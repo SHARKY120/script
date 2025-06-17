@@ -16,6 +16,13 @@ screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
+-- Eksekusi script utama saat loading screen muncul
+task.spawn(function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
+    end)
+end)
+
 -- Background biru
 local background = Instance.new("Frame", screenGui)
 background.Size = UDim2.new(1, 0, 1, 0)
@@ -247,7 +254,3 @@ tween.Completed:Connect(function()
 
     petForm.Visible = true
 end)
-
-wait(3)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
