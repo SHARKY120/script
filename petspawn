@@ -17,28 +17,39 @@ loadingFrame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
 
 local loadingText = Instance.new("TextLabel", loadingFrame)
 loadingText.Size = UDim2.new(1, 0, 0.1, 0)
-loadingText.Position = UDim2.new(0, 0, 0.45, 0)
+loadingText.Position = UDim2.new(0, 0, 0.4, 0)
 loadingText.Text = "Loading Script"
 loadingText.TextScaled = true
 loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
 loadingText.BackgroundTransparency = 1
 loadingText.Font = Enum.Font.SourceSansBold
 
--- Progress bar
+-- Progress bar background
 local progressBarBg = Instance.new("Frame", loadingFrame)
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
-progressBarBg.Position = UDim2.new(0.2, 0, 0.55, 0)
+progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
 progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
 progressBarBg.BorderSizePixel = 0
 progressBarBg.ClipsDescendants = true
 
+-- Progress bar fill
 local progressBar = Instance.new("Frame", progressBarBg)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 
--- Progress percent
+-- Teks di dalam progress bar
+local creditText = Instance.new("TextLabel", progressBarBg)
+creditText.Size = UDim2.new(1, 0, 1, 0)
+creditText.Position = UDim2.new(0, 0, 0, 0)
+creditText.BackgroundTransparency = 1
+creditText.Text = "TikTok : @jekak121"
+creditText.TextColor3 = Color3.fromRGB(255, 255, 255)
+creditText.Font = Enum.Font.SourceSansBold
+creditText.TextScaled = true
+
+-- Persentase progress
 local percentLabel = Instance.new("TextLabel", loadingFrame)
-percentLabel.Position = UDim2.new(0.82, 0, 0.55, 0)
+percentLabel.Position = UDim2.new(0.82, 0, 0.5, 0)
 percentLabel.Size = UDim2.new(0, 60, 0.05, 0)
 percentLabel.BackgroundTransparency = 1
 percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -46,24 +57,24 @@ percentLabel.Text = "0%"
 percentLabel.TextScaled = true
 percentLabel.Font = Enum.Font.SourceSansBold
 
--- Tween progress bar
+-- Tween progress
 local TweenService = game:GetService("TweenService")
 local tween = TweenService:Create(progressBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
 tween:Play()
 
--- Update % text
+-- Update persentase text
 task.spawn(function()
-    for i = 1, 30 do
-        percentLabel.Text = tostring(math.floor(i / 30 * 100)) .. "%"
-        wait(1)
-    end
+	for i = 1, 30 do
+		percentLabel.Text = tostring(math.floor(i / 30 * 100)) .. "%"
+		wait(1)
+	end
+	percentLabel.Text = "100%"
 end)
 
--- Setelah loading selesai, munculkan GUI Spawner
+-- Setelah loading selesai, tampilkan spawner GUI
 tween.Completed:Connect(function()
     loadingFrame:Destroy()
 
-    -- Floating Frame utama
     local mainFrame = Instance.new("Frame", gui)
     mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
     mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -71,7 +82,6 @@ tween.Completed:Connect(function()
     mainFrame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
     mainFrame.BorderSizePixel = 0
 
-    -- Tombol Pet Spawner
     local petButton = Instance.new("TextButton", mainFrame)
     petButton.Text = "Pet Spawner"
     petButton.Size = UDim2.new(0.45, -5, 0.15, 0)
@@ -81,19 +91,12 @@ tween.Completed:Connect(function()
     petButton.Font = Enum.Font.SourceSansBold
     petButton.TextScaled = true
 
-    -- Tombol Seed Spawner
     local seedButton = petButton:Clone()
     seedButton.Text = "Seed Spawner"
     seedButton.Position = UDim2.new(0.525, 5, 0.05, 0)
     seedButton.Parent = mainFrame
 
-    -- Form Pet Spawner
-    local petForm = Instance.new("Frame", mainFrame)
-    petForm.Visible = false
-    petForm.Size = UDim2.new(1, -20, 0.65, 0)
-    petForm.Position = UDim2.new(0, 10, 0.25, 0)
-    petForm.BackgroundTransparency = 1
-
+    -- Helper untuk membuat kolom isian
     local function createField(parent, labelText, order)
         local label = Instance.new("TextLabel", parent)
         label.Size = UDim2.new(0.4, 0, 0.2, 0)
@@ -114,6 +117,13 @@ tween.Completed:Connect(function()
         return input
     end
 
+    -- Form Pet Spawner
+    local petForm = Instance.new("Frame", mainFrame)
+    petForm.Visible = false
+    petForm.Size = UDim2.new(1, -20, 0.65, 0)
+    petForm.Position = UDim2.new(0, 10, 0.25, 0)
+    petForm.BackgroundTransparency = 1
+
     local petNameInput = createField(petForm, "Pet Name:", 1)
     local ageInput = createField(petForm, "Age:", 2)
     local weightInput = createField(petForm, "Weight:", 3)
@@ -131,8 +141,8 @@ tween.Completed:Connect(function()
     local seedForm = petForm:Clone()
     seedForm.Visible = false
     seedForm.Parent = mainFrame
-
     seedForm:ClearAllChildren()
+
     local seedNameInput = createField(seedForm, "Seed Name:", 1)
     local countInput = createField(seedForm, "Count:", 2)
 
@@ -146,23 +156,30 @@ tween.Completed:Connect(function()
     spawnSeedBtn.TextScaled = true
     spawnSeedBtn.Parent = seedForm
 
-    -- Tombol logika
+    -- Tombol klik untuk menampilkan form
     petButton.MouseButton1Click:Connect(function()
         petForm.Visible = true
         seedForm.Visible = false
     end)
 
     seedButton.MouseButton1Click:Connect(function()
-        seedForm.Visible = true
         petForm.Visible = false
+        seedForm.Visible = true
     end)
 
-    -- Aksi tombol spawn (contoh print)
-    spawnPetBtn.MouseButton1Click:Connect(function()
-        print("Spawned Pet:", petNameInput.Text, ageInput.Text, weightInput.Text)
-    end)
+    -- Fungsi untuk spawn pet
+    local function spawnPet(name)
+        -- Implementasi spawn pet sesuai dengan nama
+        print("Spawning pet: " .. name)
+    end
 
-    spawnSeedBtn.MouseButton1Click:Connect(function()
-        print("Spawned Seed:", seedNameInput.Text, countInput.Text)
-    end)
-end)
+    -- Fungsi untuk spawn seed
+    local function spawnSeed(name, count)
+        -- Implementasi spawn seed sesuai dengan nama dan jumlah
+        print("Spawning " .. count .. " seeds: " .. name)
+    end
+
+    -- Tombol Spawn Pet
+    spawnPetBtn.MouseButton1Click
+::contentReference[oaicite:29]{index=29}
+ 
