@@ -1,4 +1,4 @@
--- Hapus loading screen lama jika ada
+-- Hapus loading screen sebelumnya jika ada
 if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
     game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
 end
@@ -6,11 +6,11 @@ end
 -- Buat ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullBlueLoadingScreen"
-screenGui.Parent = game.CoreGui
-screenGui.IgnoreGuiInset = true -- Supaya benar-benar full layar (hilangkan top bar)
+screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
+screenGui.Parent = game.CoreGui
 
--- Buat background biru full layar
+-- Buat background biru fullscreen
 local background = Instance.new("Frame")
 background.Size = UDim2.new(1, 0, 1, 0)
 background.Position = UDim2.new(0, 0, 0, 0)
@@ -18,7 +18,7 @@ background.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
 background.BorderSizePixel = 0
 background.Parent = screenGui
 
--- Teks utama "Loading Script"
+-- Teks utama
 local loadingText = Instance.new("TextLabel")
 loadingText.Size = UDim2.new(1, 0, 0.1, 0)
 loadingText.Position = UDim2.new(0, 0, 0.3, 0)
@@ -29,7 +29,7 @@ loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
 loadingText.Parent = background
 
--- Background progress bar
+-- Progress bar background
 local progressBarBg = Instance.new("Frame")
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
@@ -38,7 +38,7 @@ progressBarBg.BorderSizePixel = 0
 progressBarBg.Parent = background
 progressBarBg.ClipsDescendants = true
 
--- Isi progress bar
+-- Progress bar fill
 local progressBar = Instance.new("Frame")
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.Position = UDim2.new(0, 0, 0, 0)
@@ -46,7 +46,7 @@ progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 progressBar.BorderSizePixel = 0
 progressBar.Parent = progressBarBg
 
--- Text di dalam progress bar
+-- Teks dalam progress bar
 local creditText = Instance.new("TextLabel")
 creditText.Size = UDim2.new(1, 0, 1, 0)
 creditText.Position = UDim2.new(0, 0, 0, 0)
@@ -57,14 +57,68 @@ creditText.Font = Enum.Font.SourceSansBold
 creditText.TextScaled = true
 creditText.Parent = progressBarBg
 
--- TweenService buat animasi progress bar selama 8 menit (480 detik)
-local TweenService = game:GetService("TweenService")
-local tweenInfo = TweenInfo.new(480, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-local goal = {Size = UDim2.new(1, 0, 1, 0)}
-local tween = TweenService:Create(progressBar, tweenInfo, goal)
+-- Persentase Text di kanan progress bar
+local percentText = Instance.new("TextLabel")
+percentText.Size = UDim2.new(0, 60, 0.05, 0)
+percentText.Position = UDim2.new(0.81, 10, 0.5, 0)
+percentText.AnchorPoint = Vector2.new(0, 0)
+percentText.BackgroundTransparency = 1
+percentText.Text = "0%"
+percentText.TextColor3 = Color3.fromRGB(255, 255, 255)
+percentText.Font = Enum.Font.SourceSansBold
+percentText.TextScaled = true
+percentText.Parent = background
 
--- Mulai animasi, hapus GUI setelah selesai
+-- Status Text di bawah progress bar
+local statusText = Instance.new("TextLabel")
+statusText.Size = UDim2.new(1, 0, 0.05, 0)
+statusText.Position = UDim2.new(0, 0, 0.57, 0)
+statusText.BackgroundTransparency = 1
+statusText.Text = "Initializing..."
+statusText.TextColor3 = Color3.fromRGB(240, 240, 240)
+statusText.Font = Enum.Font.SourceSans
+statusText.TextScaled = true
+statusText.Parent = background
+
+-- Daftar status teks
+local statuses = {
+    "Getting server data...",
+    "Finding best server...",
+    "Verifying session...",
+    "Loading environment...",
+    "Finalizing..."
+}
+
+-- Update status teks tiap 10 detik
+task.spawn(function()
+    local i = 1
+    while screenGui and screenGui.Parent do
+        statusText.Text = statuses[i]
+        i = i + 1
+        if i > #statuses then i = 1 end
+        wait(10)
+    end
+end)
+
+-- Tween progress bar (durasi 300 detik = 5 menit)
+local TweenService = game:GetService("TweenService")
+local tweenInfo = TweenInfo.new(300, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local tweenGoal = {Size = UDim2.new(1, 0, 1, 0)}
+local tween = TweenService:Create(progressBar, tweenInfo, tweenGoal)
 tween:Play()
+
+-- Update persentase selama tween berlangsung
+task.spawn(function()
+    local duration = 300 -- 5 menit
+    for i = 1, duration do
+        local percent = math.floor((i / duration) * 100)
+        percentText.Text = percent .. "%"
+        wait(1)
+    end
+    percentText.Text = "100%"
+end)
+
+-- Hapus loading screen setelah selesai
 tween.Completed:Connect(function()
     wait(0.5)
     screenGui:Destroy()
