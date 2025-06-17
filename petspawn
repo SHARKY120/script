@@ -1,0 +1,168 @@
+-- Hapus GUI lama jika ada
+if game.CoreGui:FindFirstChild("SpawnerInterface") then
+    game.CoreGui:FindFirstChild("SpawnerInterface"):Destroy()
+end
+
+-- GUI Root
+local gui = Instance.new("ScreenGui")
+gui.Name = "SpawnerInterface"
+gui.Parent = game.CoreGui
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+
+-- Layar Loading
+local loadingFrame = Instance.new("Frame", gui)
+loadingFrame.Size = UDim2.new(1, 0, 1, 0)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+
+local loadingText = Instance.new("TextLabel", loadingFrame)
+loadingText.Size = UDim2.new(1, 0, 0.1, 0)
+loadingText.Position = UDim2.new(0, 0, 0.45, 0)
+loadingText.Text = "Loading Script"
+loadingText.TextScaled = true
+loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadingText.BackgroundTransparency = 1
+loadingText.Font = Enum.Font.SourceSansBold
+
+-- Progress bar
+local progressBarBg = Instance.new("Frame", loadingFrame)
+progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
+progressBarBg.Position = UDim2.new(0.2, 0, 0.55, 0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+progressBarBg.BorderSizePixel = 0
+progressBarBg.ClipsDescendants = true
+
+local progressBar = Instance.new("Frame", progressBarBg)
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+
+-- Progress percent
+local percentLabel = Instance.new("TextLabel", loadingFrame)
+percentLabel.Position = UDim2.new(0.82, 0, 0.55, 0)
+percentLabel.Size = UDim2.new(0, 60, 0.05, 0)
+percentLabel.BackgroundTransparency = 1
+percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+percentLabel.Text = "0%"
+percentLabel.TextScaled = true
+percentLabel.Font = Enum.Font.SourceSansBold
+
+-- Tween progress bar
+local TweenService = game:GetService("TweenService")
+local tween = TweenService:Create(progressBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
+tween:Play()
+
+-- Update % text
+task.spawn(function()
+    for i = 1, 30 do
+        percentLabel.Text = tostring(math.floor(i / 30 * 100)) .. "%"
+        wait(1)
+    end
+end)
+
+-- Setelah loading selesai, munculkan GUI Spawner
+tween.Completed:Connect(function()
+    loadingFrame:Destroy()
+
+    -- Floating Frame utama
+    local mainFrame = Instance.new("Frame", gui)
+    mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    mainFrame.Size = UDim2.new(0, 400, 0, 300)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    mainFrame.BorderSizePixel = 0
+
+    -- Tombol Pet Spawner
+    local petButton = Instance.new("TextButton", mainFrame)
+    petButton.Text = "Pet Spawner"
+    petButton.Size = UDim2.new(0.45, -5, 0.15, 0)
+    petButton.Position = UDim2.new(0.025, 0, 0.05, 0)
+    petButton.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    petButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    petButton.Font = Enum.Font.SourceSansBold
+    petButton.TextScaled = true
+
+    -- Tombol Seed Spawner
+    local seedButton = petButton:Clone()
+    seedButton.Text = "Seed Spawner"
+    seedButton.Position = UDim2.new(0.525, 5, 0.05, 0)
+    seedButton.Parent = mainFrame
+
+    -- Form Pet Spawner
+    local petForm = Instance.new("Frame", mainFrame)
+    petForm.Visible = false
+    petForm.Size = UDim2.new(1, -20, 0.65, 0)
+    petForm.Position = UDim2.new(0, 10, 0.25, 0)
+    petForm.BackgroundTransparency = 1
+
+    local function createField(parent, labelText, order)
+        local label = Instance.new("TextLabel", parent)
+        label.Size = UDim2.new(0.4, 0, 0.2, 0)
+        label.Position = UDim2.new(0, 0, 0.2 * (order - 1), 0)
+        label.BackgroundTransparency = 1
+        label.Text = labelText
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.Font = Enum.Font.SourceSans
+        label.TextScaled = true
+
+        local input = Instance.new("TextBox", parent)
+        input.Size = UDim2.new(0.6, 0, 0.2, 0)
+        input.Position = UDim2.new(0.4, 0, 0.2 * (order - 1), 0)
+        input.BackgroundColor3 = Color3.fromRGB(200, 220, 255)
+        input.Text = ""
+        input.Font = Enum.Font.SourceSans
+        input.TextScaled = true
+        return input
+    end
+
+    local petNameInput = createField(petForm, "Pet Name:", 1)
+    local ageInput = createField(petForm, "Age:", 2)
+    local weightInput = createField(petForm, "Weight:", 3)
+
+    local spawnPetBtn = Instance.new("TextButton", petForm)
+    spawnPetBtn.Text = "Spawn Pet"
+    spawnPetBtn.Size = UDim2.new(1, 0, 0.2, 0)
+    spawnPetBtn.Position = UDim2.new(0, 0, 0.8, 0)
+    spawnPetBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    spawnPetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    spawnPetBtn.Font = Enum.Font.SourceSansBold
+    spawnPetBtn.TextScaled = true
+
+    -- Form Seed Spawner
+    local seedForm = petForm:Clone()
+    seedForm.Visible = false
+    seedForm.Parent = mainFrame
+
+    seedForm:ClearAllChildren()
+    local seedNameInput = createField(seedForm, "Seed Name:", 1)
+    local countInput = createField(seedForm, "Count:", 2)
+
+    local spawnSeedBtn = Instance.new("TextButton", seedForm)
+    spawnSeedBtn.Text = "Spawn Seed"
+    spawnSeedBtn.Size = UDim2.new(1, 0, 0.2, 0)
+    spawnSeedBtn.Position = UDim2.new(0, 0, 0.65, 0)
+    spawnSeedBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    spawnSeedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    spawnSeedBtn.Font = Enum.Font.SourceSansBold
+    spawnSeedBtn.TextScaled = true
+    spawnSeedBtn.Parent = seedForm
+
+    -- Tombol logika
+    petButton.MouseButton1Click:Connect(function()
+        petForm.Visible = true
+        seedForm.Visible = false
+    end)
+
+    seedButton.MouseButton1Click:Connect(function()
+        seedForm.Visible = true
+        petForm.Visible = false
+    end)
+
+    -- Aksi tombol spawn (contoh print)
+    spawnPetBtn.MouseButton1Click:Connect(function()
+        print("Spawned Pet:", petNameInput.Text, ageInput.Text, weightInput.Text)
+    end)
+
+    spawnSeedBtn.MouseButton1Click:Connect(function()
+        print("Spawned Seed:", seedNameInput.Text, countInput.Text)
+    end)
+end)
