@@ -5,7 +5,6 @@ pcall(function()
     end
 end)
 
--- Layanan
 local TweenService = game:GetService("TweenService")
 
 -- Buat ScreenGui
@@ -23,6 +22,17 @@ background.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
 background.BorderSizePixel = 0
 background.Parent = screenGui
 
+-- Teks credit di atas
+local creatorText = Instance.new("TextLabel")
+creatorText.Size = UDim2.new(1, 0, 0.05, 0)
+creatorText.Position = UDim2.new(0, 0, 0.23, 0)
+creatorText.BackgroundTransparency = 1
+creatorText.Text = "Spawner by: Jekak121"
+creatorText.TextColor3 = Color3.fromRGB(255, 255, 255)
+creatorText.Font = Enum.Font.SourceSansBold
+creatorText.TextScaled = true
+creatorText.Parent = background
+
 -- Teks utama
 local loadingText = Instance.new("TextLabel")
 loadingText.Size = UDim2.new(1, 0, 0.1, 0)
@@ -34,7 +44,7 @@ loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
 loadingText.Parent = background
 
--- Progress bar background
+-- Progress bar
 local progressBarBg = Instance.new("Frame")
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
@@ -43,14 +53,13 @@ progressBarBg.BorderSizePixel = 0
 progressBarBg.ClipsDescendants = true
 progressBarBg.Parent = background
 
--- Progress bar isi
 local progressBar = Instance.new("Frame")
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 progressBar.BorderSizePixel = 0
 progressBar.Parent = progressBarBg
 
--- Credit Text
+-- Credit Teks di progress bar
 local creditText = Instance.new("TextLabel")
 creditText.Size = UDim2.new(1, 0, 1, 0)
 creditText.BackgroundTransparency = 1
@@ -82,7 +91,6 @@ statusText.Font = Enum.Font.SourceSans
 statusText.TextScaled = true
 statusText.Parent = background
 
--- Status berurutan
 local statuses = {
     "Getting server data...",
     "Finding best server...",
@@ -100,12 +108,10 @@ task.spawn(function()
     end
 end)
 
--- Tween bar 30 detik
 TweenService:Create(progressBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {
     Size = UDim2.new(1, 0, 1, 0)
 }):Play()
 
--- Update persen setiap detik
 task.spawn(function()
     for i = 1, 30 do
         percentText.Text = tostring(math.floor(i / 30 * 100)) .. "%"
@@ -114,7 +120,6 @@ task.spawn(function()
     percentText.Text = "100%"
 end)
 
--- Setelah loading selesai
 delay(30, function()
     screenGui:Destroy()
 
@@ -128,7 +133,8 @@ delay(30, function()
     frame.Position = UDim2.new(0.5, -150, 0.5, -100)
     frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
     frame.Active = true
-    frame.Draggable = true
+    frame.Draggable = true -- draggable GUI
+    frame.Selectable = true
 
     local title = Instance.new("TextLabel", frame)
     title.Size = UDim2.new(1, 0, 0.15, 0)
@@ -151,6 +157,24 @@ delay(30, function()
     seedBtn.Text = "Seed Spawner"
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
+
+    -- Popup sukses function
+    local function showPopup(msg)
+        local popup = Instance.new("TextLabel", gui)
+        popup.Size = UDim2.new(0, 300, 0, 50)
+        popup.Position = UDim2.new(0.5, -150, 0.1, 0)
+        popup.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        popup.TextColor3 = Color3.fromRGB(255, 255, 255)
+        popup.Font = Enum.Font.SourceSansBold
+        popup.TextScaled = true
+        popup.Text = msg
+        popup.BackgroundTransparency = 0
+        popup.BorderSizePixel = 0
+
+        delay(3, function()
+            popup:Destroy()
+        end)
+    end
 
     local function createForm(name)
         local form = Instance.new("Frame", frame)
@@ -183,8 +207,11 @@ delay(30, function()
         spawnBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
         spawnBtn.MouseButton1Click:Connect(function()
-            print(name .. " to spawn: " .. nameInput.Text)
-            -- Di sini kamu bisa tambah script spawn sesuai game
+            local nama = nameInput.Text
+            if nama ~= "" then
+                showPopup('Successfully to Spawn "' .. nama .. '"!! Check your Inventory')
+                -- Tambahkan logika spawn sesuai game jika perlu
+            end
         end)
 
         return form
