@@ -3,42 +3,36 @@ if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
     game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
 end
 
--- Services
-local TweenService = game:GetService("TweenService")
-local SoundService = game:GetService("SoundService")
+-- Sound efek spawn
+local spawnSound = Instance.new("Sound")
+spawnSound.SoundId = "rbxassetid://6026984224"
+spawnSound.Volume = 1
+spawnSound.Name = "SpawnSound"
+spawnSound.Parent = game:GetService("SoundService")
 
 -- Buat ScreenGui
-local screenGui = Instance.new("ScreenGui")
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
-screenGui.Parent = game.CoreGui
 
--- Background biru fullscreen
-local background = Instance.new("Frame")
+-- Background biru
+local background = Instance.new("Frame", screenGui)
 background.Size = UDim2.new(1, 0, 1, 0)
-background.Position = UDim2.new(0, 0, 0, 0)
 background.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
-background.BorderSizePixel = 0
-background.BackgroundTransparency = 1
-background.Parent = screenGui
 
--- Tween animasi background masuk
-TweenService:Create(background, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
-
--- Teks pembuat
-local authorText = Instance.new("TextLabel")
-authorText.Size = UDim2.new(1, 0, 0.05, 0)
-authorText.Position = UDim2.new(0, 0, 0.25, 0)
-authorText.BackgroundTransparency = 1
-authorText.Text = "Spawner by: Jekak121"
-authorText.TextColor3 = Color3.fromRGB(255, 255, 255)
-authorText.Font = Enum.Font.SourceSansBold
-authorText.TextScaled = true
-authorText.Parent = background
+-- Text credit atas
+local creditTop = Instance.new("TextLabel", background)
+creditTop.Size = UDim2.new(1, 0, 0.05, 0)
+creditTop.Position = UDim2.new(0, 0, 0.23, 0)
+creditTop.BackgroundTransparency = 1
+creditTop.Text = "Spawner by: Jekak121"
+creditTop.Font = Enum.Font.SourceSansBold
+creditTop.TextScaled = true
+creditTop.TextColor3 = Color3.new(1,1,1)
 
 -- Teks utama
-local loadingText = Instance.new("TextLabel")
+local loadingText = Instance.new("TextLabel", background)
 loadingText.Size = UDim2.new(1, 0, 0.1, 0)
 loadingText.Position = UDim2.new(0, 0, 0.3, 0)
 loadingText.BackgroundTransparency = 1
@@ -46,47 +40,38 @@ loadingText.Text = "Loading Script"
 loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
 loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
-loadingText.Parent = background
 
 -- Progress bar
-local progressBarBg = Instance.new("Frame")
+local progressBarBg = Instance.new("Frame", background)
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
 progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
-progressBarBg.BorderSizePixel = 0
-progressBarBg.Parent = background
-progressBarBg.ClipsDescendants = true
 
-local progressBar = Instance.new("Frame")
+local progressBar = Instance.new("Frame", progressBarBg)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
-progressBar.Position = UDim2.new(0, 0, 0, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-progressBar.BorderSizePixel = 0
-progressBar.Parent = progressBarBg
 
--- Teks dalam progress bar
-local creditText = Instance.new("TextLabel")
+-- Text credit bawah
+local creditText = Instance.new("TextLabel", progressBarBg)
 creditText.Size = UDim2.new(1, 0, 1, 0)
 creditText.BackgroundTransparency = 1
 creditText.Text = "Tiktok: @Jekak121"
-creditText.TextColor3 = Color3.fromRGB(255, 255, 255)
 creditText.Font = Enum.Font.SourceSansBold
 creditText.TextScaled = true
-creditText.Parent = progressBarBg
+creditText.TextColor3 = Color3.new(1,1,1)
 
--- Persentase
-local percentText = Instance.new("TextLabel")
+-- Percent
+local percentText = Instance.new("TextLabel", background)
 percentText.Size = UDim2.new(0, 60, 0.05, 0)
 percentText.Position = UDim2.new(0.81, 10, 0.5, 0)
 percentText.BackgroundTransparency = 1
 percentText.Text = "0%"
-percentText.TextColor3 = Color3.fromRGB(255, 255, 255)
+percentText.TextColor3 = Color3.new(1,1,1)
 percentText.Font = Enum.Font.SourceSansBold
 percentText.TextScaled = true
-percentText.Parent = background
 
--- Status Text di bawah progress bar
-local statusText = Instance.new("TextLabel")
+-- Status
+local statusText = Instance.new("TextLabel", background)
 statusText.Size = UDim2.new(1, 0, 0.05, 0)
 statusText.Position = UDim2.new(0, 0, 0.57, 0)
 statusText.BackgroundTransparency = 1
@@ -94,7 +79,6 @@ statusText.Text = "Initializing..."
 statusText.TextColor3 = Color3.fromRGB(240, 240, 240)
 statusText.Font = Enum.Font.SourceSans
 statusText.TextScaled = true
-statusText.Parent = background
 
 local statuses = {
     "Getting server data...",
@@ -113,6 +97,7 @@ task.spawn(function()
     end
 end)
 
+local TweenService = game:GetService("TweenService")
 local tween = TweenService:Create(progressBar, TweenInfo.new(10, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
 tween:Play()
 
@@ -127,6 +112,7 @@ end)
 tween.Completed:Connect(function()
     screenGui:Destroy()
 
+    -- Main GUI
     local gui = Instance.new("ScreenGui", game.CoreGui)
     gui.Name = "SpawnerFloatingWindow"
     gui.ResetOnSpawn = false
@@ -136,34 +122,48 @@ tween.Completed:Connect(function()
     frame.Position = UDim2.new(0.5, -150, 0.5, -100)
     frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
     frame.Active = true
-    frame.Draggable = true
+
+    local drag = Instance.new("LocalScript", frame)
+    drag.Source = [[
+        local UIS = game:GetService("UserInputService")
+        local frame = script.Parent
+        local dragToggle, dragInput, dragStart, startPos
+
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragToggle = true
+                dragStart = input.Position
+                startPos = frame.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragToggle = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                dragInput = input
+            end
+        end)
+
+        UIS.InputChanged:Connect(function(input)
+            if input == dragInput and dragToggle then
+                local delta = input.Position - dragStart
+                frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                           startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+    ]]
 
     local title = Instance.new("TextLabel", frame)
     title.Size = UDim2.new(1, 0, 0.15, 0)
     title.Text = "Spawner"
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextColor3 = Color3.new(1,1,1)
     title.Font = Enum.Font.SourceSansBold
     title.TextScaled = true
     title.BackgroundTransparency = 1
-
-    local function showPopup(text)
-        local popup = Instance.new("TextLabel", gui)
-        popup.Size = UDim2.new(0, 250, 0, 50)
-        popup.Position = UDim2.new(0.5, -125, 0.9, 0)
-        popup.Text = text
-        popup.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-        popup.TextColor3 = Color3.fromRGB(255, 255, 255)
-        popup.Font = Enum.Font.SourceSansBold
-        popup.TextScaled = true
-        popup.ZIndex = 10
-
-        local sound = Instance.new("Sound", popup)
-        sound.SoundId = "rbxassetid://6026984224" -- UI Click
-        sound:Play()
-
-        wait(2)
-        popup:Destroy()
-    end
 
     local petBtn = Instance.new("TextButton", frame)
     petBtn.Size = UDim2.new(0.5, -5, 0.2, 0)
@@ -172,7 +172,7 @@ tween.Completed:Connect(function()
     petBtn.Font = Enum.Font.SourceSansBold
     petBtn.TextScaled = true
     petBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-    petBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    petBtn.TextColor3 = Color3.new(1,1,1)
 
     local seedBtn = petBtn:Clone()
     seedBtn.Text = "Seed Spawner"
@@ -189,7 +189,7 @@ tween.Completed:Connect(function()
         local nameLabel = Instance.new("TextLabel", form)
         nameLabel.Size = UDim2.new(0.4, 0, 0.3, 0)
         nameLabel.Text = name .. " Name:"
-        nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        nameLabel.TextColor3 = Color3.new(1,1,1)
         nameLabel.Font = Enum.Font.SourceSansBold
         nameLabel.TextScaled = true
         nameLabel.BackgroundTransparency = 1
@@ -207,26 +207,33 @@ tween.Completed:Connect(function()
         spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
         spawnBtn.Text = "Spawn"
         spawnBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-        spawnBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        spawnBtn.Font = Enum.Font.SourceSansBold
-        spawnBtn.TextScaled = true
+        spawnBtn.TextColor3 = Color3.new(1,1,1)
 
         spawnBtn.MouseButton1Click:Connect(function()
-            local name = nameInput.Text
+            local itemName = nameInput.Text
             if isSeed then
-                name = name .. " Seed"
+                itemName = itemName .. " Seed"
             end
-            showPopup("Successfully spawned "" .. name .. ""!\nCheck Your Inventory.")
+
+            spawnSound:Play()
+
+            local popup = Instance.new("TextLabel", gui)
+            popup.Size = UDim2.new(0.4, 0, 0.07, 0)
+            popup.Position = UDim2.new(0.3, 0, 0.65, 0)
+            popup.BackgroundColor3 = Color3.fromRGB(0, 153, 0)
+            popup.TextColor3 = Color3.new(1,1,1)
+            popup.Font = Enum.Font.SourceSansBold
+            popup.TextScaled = true
+            popup.Text = "Successfully to Spawn \"".. itemName .. "\"!!\nCheck Your Inventory"
+            wait(2.5)
+            popup:Destroy()
         end)
 
         return form
     end
 
     local petForm = createForm("Pet", false)
-    petForm.Parent = frame
-
     local seedForm = createForm("Seed", true)
-    seedForm.Parent = frame
 
     petBtn.MouseButton1Click:Connect(function()
         petForm.Visible = true
@@ -237,41 +244,6 @@ tween.Completed:Connect(function()
         petForm.Visible = false
         seedForm.Visible = true
     end)
+
+    petForm.Visible = true
 end)
-
-local UIS = game:GetService("UserInputService")
-local dragging, dragInput, dragStart, startPos
-
-local function makeDraggable(frame)
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-
-    UIS.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(
-                startPos.X.Scale, startPos.X.Offset + delta.X,
-                startPos.Y.Scale, startPos.Y.Offset + delta.Y
-            )
-        end
-    end)
-end
-
-makeDraggable(frame)
