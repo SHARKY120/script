@@ -1,25 +1,27 @@
--- Hapus jika sudah ada loading sebelumnya
+-- Hapus loading screen lama jika ada
 if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
     game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
 end
 
--- Buat GUI utama
+-- Buat ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.Parent = game.CoreGui
+screenGui.IgnoreGuiInset = true -- Supaya benar-benar full layar (hilangkan top bar)
 screenGui.ResetOnSpawn = false
 
--- Background penuh
+-- Buat background biru full layar
 local background = Instance.new("Frame")
 background.Size = UDim2.new(1, 0, 1, 0)
 background.Position = UDim2.new(0, 0, 0, 0)
-background.BackgroundColor3 = Color3.fromRGB(0, 102, 204) -- Biru utama
+background.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+background.BorderSizePixel = 0
 background.Parent = screenGui
 
--- Label utama "Loading Script"
+-- Teks utama "Loading Script"
 local loadingText = Instance.new("TextLabel")
 loadingText.Size = UDim2.new(1, 0, 0.1, 0)
-loadingText.Position = UDim2.new(0, 0, 0.35, 0)
+loadingText.Position = UDim2.new(0, 0, 0.3, 0)
 loadingText.BackgroundTransparency = 1
 loadingText.Text = "Loading Script"
 loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -27,20 +29,20 @@ loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
 loadingText.Parent = background
 
--- Progress bar background
+-- Background progress bar
 local progressBarBg = Instance.new("Frame")
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
-progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80) -- Biru gelap
+progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
 progressBarBg.BorderSizePixel = 0
 progressBarBg.Parent = background
 progressBarBg.ClipsDescendants = true
 
--- Progress bar fill
+-- Isi progress bar
 local progressBar = Instance.new("Frame")
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.Position = UDim2.new(0, 0, 0, 0)
-progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255) -- Biru terang
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 progressBar.BorderSizePixel = 0
 progressBar.Parent = progressBarBg
 
@@ -55,13 +57,13 @@ creditText.Font = Enum.Font.SourceSansBold
 creditText.TextScaled = true
 creditText.Parent = progressBarBg
 
--- Tween loading progress
+-- TweenService buat animasi progress bar selama 8 menit (480 detik)
 local TweenService = game:GetService("TweenService")
+local tweenInfo = TweenInfo.new(480, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 local goal = {Size = UDim2.new(1, 0, 1, 0)}
-local tweenInfo = TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local tween = TweenService:Create(progressBar, tweenInfo, goal)
 
--- Jalankan tween dan hapus GUI setelah selesai
+-- Mulai animasi, hapus GUI setelah selesai
 tween:Play()
 tween.Completed:Connect(function()
     wait(0.5)
