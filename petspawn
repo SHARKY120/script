@@ -1,14 +1,19 @@
 -- Hapus loading screen sebelumnya jika ada
-if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
-    game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
-end
+pcall(function()
+    if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
+        game.CoreGui.FullBlueLoadingScreen:Destroy()
+    end
+end)
+
+-- Layanan
+local TweenService = game:GetService("TweenService")
 
 -- Buat ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
-screenGui.Parent = game.CoreGui
+screenGui.Parent = game:GetService("CoreGui")
 
 -- Background biru fullscreen
 local background = Instance.new("Frame")
@@ -29,23 +34,23 @@ loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
 loadingText.Parent = background
 
--- Progress bar
+-- Progress bar background
 local progressBarBg = Instance.new("Frame")
 progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
 progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
 progressBarBg.BorderSizePixel = 0
-progressBarBg.Parent = background
 progressBarBg.ClipsDescendants = true
+progressBarBg.Parent = background
 
+-- Progress bar isi
 local progressBar = Instance.new("Frame")
 progressBar.Size = UDim2.new(0, 0, 1, 0)
-progressBar.Position = UDim2.new(0, 0, 0, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 progressBar.BorderSizePixel = 0
 progressBar.Parent = progressBarBg
 
--- Teks dalam progress bar
+-- Credit Text
 local creditText = Instance.new("TextLabel")
 creditText.Size = UDim2.new(1, 0, 1, 0)
 creditText.BackgroundTransparency = 1
@@ -66,7 +71,7 @@ percentText.Font = Enum.Font.SourceSansBold
 percentText.TextScaled = true
 percentText.Parent = background
 
--- Status Text di bawah progress bar
+-- Status text
 local statusText = Instance.new("TextLabel")
 statusText.Size = UDim2.new(1, 0, 0.05, 0)
 statusText.Position = UDim2.new(0, 0, 0.57, 0)
@@ -77,6 +82,7 @@ statusText.Font = Enum.Font.SourceSans
 statusText.TextScaled = true
 statusText.Parent = background
 
+-- Status berurutan
 local statuses = {
     "Getting server data...",
     "Finding best server...",
@@ -85,7 +91,6 @@ local statuses = {
     "Finalizing..."
 }
 
--- Rotasi status tiap 5 detik
 task.spawn(function()
     local i = 1
     while screenGui and screenGui.Parent do
@@ -95,12 +100,12 @@ task.spawn(function()
     end
 end)
 
--- Tween loading 30 detik
-local TweenService = game:GetService("TweenService")
-local tween = TweenService:Create(progressBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
-tween:Play()
+-- Tween bar 30 detik
+TweenService:Create(progressBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {
+    Size = UDim2.new(1, 0, 1, 0)
+}):Play()
 
--- Update persen
+-- Update persen setiap detik
 task.spawn(function()
     for i = 1, 30 do
         percentText.Text = tostring(math.floor(i / 30 * 100)) .. "%"
@@ -109,9 +114,11 @@ task.spawn(function()
     percentText.Text = "100%"
 end)
 
-tween.Completed:Connect(function()
+-- Setelah loading selesai
+delay(30, function()
     screenGui:Destroy()
 
+    -- GUI utama Spawner
     local gui = Instance.new("ScreenGui", game.CoreGui)
     gui.Name = "SpawnerFloatingWindow"
     gui.ResetOnSpawn = false
@@ -145,7 +152,6 @@ tween.Completed:Connect(function()
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
 
-
     local function createForm(name)
         local form = Instance.new("Frame", frame)
         form.Size = UDim2.new(1, -20, 0.4, 0)
@@ -174,6 +180,29 @@ tween.Completed:Connect(function()
         spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
         spawnBtn.Text = "Spawn"
         spawnBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-        spawnBtn.TextColor3 = Color3.fromRGB(255, 255, 255
+        spawnBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
+        spawnBtn.MouseButton1Click:Connect(function()
+            print(name .. " to spawn: " .. nameInput.Text)
+            -- Di sini kamu bisa tambah script spawn sesuai game
+        end)
 
+        return form
+    end
+
+    local petForm = createForm("Pet")
+    petForm.Parent = frame
+
+    local seedForm = createForm("Seed")
+    seedForm.Parent = frame
+
+    petBtn.MouseButton1Click:Connect(function()
+        petForm.Visible = true
+        seedForm.Visible = false
+    end)
+
+    seedBtn.MouseButton1Click:Connect(function()
+        seedForm.Visible = true
+        petForm.Visible = false
+    end)
+end)
