@@ -194,6 +194,8 @@ tween.Completed:Connect(function()
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
 
+    local popupCount = 0
+
     local function createForm(name, isSeed)
         local form = Instance.new("Frame", frame)
         form.Size = UDim2.new(1, -20, 0.4, 0)
@@ -232,16 +234,27 @@ tween.Completed:Connect(function()
 
             spawnSound:Play()
 
+            popupCount += 1
             local popup = Instance.new("TextLabel", gui)
-            popup.Size = UDim2.new(0.4, 0, 0.07, 0)
-            popup.Position = UDim2.new(0.3, 0, 0.65, 0)
+            popup.Size = UDim2.new(0, 280, 0, 50)
+            popup.Position = UDim2.new(0.5, 160, 0.5, -25 - ((popupCount - 1) * 60))
             popup.BackgroundColor3 = Color3.fromRGB(0, 153, 0)
             popup.TextColor3 = Color3.new(1,1,1)
             popup.Font = Enum.Font.SourceSansBold
             popup.TextScaled = true
             popup.Text = "Successfully to Spawn \"".. itemName .. "\"!!\nCheck Your Inventory"
-            wait(2.5)
-            popup:Destroy()
+            popup.AnchorPoint = Vector2.new(0, 0.5)
+            popup.ZIndex = 10
+
+            local popupCorner = Instance.new("UICorner", popup)
+            popupCorner.CornerRadius = UDim.new(0, 8)
+
+            task.delay(1.5, function()
+                if popup then
+                    popup:Destroy()
+                    popupCount -= 1
+                end
+            end)
         end)
 
         return form
@@ -262,7 +275,7 @@ tween.Completed:Connect(function()
 
     petForm.Visible = true
 
-    -- Tambahan: Tombol Close
+    -- Tombol Close
     local closeBtn = Instance.new("TextButton", frame)
     closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
     closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
@@ -272,7 +285,6 @@ tween.Completed:Connect(function()
     closeBtn.TextColor3 = Color3.new(1,1,1)
     closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 
-    -- Logo "J" untuk membuka kembali
     local reopenBtn = Instance.new("TextButton", gui)
     reopenBtn.Size = UDim2.new(0, 50, 0, 50)
     reopenBtn.Position = UDim2.new(0, 20, 0, 20)
