@@ -186,19 +186,23 @@ tween.Completed:Connect(function()
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
 
-    local function addPetToInventory(name)
+    -- 🟩 Tambahan: Fungsi visual add to inventory
+    local function addItemVisual(name, isSeed)
         local player = game.Players.LocalPlayer
-        local inventory = player:FindFirstChild("Inventory")
-        if not inventory then
-            inventory = Instance.new("Folder")
-            inventory.Name = "Inventory"
-            inventory.Parent = player
+        local inv = player:FindFirstChild("Inventory")
+            or player:FindFirstChild("Backpack")
+            or (player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("Inventory"))
+
+        if not inv then
+            inv = Instance.new("Folder")
+            inv.Name = "Inventory"
+            inv.Parent = player
         end
 
         local item = Instance.new("Folder")
         item.Name = name
 
-        local weight = Instance.new("IntValue")
+        local weight = Instance.new("NumberValue")
         weight.Name = "Weight"
         weight.Value = math.random(1, 30)
         weight.Parent = item
@@ -208,7 +212,7 @@ tween.Completed:Connect(function()
         age.Value = math.random(1, 80)
         age.Parent = item
 
-        item.Parent = inventory
+        item.Parent = inv
     end
 
     local function createForm(name, isSeed)
@@ -248,7 +252,8 @@ tween.Completed:Connect(function()
             end
 
             spawnSound:Play()
-            addPetToInventory(itemName)
+
+            addItemVisual(itemName, isSeed)
 
             local popup = Instance.new("TextLabel", gui)
             popup.Size = UDim2.new(0.4, 0, 0.07, 0)
@@ -280,7 +285,7 @@ tween.Completed:Connect(function()
 
     petForm.Visible = true
 
-    -- Tombol Close
+    -- Tombol Close & Reopen
     local closeBtn = Instance.new("TextButton", frame)
     closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
     closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
