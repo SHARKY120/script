@@ -1,6 +1,3 @@
-Berikut adalah kode lengkap yang telah dimodifikasi untuk menggabungkan semua bagian, termasuk pengaturan posisi popup di kanan bawah dan memastikan popup baru muncul di atas popup sebelumnya:
-
-```lua
 -- Hapus loading screen sebelumnya jika ada
 if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
     game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
@@ -29,61 +26,61 @@ end)
 -- Background biru + teks/loading bar
 do
     local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.Size = UDim2.new(1,0,1,0)
     bg.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
 
     local creditTop = Instance.new("TextLabel", bg)
-    creditTop.Size = UDim2.new(1, 0, 0.05, 0)
-    creditTop.Position = UDim2.new(0, 0, 0.23, 0)
+    creditTop.Size = UDim2.new(1,0,0.05,0)
+    creditTop.Position = UDim2.new(0,0,0.23,0)
     creditTop.BackgroundTransparency = 1
     creditTop.Text = "Spawner by: Jekak121"
     creditTop.Font = Enum.Font.SourceSansBold
     creditTop.TextScaled = true
-    creditTop.TextColor3 = Color3.new(1, 1, 1)
+    creditTop.TextColor3 = Color3.new(1,1,1)
 
     local loadingText = Instance.new("TextLabel", bg)
-    loadingText.Size = UDim2.new(1, 0, 0.1, 0)
-    loadingText.Position = UDim2.new(0, 0, 0.3, 0)
+    loadingText.Size = UDim2.new(1,0,0.1,0)
+    loadingText.Position = UDim2.new(0,0,0.3,0)
     loadingText.BackgroundTransparency = 1
     loadingText.Text = "Loading Script"
     loadingText.TextScaled = true
     loadingText.Font = Enum.Font.SourceSansBold
-    loadingText.TextColor3 = Color3.new(1, 1, 1)
+    loadingText.TextColor3 = Color3.new(1,1,1)
 
     local progressBarBg = Instance.new("Frame", bg)
-    progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
-    progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
-    progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+    progressBarBg.Size = UDim2.new(0.6,0,0.05,0)
+    progressBarBg.Position = UDim2.new(0.2,0,0.5,0)
+    progressBarBg.BackgroundColor3 = Color3.fromRGB(20,20,80)
 
     local progressBar = Instance.new("Frame", progressBarBg)
-    progressBar.Size = UDim2.new(0, 0, 1, 0)
-    progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    progressBar.Size = UDim2.new(0,0,1,0)
+    progressBar.BackgroundColor3 = Color3.fromRGB(0,153,255)
 
     local creditText = Instance.new("TextLabel", progressBarBg)
-    creditText.Size = UDim2.new(1, 0, 1, 0)
+    creditText.Size = UDim2.new(1,0,1,0)
     creditText.BackgroundTransparency = 1
     creditText.Text = "Tiktok: @Jekak121"
     creditText.Font = Enum.Font.SourceSansBold
     creditText.TextScaled = true
-    creditText.TextColor3 = Color3.new(1, 1, 1)
+    creditText.TextColor3 = Color3.new(1,1,1)
 
     local percentText = Instance.new("TextLabel", bg)
-    percentText.Size = UDim2.new(0, 60, 0.05, 0)
-    percentText.Position = UDim2.new(0.81, 10, 0.5, 0)
+    percentText.Size = UDim2.new(0,60,0.05,0)
+    percentText.Position = UDim2.new(0.81,10,0.5,0)
     percentText.BackgroundTransparency = 1
     percentText.Text = "0%"
     percentText.Font = Enum.Font.SourceSansBold
     percentText.TextScaled = true
-    percentText.TextColor3 = Color3.new(1, 1, 1)
+    percentText.TextColor3 = Color3.new(1,1,1)
 
     local statusText = Instance.new("TextLabel", bg)
-    statusText.Size = UDim2.new(1, 0, 0.05, 0)
-    statusText.Position = UDim2.new(0, 0, 0.57, 0)
+    statusText.Size = UDim2.new(1,0,0.05,0)
+    statusText.Position = UDim2.new(0,0,0.57,0)
     statusText.BackgroundTransparency = 1
     statusText.Text = "Initializing..."
     statusText.Font = Enum.Font.SourceSans
     statusText.TextScaled = true
-    statusText.TextColor3 = Color3.fromRGB(240, 240, 240)
+    statusText.TextColor3 = Color3.fromRGB(240,240,240)
 
     local statuses = {
         "Getting server data...",
@@ -103,7 +100,7 @@ do
     end)
 
     local TweenService = game:GetService("TweenService")
-    local tween = TweenService:Create(progressBar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
+    local tween = TweenService:Create(progressBar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,1,0)})
     tween:Play()
 
     task.spawn(function()
@@ -134,15 +131,15 @@ function createSpawnerGui()
     gui.ResetOnSpawn = false
 
     local frame = Instance.new("Frame", gui)
-    frame.Size = UDim2.new(0, 300, 0, 200)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -100)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    frame.Size = UDim2.new(0,300,0,200)
+    frame.Position = UDim2.new(0.5,-150,0.5,-100)
+    frame.BackgroundColor3 = Color3.fromRGB(0,102,204)
     frame.Active = true
 
     -- Drag script
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
-        local UIS = game:GetService("User InputService")
+        local UIS = game:GetService("UserInputService")
         local f = script.Parent
         local dragging, startPos, mouseStart
         f.InputBegan:Connect(function(inp)
@@ -167,97 +164,96 @@ function createSpawnerGui()
     ]]
 
     local title = Instance.new("TextLabel", frame)
-    title.Size = UDim2.new(1, 0, 0.15, 0)
+    title.Size = UDim2.new(1,0,0.15,0)
     title.Text = "Spawner"
-    title.TextColor3 = Color3.new(1, 1, 1)
+    title.TextColor3 = Color3.new(1,1,1)
     title.Font = Enum.Font.SourceSansBold
     title.TextScaled = true
     title.BackgroundTransparency = 1
 
     local petBtn = Instance.new("TextButton", frame)
-    petBtn.Size = UDim2.new(0.5, -5, 0.2, 0)
-    petBtn.Position = UDim2.new(0, 5, 0.2, 0)
+    petBtn.Size = UDim2.new(0.5,-5,0.2,0)
+    petBtn.Position = UDim2.new(0,5,0.2,0)
     petBtn.Text = "Pet Spawner"
     petBtn.Font = Enum.Font.SourceSansBold
     petBtn.TextScaled = true
-    petBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-    petBtn.TextColor3 = Color3.new(1, 1, 1)
+    petBtn.BackgroundColor3 = Color3.fromRGB(0,153,255)
+    petBtn.TextColor3 = Color3.new(1,1,1)
 
     local seedBtn = petBtn:Clone()
     seedBtn.Text = "Seed Spawner"
-    seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
+    seedBtn.Position = UDim2.new(0.5,5,0.2,0)
     seedBtn.Parent = frame
 
     local popupCount = 0
-    local lastPopup = nil -- Variabel untuk menyimpan posisi popup terakhir
 
     local function createForm(name, isSeed)
         local form = Instance.new("Frame", frame)
-        form.Size = UDim2.new(1, -20, 0.4, 0)
-        form.Position = UDim2.new(0, 10, 0.45, 0)
+        form.Size = UDim2.new(1,-20,0.4,0)
+        form.Position = UDim2.new(0,10,0.45,0)
         form.BackgroundTransparency = 1
         form.Visible = false
 
         local label = Instance.new("TextLabel", form)
-        label.Size = UDim2.new(0.4, 0, 0.3, 0)
-        label.Text = name .. " Name:"
-        label.TextColor3 = Color3.new(1, 1, 1)
+        label.Size = UDim2.new(0.4,0,0.3,0)
+        label.Text = name.." Name:"
+        label.TextColor3 = Color3.new(1,1,1)
         label.Font = Enum.Font.SourceSansBold
         label.TextScaled = true
         label.BackgroundTransparency = 1
 
         local input = Instance.new("TextBox", form)
-        input.Size = UDim2.new(0.6, 0, 0.3, 0)
-        input.Position = UDim2.new(0.4, 0, 0, 0)
+        input.Size = UDim2.new(0.6,0,0.3,0)
+        input.Position = UDim2.new(0.4,0,0,0)
         input.Font = Enum.Font.SourceSansBold
         input.TextScaled = true
         input.Text = ""
-        input.BackgroundColor3 = Color3.fromRGB(200, 220, 255)
+        input.BackgroundColor3 = Color3.fromRGB(200,220,255)
 
         local spawnBtn = Instance.new("TextButton", form)
-        spawnBtn.Size = UDim2.new(1, 0, 0.3, 0)
-        spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
+        spawnBtn.Size = UDim2.new(1,0,0.3,0)
+        spawnBtn.Position = UDim2.new(0,0,0.7,0)
         spawnBtn.Text = "Spawn"
-        spawnBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-        spawnBtn.TextColor3 = Color3.new(1, 1, 1)
+        spawnBtn.BackgroundColor3 = Color3.fromRGB(0,153,255)
+        spawnBtn.TextColor3 = Color3.new(1,1,1)
 
-        if not isSeed then
-            local help = Instance.new("TextButton", form)
-            help.Size = UDim2.new(0, 20, 0, 20)
-            help.Position = UDim2.new(0, 0, 0.35, 0)
-            help.Text = "?"
-            help.Font = Enum.Font.SourceSansBold
-            help.TextScaled = true
-            help.BackgroundColor3 = Color3.fromRGB(255, 255, 100)
-            help.TextColor3 = Color3.new(0, 0, 0)
-            help.ZIndex = 2
+if not isSeed then
+    local help = Instance.new("TextButton", form)
+    help.Size = UDim2.new(0,20,0,20)
+    help.Position = UDim2.new(0, 0, 0.35, 0)
+    help.Text = "?"
+    help.Font = Enum.Font.SourceSansBold
+    help.TextScaled = true
+    help.BackgroundColor3 = Color3.fromRGB(255,255,100)
+    help.TextColor3 = Color3.new(0,0,0)
+    help.ZIndex = 2
 
-            local helpPop = Instance.new("Frame", gui)
-            helpPop.Size = UDim2.new(0, 400, 0, 250)
-            helpPop.Position = UDim2.new(0.5, -200, 0.5, -125)
-            helpPop.Visible = false
-            helpPop.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
-            helpPop.BackgroundTransparency = 0
-            helpPop.ZIndex = 20
-            Instance.new("UICorner", helpPop).CornerRadius = UDim.new(0, 12)
+    local helpPop = Instance.new("Frame", gui)
+    helpPop.Size = UDim2.new(0,400,0,250)
+    helpPop.Position = UDim2.new(0.5,-200,0.5,-125)
+    helpPop.Visible = false
+    helpPop.BackgroundColor3 = Color3.fromRGB(0,102,204)
+    helpPop.BackgroundTransparency = 0
+    helpPop.ZIndex = 20
+    Instance.new("UICorner", helpPop).CornerRadius = UDim.new(0,12)
 
-            local ht = Instance.new("TextLabel", helpPop)
-            ht.Size = UDim2.new(1, 0, 0.15, 0)
-            ht.Position = UDim2.new(0, 0, 0, 0)
-            ht.Text = "⚠️ Attention ⚠️"
-            ht.Font = Enum.Font.SourceSansBold
-            ht.TextScaled = true
-            ht.TextColor3 = Color3.new(1, 1, 1)
-            ht.BackgroundTransparency = 1
-            ht.ZIndex = 21
+    local ht = Instance.new("TextLabel", helpPop)
+    ht.Size = UDim2.new(1,0,0.15,0)
+    ht.Position = UDim2.new(0,0,0,0)
+    ht.Text = "⚠️ Attention ⚠️"
+    ht.Font = Enum.Font.SourceSansBold
+    ht.TextScaled = true
+    ht.TextColor3 = Color3.new(1,1,1)
+    ht.BackgroundTransparency = 1
+    ht.ZIndex = 21
 
-            local desc = Instance.new("TextLabel", helpPop)
-            desc.Size = UDim2.new(1, -20, 0.75, 0)
-            desc.Position = UDim2.new(0, 10, 0.2, 0)
-            desc.TextWrapped = true
-            desc.TextYAlignment = Enum.TextYAlignment.Top
-            desc.TextXAlignment = Enum.TextXAlignment.Left
-            desc.Text = [[
+    local desc = Instance.new("TextLabel", helpPop)
+    desc.Size = UDim2.new(1,-20,0.75,0)
+    desc.Position = UDim2.new(0,10,0.2,0)
+    desc.TextWrapped = true
+    desc.TextYAlignment = Enum.TextYAlignment.Top
+    desc.TextXAlignment = Enum.TextXAlignment.Left
+    desc.Text = [[
 Please read this before you execute my script :  
 ⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️
 You must be in public server don't play in private server
@@ -271,34 +267,34 @@ because it will dupe your pet, with same age and weight as your own pet.
 if you don't have any pet that listed above, it still work but has 80% chance.
 Do not leave immediately in the game and wait at least 6-10 minutes before leaving the game or it will ruin data so be careful
 ]]
-            desc.Font = Enum.Font.SourceSans
-            desc.TextScaled = true
-            desc.TextColor3 = Color3.new(1, 1, 1)
-            desc.BackgroundTransparency = 1
-            desc.ZIndex = 21
+    desc.Font = Enum.Font.SourceSans
+    desc.TextScaled = true
+    desc.TextColor3 = Color3.new(1,1,1)
+    desc.BackgroundTransparency = 1
+    desc.ZIndex = 21
 
-            local closePop = Instance.new("TextButton", helpPop)
-            closePop.Size = UDim2.new(0, 30, 0, 30)
-            closePop.Position = UDim2.new(1, -35, 0, 5)
-            closePop.Text = "X"
-            closePop.Font = Enum.Font.SourceSansBold
-            closePop.TextScaled = true
-            closePop.TextColor3 = Color3.new(1, 1, 1)
-            closePop.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-            closePop.ZIndex = 21
-            Instance.new("UICorner", closePop).CornerRadius = UDim.new(1, 0)
+    local closePop = Instance.new("TextButton", helpPop)
+    closePop.Size = UDim2.new(0,30,0,30)
+    closePop.Position = UDim2.new(1,-35,0,5)
+    closePop.Text = "X"
+    closePop.Font = Enum.Font.SourceSansBold
+    closePop.TextScaled = true
+    closePop.TextColor3 = Color3.new(1,1,1)
+    closePop.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    closePop.ZIndex = 21
+    Instance.new("UICorner", closePop).CornerRadius = UDim.new(1,0)
 
-            closePop.MouseButton1Click:Connect(function()
-                helpPop.Visible = false
-            end)
+    closePop.MouseButton1Click:Connect(function()
+        helpPop.Visible = false
+    end)
 
-            help.MouseButton1Click:Connect(function()
-                helpPop.Visible = not helpPop.Visible
-            end)
+    help.MouseButton1Click:Connect(function()
+        helpPop.Visible = not helpPop.Visible
+    end)
 
-            -- Atur ulang posisi tombol Spawn di bawah tombol ?
-            spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
-        end
+    -- Atur ulang posisi tombol Spawn di bawah tombol ?
+    spawnBtn.Position = UDim2.new(0,0,0.7,0)
+end
 
         spawnBtn.MouseButton1Click:Connect(function()
             local item = input.Text .. (isSeed and " Seed" or "")
@@ -307,35 +303,23 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
             popupCount += 1
 
             local pop = Instance.new("TextLabel", gui)
-            pop.Size = UDim2.new(0, 280, 0, 50)
-            -- Atur posisi popup di kanan bawah
-            if lastPopup then
-                pop.Position = UDim2.new(1, -300, 1, -50 - (lastPopup.Size.Y.Offset + 5)) -- 5 adalah jarak antar popup
-            else
-                pop.Position = UDim2.new(1, -300, 1, -50) -- Posisi awal
-            end
-            pop.AnchorPoint = Vector2.new(1, 1)
+            pop.Size = UDim2.new(0,280,0,50)
+            pop.Position = UDim2.new(0.5,0.85,0)
+            pop.AnchorPoint = Vector2.new(0.5,0.5)
             pop.BackgroundTransparency = 0.3
-            pop.BackgroundColor3 = succ and Color3.fromRGB(0, 153, 0) or Color3.fromRGB(200, 0, 0)
-            pop.TextColor3 = Color3.new(1, 1, 1)
+            pop.BackgroundColor3 = succ and Color3.fromRGB(0,153,0) or Color3.fromRGB(200,0,0)
+            pop.TextColor3 = Color3.new(1,1,1)
             pop.Font = Enum.Font.SourceSansBold
             pop.TextScaled = true
             pop.ZIndex = 10
-            Instance.new("UICorner", pop).CornerRadius = UDim.new(0, 8)
+            Instance.new("UICorner", pop).CornerRadius = UDim.new(0,8)
 
-            pop.Text = (succ and "Successfully to Spawn \"" .. item .. "\"!!\nCheck Your Inventory")
-                    or ("Failed to spawn \"" .. item .. "\" to your inventory, please try again.")
-
-            -- Simpan referensi popup terakhir
-            lastPopup = pop
+            pop.Text = (succ and "Successfully to Spawn \""..item.."\"!!\nCheck Your Inventory")
+                    or ("Failed to spawn \""..item.."\" to your inventory, please try again.")
 
             task.delay(3, function()
                 pop:Destroy()
                 popupCount -= 1
-                -- Reset lastPopup jika popup terakhir dihapus
-                if lastPopup == pop then
-                    lastPopup = nil
-                end
             end)
         end)
 
@@ -356,28 +340,28 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
     petForm.Visible = true
 
     local closeBtn = Instance.new("TextButton", frame)
-    closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
-    closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
+    closeBtn.Size = UDim2.new(0.1,0,0.1,0)
+    closeBtn.Position = UDim2.new(0.9,-5,0,5)
     closeBtn.Text = "X"
     closeBtn.Font = Enum.Font.SourceSansBold
     closeBtn.TextScaled = true
-    closeBtn.TextColor3 = Color3.new(1, 1, 1)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255,50,50)
 
     local reopenBtn = Instance.new("TextButton", gui)
-    reopenBtn.Size = UDim2.new(0, 50, 0, 50)
-    reopenBtn.Position = UDim2.new(0, 20, 0, 20)
+    reopenBtn.Size = UDim2.new(0,50,0,50)
+    reopenBtn.Position = UDim2.new(0,20,0,20)
     reopenBtn.Text = "J"
     reopenBtn.Font = Enum.Font.SourceSansBold
     reopenBtn.TextScaled = true
-    reopenBtn.TextColor3 = Color3.new(1, 1, 1)
-    reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    reopenBtn.TextColor3 = Color3.new(1,1,1)
+    reopenBtn.BackgroundColor3 = Color3.fromRGB(0,102,204)
     reopenBtn.Visible = false
     reopenBtn.Name = "ReopenButton"
     reopenBtn.BackgroundTransparency = 0
     reopenBtn.ZIndex = 10
     reopenBtn.BorderSizePixel = 0
-    Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(1, 0)
+    Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(1,0)
 
     closeBtn.MouseButton1Click:Connect(function()
         frame.Visible = false
@@ -388,3 +372,4 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
         reopenBtn.Visible = false
     end)
 end
+ 
