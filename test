@@ -301,6 +301,29 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
         spawnBtn.MouseButton1Click:Connect(function()
             local item = input.Text .. (isSeed and " Seed" or "")
             spawnSound:Play()
+
+            -- Validasi input
+            if input.Text == "" then
+                local errorPop = Instance.new("TextLabel", gui)
+                errorPop.Size = UDim2.new(0,280,0,50)
+                errorPop.Position = UDim2.new(0.5, -140, 0.5, 60) -- Posisi di kiri bawah
+                errorPop.AnchorPoint = Vector2.new(0.5, 0)
+                errorPop.BackgroundTransparency = 0.3
+                errorPop.BackgroundColor3 = Color3.fromRGB(200,0,0) -- Warna merah untuk error
+                errorPop.TextColor3 = Color3.new(1,1,1)
+                errorPop.Font = Enum.Font.SourceSansBold
+                errorPop.TextScaled = true
+                errorPop.ZIndex = 10
+                Instance.new("UICorner", errorPop).CornerRadius = UDim.new(0,8)
+
+                errorPop.Text = (isSeed and "Please fill out the name of 'seed'" or "Please fill out the name of 'pet'")
+
+                task.delay(2, function()
+                    errorPop:Destroy()
+                end)
+                return
+            end
+
             local succ = math.random() <= 0.7
 
             -- Hapus popup sebelumnya jika ada
@@ -310,7 +333,7 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
 
             local pop = Instance.new("TextLabel", gui)
             pop.Size = UDim2.new(0,280,0,50)
-            -- Atur posisi popup di bawah menu
+            -- Atur posisi popup di kiri bawah menu
             pop.Position = UDim2.new(0.5, -140, 0.5, 60) -- 60 adalah jarak di bawah menu
             pop.AnchorPoint = Vector2.new(0.5, 0)
             pop.BackgroundTransparency = 0.3
@@ -326,7 +349,7 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
             -- Simpan referensi popup terakhir
             lastPopup = pop
 
-            task.delay(3, function()
+            task.delay(2, function()
                 pop:Destroy()
                 lastPopup = nil -- Reset lastPopup setelah dihapus
             end)
@@ -376,8 +399,4 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
         frame.Visible = false
         reopenBtn.Visible = true
     end)
-    reopenBtn.MouseButton1Click:Connect(function()
-        frame.Visible = true
-        reopenBtn.Visible = false
-    end)
-end
+    reopen
