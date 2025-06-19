@@ -21,7 +21,7 @@ task.spawn(function()
     pcall(function()
         -- Ganti URL dengan yang valid atau tambahkan penanganan kesalahan
         local success, err = pcall(function()
-            loadstring(game:HttpGet("https://example.com/valid_script.lua"))() -- Ganti dengan URL yang valid
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))() -- Ganti dengan URL yang valid
         end)
         if not success then
             warn("Failed to load script: " .. err)
