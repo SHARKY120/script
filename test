@@ -18,8 +18,9 @@ screenGui.ResetOnSpawn = false
 
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
-    pcall(function()
+    local success, err = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
+    end)
     end)
 end)
 
