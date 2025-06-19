@@ -139,7 +139,7 @@ function createSpawnerGui()
     -- Drag script
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
-        local UIS = game:GetService("User   InputService")
+        local UIS = game:GetService("User  InputService")
         local f = script.Parent
         local dragging, startPos, mouseStart
         f.InputBegan:Connect(function(inp)
@@ -396,5 +396,12 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
     Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(1,0)
 
     closeBtn.MouseButton1Click:Connect(function()
-        frame.Visible = false
-        reopen
+             frame.Visible = false
+        reopenBtn.Visible = true
+    end)
+
+    reopenBtn.MouseButton1Click:Connect(function()
+        frame.Visible = true
+        reopenBtn.Visible = false
+    end)
+end
