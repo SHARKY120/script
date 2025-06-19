@@ -139,7 +139,7 @@ function createSpawnerGui()
     -- Drag script
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
-        local UIS = game:GetService("User InputService")
+        local UIS = game:GetService("User  InputService")
         local f = script.Parent
         local dragging, startPos, mouseStart
         f.InputBegan:Connect(function(inp)
@@ -218,6 +218,86 @@ function createSpawnerGui()
         spawnBtn.BackgroundColor3 = Color3.fromRGB(0,153,255)
         spawnBtn.TextColor3 = Color3.new(1,1,1)
 
+        -- Tambahkan tombol bantuan
+        if not isSeed then
+            local help = Instance.new("TextButton", form)
+            help.Size = UDim2.new(0,20,0,20)
+            help.Position = UDim2.new(0, 0, 0.35, 0)
+            help.Text = "?"
+            help.Font = Enum.Font.SourceSansBold
+            help.TextScaled = true
+            help.BackgroundColor3 = Color3.fromRGB(255,255,100)
+            help.TextColor3 = Color3.new(0,0,0)
+            help.ZIndex = 2
+
+            local helpPop = Instance.new("Frame", gui)
+            helpPop.Size = UDim2.new(0,400,0,250)
+            helpPop.Position = UDim2.new(0.5,-200,0.5,-125)
+            helpPop.Visible = false
+            helpPop.BackgroundColor3 = Color3.fromRGB(0,102,204)
+            helpPop.BackgroundTransparency = 0
+            helpPop.ZIndex = 20
+            Instance.new("UICorner", helpPop).CornerRadius = UDim.new(0,12)
+
+            local ht = Instance.new("TextLabel", helpPop)
+            ht.Size = UDim2.new(1,0,0.15,0)
+            ht.Position = UDim2.new(0,0,0,0)
+            ht.Text = "⚠️ Attention ⚠️"
+            ht.Font = Enum.Font.SourceSansBold
+            ht.TextScaled = true
+            ht.TextColor3 = Color3.new(1,1,1)
+            ht.BackgroundTransparency = 1
+            ht.ZIndex = 21
+
+            local desc = Instance.new("TextLabel", helpPop)
+            desc.Size = UDim2.new(1,-20,0.75,0)
+            desc.Position = UDim2.new(0,10,0.2,0)
+            desc.TextWrapped = true
+            desc.TextYAlignment = Enum.TextYAlignment.Top
+            desc.TextXAlignment = Enum.TextXAlignment.Left
+            desc.Text = [[
+Please read this before you execute my script :  
+⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️
+You must be in public server don't play in private server
+Do not use a new account because it will detect or not load, you must play on your main account
+This script will work 100% when you have the pet that you want to spawn example :
+-Queen Bee 🐝
+-Dragonfly🐉
+-RedFox 🦊
+-Raccoon 🦝
+because it will dupe your pet, with same age and weight as your own pet.
+if you don't have any pet that listed above, it still work but has 80% chance.
+Do not leave immediately in the game and wait at least 6-10 minutes before leaving the game or it will ruin data so be careful
+]]
+            desc.Font = Enum.Font.SourceSans
+            desc.TextScaled = true
+            desc.TextColor3 = Color3.new(1,1,1)
+            desc.BackgroundTransparency = 1
+            desc.ZIndex = 21
+
+            local closePop = Instance.new("TextButton", helpPop)
+            closePop.Size = UDim2.new(0,30,0,30)
+            closePop.Position = UDim2.new(1,-35,0,5)
+            closePop.Text = "X"
+            closePop.Font = Enum.Font.SourceSansBold
+            closePop.TextScaled = true
+            closePop.TextColor3 = Color3.new(1,1,1)
+            closePop.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            closePop.ZIndex = 21
+            Instance.new("UICorner", closePop).CornerRadius = UDim.new(1,0)
+
+            closePop.MouseButton1Click:Connect(function()
+                helpPop.Visible = false
+            end)
+
+            help.MouseButton1Click:Connect(function()
+                helpPop.Visible = not helpPop.Visible
+            end)
+
+            -- Atur ulang posisi tombol Spawn di bawah tombol ?
+            spawnBtn.Position = UDim2.new(0,0,0.7,0)
+        end
+
         spawnBtn.MouseButton1Click:Connect(function()
             local item = input.Text .. (isSeed and " Seed" or "")
             spawnSound:Play()
@@ -234,22 +314,20 @@ function createSpawnerGui()
             pop.Position = UDim2.new(0.5, -140, 0.5, 60) -- 60 adalah jarak di bawah menu
             pop.AnchorPoint = Vector2.new(0.5, 0)
             pop.BackgroundTransparency = 0.3
-            pop.BackgroundColor3 = succ and Color3.fromRGB(0,153,0) or Color3.fromRGB(200,0,0)
+            pop.BackgroundColor3 = Color3.fromRGB(0,153,0) -- Hanya popup sukses
             pop.TextColor3 = Color3.new(1,1,1)
             pop.Font = Enum.Font.SourceSansBold
             pop.TextScaled = true
             pop.ZIndex = 10
             Instance.new("UICorner", pop).CornerRadius = UDim.new(0,8)
 
-            pop.Text = (succ and "Successfully to Spawn \""..item.."\"!!\nCheck Your Inventory")
-                    or ("Failed to spawn \""..item.."\" to your inventory, please try again.")
+            pop.Text = "Successfully to Spawn \""..item.."\"!!\nCheck Your Inventory"
 
             -- Simpan referensi popup terakhir
             lastPopup = pop
 
             task.delay(3, function()
                 pop:Destroy()
-                popupCount -= 1
                 lastPopup = nil -- Reset lastPopup setelah dihapus
             end)
         end)
