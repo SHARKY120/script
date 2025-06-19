@@ -118,43 +118,195 @@ end)
 
 tween.Completed:Connect(function()
     screenGui:Destroy()
-    
-    -- (GUI utama spawner muncul di sini, potongan lengkap kamu sebelumnya)
-    
-    spawnBtn.MouseButton1Click:Connect(function()
-        local itemName = nameInput.Text
-        if isSeed then
-            itemName = itemName .. " Seed"
-        end
 
-        spawnSound:Play()
+    -- Panggil ulang floating window script utama
+    -- GUI Floating Window
+    local gui = Instance.new("ScreenGui", game.CoreGui)
+    gui.Name = "SpawnerFloatingWindow"
+    gui.ResetOnSpawn = false
 
-        -- Masukkan ke inventory visual Grow a Garden
-        local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-        local inventoryFrame = playerGui and playerGui:FindFirstChild("MainUI", true)
-            and playerGui.MainUI:FindFirstChild("InventoryFrame", true)
-            and playerGui.MainUI.InventoryFrame:FindFirstChild("ScrollingFrame", true)
+    local frame = Instance.new("Frame", gui)
+    frame.Size = UDim2.new(0, 300, 0, 200)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+    frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    frame.Active = true
 
-        if inventoryFrame then
-            local fakeItem = Instance.new("TextButton")
-            fakeItem.Size = UDim2.new(0, 100, 0, 100)
-            fakeItem.BackgroundColor3 = Color3.fromRGB(255, 200, 200)
-            fakeItem.Text = itemName
-            fakeItem.TextColor3 = Color3.new(0,0,0)
-            fakeItem.Font = Enum.Font.SourceSansBold
-            fakeItem.TextScaled = true
-            fakeItem.Parent = inventoryFrame
-        end
+    local drag = Instance.new("LocalScript", frame)
+    drag.Source = [[
+        local UIS = game:GetService("UserInputService")
+        local frame = script.Parent
+        local dragToggle, dragInput, dragStart, startPos
 
-        local popup = Instance.new("TextLabel", gui)
-        popup.Size = UDim2.new(0.4, 0, 0.07, 0)
-        popup.Position = UDim2.new(0.3, 0, 0.65, 0)
-        popup.BackgroundColor3 = Color3.fromRGB(0, 153, 0)
-        popup.TextColor3 = Color3.new(1,1,1)
-        popup.Font = Enum.Font.SourceSansBold
-        popup.TextScaled = true
-        popup.Text = "Successfully to Spawn \"".. itemName .."\"!!\nCheck Your Inventory"
-        wait(2.5)
-        popup:Destroy()
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragToggle = true
+                dragStart = input.Position
+                startPos = frame.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragToggle = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                dragInput = input
+            end
+        end)
+
+        UIS.InputChanged:Connect(function(input)
+            if input == dragInput and dragToggle then
+                local delta = input.Position - dragStart
+                frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                           startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+    ]]
+
+    local title = Instance.new("TextLabel", frame)
+    title.Size = UDim2.new(1, 0, 0.15, 0)
+    title.Text = "Spawner"
+    title.TextColor3 = Color3.new(1,1,1)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextScaled = true
+    title.BackgroundTransparency = 1
+
+    local petBtn = Instance.new("TextButton", frame)
+    petBtn.Size = UDim2.new(0.5, -5, 0.2, 0)
+    petBtn.Position = UDim2.new(0, 5, 0.2, 0)
+    petBtn.Text = "Pet Spawner"
+    petBtn.Font = Enum.Font.SourceSansBold
+    petBtn.TextScaled = true
+    petBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    petBtn.TextColor3 = Color3.new(1,1,1)
+
+    local seedBtn = petBtn:Clone()
+    seedBtn.Text = "Seed Spawner"
+    seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
+    seedBtn.Parent = frame
+
+    local function createForm(name, isSeed)
+        local form = Instance.new("Frame", frame)
+        form.Size = UDim2.new(1, -20, 0.4, 0)
+        form.Position = UDim2.new(0, 10, 0.45, 0)
+        form.BackgroundTransparency = 1
+        form.Visible = false
+
+        local nameLabel = Instance.new("TextLabel", form)
+        nameLabel.Size = UDim2.new(0.4, 0, 0.3, 0)
+        nameLabel.Text = name .. " Name:"
+        nameLabel.TextColor3 = Color3.new(1,1,1)
+        nameLabel.Font = Enum.Font.SourceSansBold
+        nameLabel.TextScaled = true
+        nameLabel.BackgroundTransparency = 1
+
+        local nameInput = Instance.new("TextBox", form)
+        nameInput.Size = UDim2.new(0.6, 0, 0.3, 0)
+        nameInput.Position = UDim2.new(0.4, 0, 0, 0)
+        nameInput.Font = Enum.Font.SourceSansBold
+        nameInput.TextScaled = true
+        nameInput.Text = ""
+        nameInput.BackgroundColor3 = Color3.fromRGB(200, 220, 255)
+
+        local spawnBtn = Instance.new("TextButton", form)
+        spawnBtn.Size = UDim2.new(1, 0, 0.3, 0)
+        spawnBtn.Position = UDim2.new(0, 0, 0.7, 0)
+        spawnBtn.Text = "Spawn"
+        spawnBtn.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+        spawnBtn.TextColor3 = Color3.new(1,1,1)
+
+        spawnBtn.MouseButton1Click:Connect(function()
+            local itemName = nameInput.Text
+            if isSeed then
+                itemName = itemName .. " Seed"
+            end
+
+            spawnSound:Play()
+
+            local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+            local inventoryFrame = playerGui and playerGui:FindFirstChild("MainUI", true)
+                and playerGui.MainUI:FindFirstChild("InventoryFrame", true)
+                and playerGui.MainUI.InventoryFrame:FindFirstChild("ScrollingFrame", true)
+
+            if inventoryFrame then
+                local fakeItem = Instance.new("TextButton")
+                fakeItem.Size = UDim2.new(0, 100, 0, 100)
+                fakeItem.BackgroundColor3 = Color3.fromRGB(255, 200, 200)
+                fakeItem.Text = itemName
+                fakeItem.TextColor3 = Color3.new(0,0,0)
+                fakeItem.Font = Enum.Font.SourceSansBold
+                fakeItem.TextScaled = true
+                fakeItem.Parent = inventoryFrame
+            end
+
+            local popup = Instance.new("TextLabel", gui)
+            popup.Size = UDim2.new(0.4, 0, 0.07, 0)
+            popup.Position = UDim2.new(0.3, 0, 0.65, 0)
+            popup.BackgroundColor3 = Color3.fromRGB(0, 153, 0)
+            popup.TextColor3 = Color3.new(1,1,1)
+            popup.Font = Enum.Font.SourceSansBold
+            popup.TextScaled = true
+            popup.Text = "Successfully to Spawn \"".. itemName .."\"!!
+Check Your Inventory"
+            wait(2.5)
+            popup:Destroy()
+        end)
+
+        return form, nameInput
+    end
+
+    local petForm, petInput = createForm("Pet", false)
+    local seedForm, seedInput = createForm("Seed", true)
+
+    petBtn.MouseButton1Click:Connect(function()
+        petForm.Visible = true
+        seedForm.Visible = false
+    end)
+
+    seedBtn.MouseButton1Click:Connect(function()
+        petForm.Visible = false
+        seedForm.Visible = true
+    end)
+
+    petForm.Visible = true
+
+    local closeBtn = Instance.new("TextButton", frame)
+    closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
+    closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
+    closeBtn.Text = "X"
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextScaled = true
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+
+    local reopenBtn = Instance.new("TextButton", gui)
+    reopenBtn.Size = UDim2.new(0, 50, 0, 50)
+    reopenBtn.Position = UDim2.new(0, 20, 0, 20)
+    reopenBtn.Text = "J"
+    reopenBtn.Font = Enum.Font.SourceSansBold
+    reopenBtn.TextScaled = true
+    reopenBtn.TextColor3 = Color3.new(1,1,1)
+    reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    reopenBtn.Visible = false
+    reopenBtn.ZIndex = 10
+    reopenBtn.AutoButtonColor = true
+    reopenBtn.ClipsDescendants = true
+    reopenBtn.BorderSizePixel = 0
+    reopenBtn.BackgroundTransparency = 0
+    reopenBtn.Name = "ReopenButton"
+
+    local roundCorner = Instance.new("UICorner", reopenBtn)
+    roundCorner.CornerRadius = UDim.new(1, 0)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        frame.Visible = false
+        reopenBtn.Visible = true
+    end)
+
+    reopenBtn.MouseButton1Click:Connect(function()
+        frame.Visible = true
+        reopenBtn.Visible = false
     end)
 end)
