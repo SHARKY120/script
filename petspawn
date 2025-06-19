@@ -119,6 +119,14 @@ end)
 tween.Completed:Connect(function()
     screenGui:Destroy()
 
+    -- Hapus GUI spawner sebelumnya jika ada
+    if game.CoreGui:FindFirstChild("SpawnerFloatingWindow") then
+        game.CoreGui:FindFirstChild("SpawnerFloatingWindow"):Destroy()
+    end
+    if game.CoreGui:FindFirstChild("ReopenButton") then
+        game.CoreGui:FindFirstChild("ReopenButton"):Destroy()
+    end
+
     -- Main GUI
     local gui = Instance.new("ScreenGui", game.CoreGui)
     gui.Name = "SpawnerFloatingWindow"
