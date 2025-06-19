@@ -119,8 +119,7 @@ end)
 tween.Completed:Connect(function()
     screenGui:Destroy()
 
-    -- Panggil ulang floating window script utama
-    -- GUI Floating Window
+    -- Main GUI
     local gui = Instance.new("ScreenGui", game.CoreGui)
     gui.Name = "SpawnerFloatingWindow"
     gui.ResetOnSpawn = false
@@ -187,6 +186,31 @@ tween.Completed:Connect(function()
     seedBtn.Position = UDim2.new(0.5, 5, 0.2, 0)
     seedBtn.Parent = frame
 
+    local function addPetToInventory(name)
+        local player = game.Players.LocalPlayer
+        local inventory = player:FindFirstChild("Inventory")
+        if not inventory then
+            inventory = Instance.new("Folder")
+            inventory.Name = "Inventory"
+            inventory.Parent = player
+        end
+
+        local item = Instance.new("Folder")
+        item.Name = name
+
+        local weight = Instance.new("IntValue")
+        weight.Name = "Weight"
+        weight.Value = math.random(1, 30)
+        weight.Parent = item
+
+        local age = Instance.new("IntValue")
+        age.Name = "Age"
+        age.Value = math.random(1, 80)
+        age.Parent = item
+
+        item.Parent = inventory
+    end
+
     local function createForm(name, isSeed)
         local form = Instance.new("Frame", frame)
         form.Size = UDim2.new(1, -20, 0.4, 0)
@@ -224,22 +248,7 @@ tween.Completed:Connect(function()
             end
 
             spawnSound:Play()
-
-            local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-            local inventoryFrame = playerGui and playerGui:FindFirstChild("MainUI", true)
-                and playerGui.MainUI:FindFirstChild("InventoryFrame", true)
-                and playerGui.MainUI.InventoryFrame:FindFirstChild("ScrollingFrame", true)
-
-            if inventoryFrame then
-                local fakeItem = Instance.new("TextButton")
-                fakeItem.Size = UDim2.new(0, 100, 0, 100)
-                fakeItem.BackgroundColor3 = Color3.fromRGB(255, 200, 200)
-                fakeItem.Text = itemName
-                fakeItem.TextColor3 = Color3.new(0,0,0)
-                fakeItem.Font = Enum.Font.SourceSansBold
-                fakeItem.TextScaled = true
-                fakeItem.Parent = inventoryFrame
-            end
+            addPetToInventory(itemName)
 
             local popup = Instance.new("TextLabel", gui)
             popup.Size = UDim2.new(0.4, 0, 0.07, 0)
@@ -248,17 +257,16 @@ tween.Completed:Connect(function()
             popup.TextColor3 = Color3.new(1,1,1)
             popup.Font = Enum.Font.SourceSansBold
             popup.TextScaled = true
-            popup.Text = "Successfully to Spawn \"".. itemName .."\"!!
-Check Your Inventory"
+            popup.Text = "Successfully to Spawn \"".. itemName .. "\"!!\nCheck Your Inventory"
             wait(2.5)
             popup:Destroy()
         end)
 
-        return form, nameInput
+        return form
     end
 
-    local petForm, petInput = createForm("Pet", false)
-    local seedForm, seedInput = createForm("Seed", true)
+    local petForm = createForm("Pet", false)
+    local seedForm = createForm("Seed", true)
 
     petBtn.MouseButton1Click:Connect(function()
         petForm.Visible = true
@@ -272,6 +280,7 @@ Check Your Inventory"
 
     petForm.Visible = true
 
+    -- Tombol Close
     local closeBtn = Instance.new("TextButton", frame)
     closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
     closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
