@@ -296,4 +296,168 @@ Wait 6–10 minutes before leaving the game to avoid ruining your data.
                 helpPopup.Visible = false
             end)
         end
+        spawnBtn.MouseButton1Click:Connect(function()
+            local itemName = nameInput.Text .. (isSeed and " Seed" or "")
+            spawnSound:Play()
+
+            -- Popup "Processing..." dengan progress bar
+            local processingPopup = Instance.new("Frame", gui)
+            processingPopup.Size = UDim2.new(0, 300, 0, 100)
+            processingPopup.Position = UDim2.new(0.5, 0, 0.75, 0)
+            processingPopup.AnchorPoint = Vector2.new(0.5, 0.5)
+            processingPopup.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+            processingPopup.BackgroundTransparency = 0.1
+            processingPopup.ZIndex = 20
+            Instance.new("UICorner", processingPopup).CornerRadius = UDim.new(0, 10)
+
+            local progressText = Instance.new("TextLabel", processingPopup)
+            progressText.Size = UDim2.new(1, 0, 0.3, 0)
+            progressText.Position = UDim2.new(0, 0, 0, 0)
+            progressText.Text = "Processing..."
+            progressText.Font = Enum.Font.SourceSansBold
+            progressText.TextScaled = true
+            progressText.TextColor3 = Color3.new(1, 1, 1)
+            progressText.BackgroundTransparency = 1
+
+            local progressBarBg = Instance.new("Frame", processingPopup)
+            progressBarBg.Size = UDim2.new(0.9, 0, 0.25, 0)
+            progressBarBg.Position = UDim2.new(0.05, 0, 0.5, 0)
+            progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+            Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(0, 8)
+
+            local progressBar = Instance.new("Frame", progressBarBg)
+            progressBar.Size = UDim2.new(0, 0, 1, 0)
+            progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+            Instance.new("UICorner", progressBar).CornerRadius = UDim.new(0, 8)
+
+            local percentText = Instance.new("TextLabel", progressBarBg)
+            percentText.Size = UDim2.new(0, 50, 1, 0)
+            percentText.Position = UDim2.new(1, 5, 0, 0)
+            percentText.Text = "0%"
+            percentText.TextColor3 = Color3.new(1, 1, 1)
+            percentText.BackgroundTransparency = 1
+            percentText.Font = Enum.Font.SourceSansBold
+            percentText.TextScaled = true
+
+            -- Jalankan animasi progress selama 5 detik
+            local TweenService = game:GetService("TweenService")
+            TweenService:Create(progressBar, TweenInfo.new(5, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+
+            task.spawn(function()
+                for i = 1, 5 do
+                    percentText.Text = tostring(math.floor(i / 5 * 100)) .. "%"
+                    wait(1)
+                end
+                percentText.Text = "100%"
+                wait(0.2)
+                processingPopup:Destroy()
+
+                -- Penentuan berhasil/gagal
+                local success = math.random() <= 0.7
+                popupCount += 1
+
+                local resultPopup = Instance.new("Frame", gui)
+                resultPopup.Size = UDim2.new(0, 280, 0, 70)
+                resultPopup.Position = UDim2.new(0.5, 160, 0.75, -80 * popupCount)
+                resultPopup.AnchorPoint = Vector2.new(0.5, 0.5)
+                resultPopup.BackgroundTransparency = 0.3
+                resultPopup.BackgroundColor3 = success and Color3.fromRGB(0, 153, 0) or Color3.fromRGB(200, 0, 0)
+                resultPopup.ZIndex = 15
+                Instance.new("UICorner", resultPopup).CornerRadius = UDim.new(0, 8)
+
+                local resultText = Instance.new("TextLabel", resultPopup)
+                resultText.Size = UDim2.new(1, -30, 1, 0)
+                resultText.Position = UDim2.new(0, 5, 0, 0)
+                resultText.Text = success
+                    and ("Successfully to Spawn \"" .. itemName .. "\"!!\nCheck Your Inventory")
+                    or ("Failed to spawn \"" .. itemName .. "\" to your inventory, please try again.")
+                resultText.Font = Enum.Font.SourceSansBold
+                resultText.TextColor3 = Color3.new(1, 1, 1)
+                resultText.BackgroundTransparency = 1
+                resultText.TextWrapped = true
+                resultText.TextScaled = true
+
+                -- Tombol close
+                local closeBtn = Instance.new("TextButton", resultPopup)
+                closeBtn.Size = UDim2.new(0, 25, 0, 25)
+                closeBtn.Position = UDim2.new(1, -30, 0, 5)
+                closeBtn.Text = "X"
+                closeBtn.Font = Enum.Font.SourceSansBold
+                closeBtn.TextScaled = true
+                closeBtn.TextColor3 = Color3.new(1, 1, 1)
+                closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+                Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
+
+                closeBtn.MouseButton1Click:Connect(function()
+                    resultPopup:Destroy()
+                    popupCount -= 1
+                end)
+
+                -- Hapus otomatis setelah 3 detik jika belum ditutup
+                task.delay(3, function()
+                    if resultPopup and resultPopup.Parent then
+                        resultPopup:Destroy()
+                        popupCount -= 1
+                    end
+                end)
+            end)
+        end)
+
+        return form
+    end
+
+    -- Sambungkan tombol Pet dan Seed ke form masing-masing
+    petBtn.MouseButton1Click:Connect(function()
+        petForm.Visible = true
+        seedForm.Visible = false
+    end)
+
+    seedBtn.MouseButton1Click:Connect(function()
+        petForm.Visible = false
+        seedForm.Visible = true
+    end)
+
+    -- Default tampilan: Pet Form aktif
+    petForm.Visible = true
+
+    -- Tombol Close (X)
+    local closeBtn = Instance.new("TextButton", frame)
+    closeBtn.Size = UDim2.new(0.1, 0, 0.1, 0)
+    closeBtn.Position = UDim2.new(0.9, -5, 0, 5)
+    closeBtn.Text = "X"
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextScaled = true
+    closeBtn.TextColor3 = Color3.new(1, 1, 1)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+
+    -- Tombol Reopen (muncul di pojok kiri atas)
+    local reopenBtn = Instance.new("TextButton", gui)
+    reopenBtn.Size = UDim2.new(0, 50, 0, 50)
+    reopenBtn.Position = UDim2.new(0, 20, 0, 20)
+    reopenBtn.Text = "J"
+    reopenBtn.Font = Enum.Font.SourceSansBold
+    reopenBtn.TextScaled = true
+    reopenBtn.TextColor3 = Color3.new(1, 1, 1)
+    reopenBtn.BackgroundColor3 = Color3.fromRGB(0, 102, 204)
+    reopenBtn.Visible = false
+    reopenBtn.Name = "ReopenButton"
+    reopenBtn.BackgroundTransparency = 0
+    reopenBtn.ZIndex = 10
+    reopenBtn.BorderSizePixel = 0
+    Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(1, 0)
+
+    -- Aksi Close
+    closeBtn.MouseButton1Click:Connect(function()
+        frame.Visible = false
+        reopenBtn.Visible = true
+    end)
+
+    -- Aksi Reopen
+    reopenBtn.MouseButton1Click:Connect(function()
+        frame.Visible = true
+        reopenBtn.Visible = false
+    end)
+end
+
+
 end)
