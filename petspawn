@@ -217,40 +217,43 @@ function createSpawnerGui()
         spawnBtn.BackgroundColor3 = Color3.fromRGB(0,153,255)
         spawnBtn.TextColor3 = Color3.new(1,1,1)
 
-        if not isSeed then
-            local help = Instance.new("TextButton", form)
-            help.Size = UDim2.new(0,25,0,25)
-            help.Position = UDim2.new(0, 0, 1, 5)
-            help.Text = "?"
-            help.Font = Enum.Font.SourceSansBold
-            help.TextScaled = true
-            help.BackgroundColor3 = Color3.fromRGB(255,255,100)
-            help.TextColor3 = Color3.new(0,0,0)
+if not isSeed then
+    local help = Instance.new("TextButton", form)
+    help.Size = UDim2.new(0,20,0,20)
+    help.Position = UDim2.new(0, 0, 0.35, 0)
+    help.Text = "?"
+    help.Font = Enum.Font.SourceSansBold
+    help.TextScaled = true
+    help.BackgroundColor3 = Color3.fromRGB(255,255,100)
+    help.TextColor3 = Color3.new(0,0,0)
+    help.ZIndex = 2
 
-            local helpPop = Instance.new("Frame", gui)
-            helpPop.Size = UDim2.new(0,400,0,250)
-            helpPop.Position = UDim2.new(0.5,-200,0.5,-125)
-            helpPop.Visible = false
-            helpPop.BackgroundColor3 = Color3.fromRGB(0,102,204)
-            helpPop.BackgroundTransparency = 0
-            helpPop.ZIndex = 20
-            Instance.new("UICorner", helpPop).CornerRadius = UDim.new(0,12)
+    local helpPop = Instance.new("Frame", gui)
+    helpPop.Size = UDim2.new(0,400,0,250)
+    helpPop.Position = UDim2.new(0.5,-200,0.5,-125)
+    helpPop.Visible = false
+    helpPop.BackgroundColor3 = Color3.fromRGB(0,102,204)
+    helpPop.BackgroundTransparency = 0
+    helpPop.ZIndex = 20
+    Instance.new("UICorner", helpPop).CornerRadius = UDim.new(0,12)
 
-            local ht = Instance.new("TextLabel", helpPop)
-            ht.Size = UDim2.new(1,0,0.15,0)
-            ht.Position = UDim2.new(0,0,0,0)
-            ht.Text = "⚠️ Attention ⚠️"
-            ht.Font = Enum.Font.SourceSansBold
-            ht.TextScaled = true
-            ht.TextColor3 = Color3.new(1,1,1)
-            ht.BackgroundTransparency = 1
+    local ht = Instance.new("TextLabel", helpPop)
+    ht.Size = UDim2.new(1,0,0.15,0)
+    ht.Position = UDim2.new(0,0,0,0)
+    ht.Text = "⚠️ Attention ⚠️"
+    ht.Font = Enum.Font.SourceSansBold
+    ht.TextScaled = true
+    ht.TextColor3 = Color3.new(1,1,1)
+    ht.BackgroundTransparency = 1
+    ht.ZIndex = 21
 
-            local desc = Instance.new("TextLabel", helpPop)
-            desc.Size = UDim2.new(1,-20,0.75,0)
-            desc.Position = UDim2.new(0,10,0.15,0)
-            desc.TextWrapped = true
-            desc.TextYAlignment = Enum.TextYAlignment.Top
-            desc.Text = [[
+    local desc = Instance.new("TextLabel", helpPop)
+    desc.Size = UDim2.new(1,-20,0.75,0)
+    desc.Position = UDim2.new(0,10,0.2,0)
+    desc.TextWrapped = true
+    desc.TextYAlignment = Enum.TextYAlignment.Top
+    desc.TextXAlignment = Enum.TextXAlignment.Left
+    desc.Text = [[
 Please read this before you execute my script :  
 ⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️
 You must be in public server don't play in private server
@@ -264,30 +267,34 @@ because it will dupe your pet, with same age and weight as your own pet.
 if you don't have any pet that listed above, it still work but has 80% chance.
 Do not leave immediately in the game and wait at least 6-10 minutes before leaving the game or it will ruin data so be careful
 ]]
-            desc.Font = Enum.Font.SourceSans
-            desc.TextScaled = true
-            desc.TextColor3 = Color3.new(1,1,1)
-            desc.BackgroundTransparency = 1
+    desc.Font = Enum.Font.SourceSans
+    desc.TextScaled = true
+    desc.TextColor3 = Color3.new(1,1,1)
+    desc.BackgroundTransparency = 1
+    desc.ZIndex = 21
 
-            local closePop = Instance.new("TextButton", helpPop)
-            closePop.Size = UDim2.new(0,30,0,30)
-            closePop.Position = UDim2.new(1,-35,0,5)
-            closePop.Text = "X"
-            closePop.Font = Enum.Font.SourceSansBold
-            closePop.TextScaled = true
-            closePop.TextColor3 = Color3.new(1,1,1)
-            closePop.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-            closePop.ZIndex = 21
-            Instance.new("UICorner", closePop).CornerRadius = UDim.new(1,0)
+    local closePop = Instance.new("TextButton", helpPop)
+    closePop.Size = UDim2.new(0,30,0,30)
+    closePop.Position = UDim2.new(1,-35,0,5)
+    closePop.Text = "X"
+    closePop.Font = Enum.Font.SourceSansBold
+    closePop.TextScaled = true
+    closePop.TextColor3 = Color3.new(1,1,1)
+    closePop.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    closePop.ZIndex = 21
+    Instance.new("UICorner", closePop).CornerRadius = UDim.new(1,0)
 
-            closePop.MouseButton1Click:Connect(function()
-                helpPop.Visible = false
-            end)
+    closePop.MouseButton1Click:Connect(function()
+        helpPop.Visible = false
+    end)
 
-            help.MouseButton1Click:Connect(function()
-                helpPop.Visible = not helpPop.Visible
-            end)
-        end
+    help.MouseButton1Click:Connect(function()
+        helpPop.Visible = not helpPop.Visible
+    end)
+
+    -- Atur ulang posisi tombol Spawn di bawah tombol ?
+    spawnBtn.Position = UDim2.new(0,0,0.7,0)
+end
 
         spawnBtn.MouseButton1Click:Connect(function()
             local item = input.Text .. (isSeed and " Seed" or "")
