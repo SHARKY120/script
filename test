@@ -139,7 +139,7 @@ function createSpawnerGui()
     -- Drag script
     local drag = Instance.new("LocalScript", frame)
     drag.Source = [[
-        local UIS = game:GetService("User  InputService")
+        local UIS = game:GetService("User   InputService")
         local f = script.Parent
         local dragging, startPos, mouseStart
         f.InputBegan:Connect(function(inp)
@@ -333,7 +333,7 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
 
             local pop = Instance.new("TextLabel", gui)
             pop.Size = UDim2.new(0,280,0,50)
-            -- Atur posisi popup di kiri bawah menu
+            -- Atur posisi popup tepat di bawah menu
             pop.Position = UDim2.new(0.5, -140, 0.5, 60) -- 60 adalah jarak di bawah menu
             pop.AnchorPoint = Vector2.new(0.5, 0)
             pop.BackgroundTransparency = 0.3
@@ -396,12 +396,11 @@ Do not leave immediately in the game and wait at least 6-10 minutes before leavi
     Instance.new("UICorner", reopenBtn).CornerRadius = UDim.new(1,0)
 
     closeBtn.MouseButton1Click:Connect(function()
-             frame.Visible = false
+        frame.Visible = false
         reopenBtn.Visible = true
     end)
 
     reopenBtn.MouseButton1Click:Connect(function()
         frame.Visible = true
         reopenBtn.Visible = false
-    end)
-end
+    end
