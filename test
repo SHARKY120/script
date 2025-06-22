@@ -1,29 +1,11 @@
--- Hapus loading screen sebelumnya jika ada
-if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
-    game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
-end
-
--- Sound efek spawn
-local spawnSound = Instance.new("Sound")
-spawnSound.SoundId = "rbxassetid://6026984224"
-spawnSound.Volume = 1
-spawnSound.Name = "SpawnSound"
-spawnSound.Parent = game:GetService("SoundService")
-
--- Buat ScreenGui untuk loading
-local screenGui = Instance.new("ScreenGui", game.CoreGui)
-screenGui.Name = "FullBlueLoadingScreen"
-screenGui.IgnoreGuiInset = true
-screenGui.ResetOnSpawn = false
-
--- Background hitam biru + teks/loading bar
 do
     local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(0.4, 0, 0.3, 0)  -- Ukuran lebih kecil
-    bg.Position = UDim2.new(0.5, -0.2 * 300, 0.5, -0.15 * 200)  -- Pusatkan
-    bg.BackgroundColor3 = Color3.fromRGB(0, 0, 102)  -- Warna biru gelap
+    bg.Size = UDim2.new(0.4, 0, 0.3, 0)
+    bg.AnchorPoint = Vector2.new(0.5, 0.5)
+    bg.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bg.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
     bg.BorderSizePixel = 2
-    bg.BorderColor3 = Color3.fromRGB(0, 0, 0)  -- Border hitam
+    bg.BorderColor3 = Color3.fromRGB(255, 255, 255) -- Border putih
 
     local loadingText = Instance.new("TextLabel", bg)
     loadingText.Size = UDim2.new(1, 0, 0.15, 0)
@@ -38,6 +20,7 @@ do
     progressBarBg.Size = UDim2.new(0.8, 0, 0.05, 0)
     progressBarBg.Position = UDim2.new(0.1, 0, 0.5, 0)
     progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+    progressBarBg.ClipsDescendants = true
 
     local progressBar = Instance.new("Frame", progressBarBg)
     progressBar.Size = UDim2.new(0, 0, 1, 0)
@@ -82,27 +65,23 @@ do
         while screenGui and screenGui.Parent do
             statusText.Text = statuses[i]
             i = (i % #statuses) + 1
-            wait(5)
+            wait(1.5)
         end
     end)
 
-    local TweenService = game:GetService("TweenService")
-    local tween = TweenService:Create(progressBar, TweenInfo.new(3, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
-    tween:Play()
-
+    -- PROGRESS BAR MULAI DARI 1% KE 100% DENGAN HALUS
     task.spawn(function()
-        for i = 1, 3 do
-            percentText.Text = tostring(math.floor(i / 3 * 100)) .. "%"
-            wait(1)
+        for i = 1, 100 do
+            progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
+            percentText.Text = tostring(i) .. "%"
+            wait(0.03) -- Sekitar 3 detik total
         end
-        percentText.Text = "100%"
-    end)
-
-    tween.Completed:Connect(function()
+        wait(0.5)
         screenGui:Destroy()
-        loadMainScript()  -- Call the function to load the main script
+        loadMainScript()
     end)
 end
+
 
 local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
 Spawner.Load()
