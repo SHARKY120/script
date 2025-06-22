@@ -10,56 +10,70 @@ spawnSound.Volume = 1
 spawnSound.Name = "SpawnSound"
 spawnSound.Parent = game:GetService("SoundService")
 
--- Buat ScreenGui untuk loading
+-- Buat ScreenGui
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
--- Loading UI
 do
+    -- FRAME UTAMA
     local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(0, 500, 0, 375) -- 4:3 aspect ratio
-    bg.Position = UDim2.new(0.5, -250, 0.5, -187)
-    bg.BackgroundColor3 = Color3.fromRGB(15, 20, 40)
+    bg.Size = UDim2.new(0, 500, 0, 220)
+    bg.Position = UDim2.new(0.5, -250, 0.5, -110)
+    bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- hitam elegan
     bg.BorderSizePixel = 0
+    Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 12)
 
-    Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 20)
+    -- Glow belakang (biru menyebar)
+    local glow = Instance.new("ImageLabel", bg)
+    glow.AnchorPoint = Vector2.new(0.5, 0.5)
+    glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    glow.Size = UDim2.new(1.5, 0, 2, 0)
+    glow.BackgroundTransparency = 1
+    glow.Image = "rbxassetid://200527618"
+    glow.ImageColor3 = Color3.fromRGB(0, 153, 255)
+    glow.ImageTransparency = 0.75
+    glow.ZIndex = 0
 
-    local glow = Instance.new("UIStroke", bg)
-    glow.Thickness = 2
-    glow.Color = Color3.fromRGB(0, 170, 255)
-    glow.Transparency = 0.3
+    -- Border tebal glowing
+    local stroke = Instance.new("UIStroke", bg)
+    stroke.Thickness = 2.5
+    stroke.Color = Color3.fromRGB(0, 170, 255)
+    stroke.Transparency = 0.1
 
-    local glowBlur = Instance.new("ImageLabel", bg)
-    glowBlur.Size = UDim2.new(1, 60, 1, 60)
-    glowBlur.Position = UDim2.new(-0.05, 0, -0.05, 0)
-    glowBlur.BackgroundTransparency = 1
-    glowBlur.Image = "rbxassetid://200527618" -- glowing aura
-    glowBlur.ImageColor3 = Color3.fromRGB(0, 153, 255)
-    glowBlur.ImageTransparency = 0.7
-    glowBlur.ZIndex = 0
+    -- Judul
+    local title = Instance.new("TextLabel", bg)
+    title.Size = UDim2.new(1, 0, 0.2, 0)
+    title.Position = UDim2.new(0, 0, 0.05, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "jekak121 Spawner"
+    title.Font = Enum.Font.GothamBold
+    title.TextScaled = true
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.ZIndex = 2
 
-    local loadingText = Instance.new("TextLabel", bg)
-    loadingText.Size = UDim2.new(1, 0, 0.15, 0)
-    loadingText.Position = UDim2.new(0, 0, 0.08, 0)
-    loadingText.BackgroundTransparency = 1
-    loadingText.Text = "Loading Script"
-    loadingText.TextScaled = true
-    loadingText.Font = Enum.Font.GothamBold
-    loadingText.TextColor3 = Color3.new(1, 1, 1)
-    loadingText.ZIndex = 2
+    -- Subversi
+    local version = Instance.new("TextLabel", bg)
+    version.Size = UDim2.new(1, 0, 0.1, 0)
+    version.Position = UDim2.new(0, 0, 0.22, 0)
+    version.BackgroundTransparency = 1
+    version.Text = "v1.1.0"
+    version.Font = Enum.Font.Gotham
+    version.TextScaled = true
+    version.TextColor3 = Color3.fromRGB(200, 200, 200)
+    version.ZIndex = 2
 
-    -- ProgressBar Background (dipendek horizontal, diperlebar vertikal)
+    -- Progress bar background
     local progressBarBg = Instance.new("Frame", bg)
-    progressBarBg.Size = UDim2.new(0.5, 0, 0.12, 0) -- Pendek dan tinggi
-    progressBarBg.Position = UDim2.new(0.25, 0, 0.55, 0)
-    progressBarBg.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-    progressBarBg.ZIndex = 2
+    progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
+    progressBarBg.Position = UDim2.new(0.05, 0, 0.6, 0)
+    progressBarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     progressBarBg.ClipsDescendants = true
+    progressBarBg.ZIndex = 2
     Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
-    -- Background Text TikTok
+    -- Text di background progress bar (tidak tertutup bar)
     local bgText = Instance.new("TextLabel", progressBarBg)
     bgText.Size = UDim2.new(1, 0, 1, 0)
     bgText.Position = UDim2.new(0, 0, 0, 0)
@@ -68,7 +82,7 @@ do
     bgText.Font = Enum.Font.GothamSemibold
     bgText.TextScaled = true
     bgText.TextColor3 = Color3.fromRGB(0, 200, 255)
-    bgText.TextTransparency = 0.4
+    bgText.TextTransparency = 0.35
     bgText.ZIndex = 2
 
     -- Bar isi
@@ -78,41 +92,15 @@ do
     progressBar.ZIndex = 3
     Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
 
+    -- Text % progress
     local percentText = Instance.new("TextLabel", progressBarBg)
     percentText.Size = UDim2.new(1, 0, 1, 0)
     percentText.BackgroundTransparency = 1
     percentText.Text = "0%"
     percentText.Font = Enum.Font.GothamBold
     percentText.TextScaled = true
-    percentText.TextColor3 = Color3.new(1, 1, 1)
+    percentText.TextColor3 = Color3.fromRGB(255, 255, 255)
     percentText.ZIndex = 4
-
-    local statusText = Instance.new("TextLabel", bg)
-    statusText.Size = UDim2.new(1, 0, 0.07, 0)
-    statusText.Position = UDim2.new(0, 0, 0.72, 0)
-    statusText.BackgroundTransparency = 1
-    statusText.Text = "Initializing..."
-    statusText.Font = Enum.Font.Gotham
-    statusText.TextScaled = true
-    statusText.TextColor3 = Color3.fromRGB(220, 220, 220)
-    statusText.ZIndex = 2
-
-    local statuses = {
-        "Getting server data...",
-        "Finding best server...",
-        "Verifying session...",
-        "Loading environment...",
-        "Finalizing..."
-    }
-
-    coroutine.wrap(function()
-        local i = 1
-        while screenGui and screenGui.Parent do
-            statusText.Text = statuses[i]
-            i = (i % #statuses) + 1
-            wait(1.5)
-        end
-    end)()
 
     coroutine.wrap(function()
         for i = 1, 100 do
