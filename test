@@ -61,35 +61,44 @@ end)()
 
 -- Judul dan versi
 local title = Instance.new("TextLabel", bg)
-title.Size = UDim2.new(1, 0, 0.3, 0)
-title.Position = UDim2.new(0, 0, 0.15, 0)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 20)
 title.BackgroundTransparency = 1
-title.Text = "jekak121 Spawner"
+title.Text = "JEKAK121 SPAWNER"
 title.Font = Enum.Font.GothamBold
 title.TextScaled = false
-title.TextSize = 38 -- besar saat awal
+title.TextSize = 38
 title.TextColor3 = Color3.new(1, 1, 1)
 title.ZIndex = 2
 
 local version = Instance.new("TextLabel", bg)
-version.Size = UDim2.new(1, 0, 0.2, 0)
-version.Position = UDim2.new(0, 0, 0.45, 0)
+version.Size = UDim2.new(1, 0, 0, 25)
+version.Position = UDim2.new(0, 0, 0, 60)
 version.BackgroundTransparency = 1
 version.Text = "v1.1.0"
 version.Font = Enum.Font.Gotham
-version.TextScaled = true
+version.TextScaled = false
+version.TextSize = 18
 version.TextColor3 = Color3.fromRGB(200, 200, 200)
 version.ZIndex = 2
 
--- Animasi masuk (fade + membesar + title mengecil)
-wait(0.5)
-TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-	Size = UDim2.new(0, 500, 0, 220),
+-- Animasi fade in + membesar
+wait(0.3)
+TweenService:Create(bg, TweenInfo.new(0.4), {
 	BackgroundTransparency = 0
 }):Play()
 
-TweenService:Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
-	TextSize = 26 -- mengecil saat screen membesar
+wait(0.2)
+TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+	Size = UDim2.new(0, 500, 0, 220)
+}):Play()
+
+TweenService:Create(title, TweenInfo.new(0.5), {
+	TextSize = 48 -- agak diperbesar saat besar
+}):Play()
+
+TweenService:Create(version, TweenInfo.new(0.5), {
+	TextSize = 20
 }):Play()
 
 wait(0.6)
@@ -97,16 +106,16 @@ wait(0.6)
 -- Progress bar
 local progressBarBg = Instance.new("Frame", bg)
 progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
-progressBarBg.Position = UDim2.new(0.05, 0, 0.65, 0)
+progressBarBg.Position = UDim2.new(0.05, 0, 0, 110)
 progressBarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 progressBarBg.ClipsDescendants = true
 progressBarBg.ZIndex = 2
 Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
--- Text TikTok di bawah progress bar
+-- Tiktok Text
 local bgText = Instance.new("TextLabel", bg)
 bgText.Size = UDim2.new(1, 0, 0.1, 0)
-bgText.Position = UDim2.new(0, 0, 0.87, 0)
+bgText.Position = UDim2.new(0, 0, 0, 185)
 bgText.BackgroundTransparency = 1
 bgText.Text = "Tiktok: @jekak121"
 bgText.Font = Enum.Font.GothamSemibold
@@ -115,7 +124,7 @@ bgText.TextColor3 = Color3.fromRGB(180, 200, 220)
 bgText.TextTransparency = 0.3
 bgText.ZIndex = 1
 
--- Bar isi
+-- Bar Isi
 local progressBar = Instance.new("Frame", progressBarBg)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
@@ -132,7 +141,7 @@ percentText.TextScaled = true
 percentText.TextColor3 = Color3.new(1, 1, 1)
 percentText.ZIndex = 4
 
--- Mulai loading progress
+-- Jalankan progress bar
 coroutine.wrap(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -142,22 +151,27 @@ coroutine.wrap(function()
 	wait(0.2)
 	finishSound:Play()
 
-	-- Fade out dan mengecil
-	local tweenOut1 = TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-		Size = UDim2.new(0, 200, 0, 100),
-		BackgroundTransparency = 0.3
-	})
-	tweenOut1:Play()
-	tweenOut1.Completed:Wait()
+	-- Mengecil dan menyesuaikan teks
+	TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine), {
+		Size = UDim2.new(0, 200, 0, 100)
+	}):Play()
+
+	TweenService:Create(title, TweenInfo.new(0.4), {
+		TextSize = 20
+	}):Play()
+
+	TweenService:Create(version, TweenInfo.new(0.4), {
+		TextSize = 14
+	}):Play()
+
+	wait(0.4)
+
+	-- Fade out
+	TweenService:Create(bg, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
+		BackgroundTransparency = 1
+	}):Play()
 
 	wait(0.3)
-
-	local tweenOut2 = TweenService:Create(bg, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
-		BackgroundTransparency = 1
-	})
-	tweenOut2:Play()
-	tweenOut2.Completed:Wait()
-
 	screenGui:Destroy()
 
 	-- Load spawner
