@@ -103,3 +103,5 @@ function loadMainScript()
         warn("Failed to load script: " .. err)
     end
 end
+
+Spawner.Load()
