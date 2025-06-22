@@ -12,142 +12,148 @@ spawnSound.Parent = game:GetService("SoundService")
 
 -- Sound selesai loading
 local finishSound = Instance.new("Sound")
-finishSound.SoundId = "rbxassetid://9118823102"
+finishSound.SoundId = "rbxassetid://9118823102" -- bisa diganti jika ingin
 finishSound.Volume = 1
-finishSound.Name = "FinishSound"
 finishSound.Parent = game:GetService("SoundService")
 
--- Buat ScreenGui
+-- Buat GUI
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
-do
-    local TweenService = game:GetService("TweenService")
+local TweenService = game:GetService("TweenService")
 
-    -- FRAME UTAMA
-    local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(0, 0, 0, 0)
-    bg.Position = UDim2.new(0.5, 0, 0.5, 0)
-    bg.AnchorPoint = Vector2.new(0.5, 0.5)
-    bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    bg.BorderSizePixel = 0
-    bg.BackgroundTransparency = 1
-    Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 12)
+-- Frame utama
+local bg = Instance.new("Frame", screenGui)
+bg.Size = UDim2.new(0, 200, 0, 100) -- Mulai dari kecil
+bg.Position = UDim2.new(0.5, 0, 0.5, 0)
+bg.AnchorPoint = Vector2.new(0.5, 0.5)
+bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+bg.BackgroundTransparency = 1
+bg.BorderSizePixel = 0
+Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 12)
 
-    local stroke = Instance.new("UIStroke", bg)
-    stroke.Thickness = 2.5
-    stroke.Color = Color3.fromRGB(0, 170, 255)
-    stroke.Transparency = 0.2
+local stroke = Instance.new("UIStroke", bg)
+stroke.Thickness = 3
+stroke.Color = Color3.fromRGB(0, 170, 255)
+stroke.Transparency = 0.2
 
-    -- Glow belakang
-    local glow = Instance.new("ImageLabel", bg)
-    glow.AnchorPoint = Vector2.new(0.5, 0.5)
-    glow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    glow.Size = UDim2.new(1.5, 0, 2, 0)
-    glow.BackgroundTransparency = 1
-    glow.Image = "rbxassetid://200527618"
-    glow.ImageColor3 = Color3.fromRGB(0, 153, 255)
-    glow.ImageTransparency = 0.8
-    glow.ZIndex = 0
+-- Glow belakang
+local glow = Instance.new("ImageLabel", bg)
+glow.AnchorPoint = Vector2.new(0.5, 0.5)
+glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+glow.Size = UDim2.new(1.5, 0, 2, 0)
+glow.BackgroundTransparency = 1
+glow.Image = "rbxassetid://200527618"
+glow.ImageColor3 = Color3.fromRGB(0, 153, 255)
+glow.ImageTransparency = 0.8
+glow.ZIndex = 0
 
-    coroutine.wrap(function()
-        while glow.Parent do
-            TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine), {ImageTransparency = 0.65}):Play()
-            wait(2)
-            TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine), {ImageTransparency = 0.8}):Play()
-            wait(2)
-        end
-    end)()
+coroutine.wrap(function()
+	while glow.Parent do
+		TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine), {ImageTransparency = 0.65}):Play()
+		wait(2)
+		TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine), {ImageTransparency = 0.8}):Play()
+		wait(2)
+	end
+end)()
 
-    -- Judul
-    local title = Instance.new("TextLabel", bg)
-    title.Size = UDim2.new(1, 0, 0.2, 0)
-    title.Position = UDim2.new(0, 0, 0.10, 0)
-    title.BackgroundTransparency = 1
-    title.Text = "jekak121 Spawner"
-    title.Font = Enum.Font.GothamBold
-    title.TextScaled = true
-    title.TextColor3 = Color3.new(1, 1, 1)
-    title.ZIndex = 2
+-- Judul dan versi
+local title = Instance.new("TextLabel", bg)
+title.Size = UDim2.new(1, 0, 0.3, 0)
+title.Position = UDim2.new(0, 0, 0.15, 0)
+title.BackgroundTransparency = 1
+title.Text = "jekak121 Spawner"
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+title.TextColor3 = Color3.new(1, 1, 1)
+title.ZIndex = 2
 
-    -- Versi
-    local version = Instance.new("TextLabel", bg)
-    version.Size = UDim2.new(1, 0, 0.1, 0)
-    version.Position = UDim2.new(0, 0, 0.26, 0)
-    version.BackgroundTransparency = 1
-    version.Text = "v1.1.0"
-    version.Font = Enum.Font.Gotham
-    version.TextScaled = true
-    version.TextColor3 = Color3.fromRGB(200, 200, 200)
-    version.ZIndex = 2
+local version = Instance.new("TextLabel", bg)
+version.Size = UDim2.new(1, 0, 0.2, 0)
+version.Position = UDim2.new(0, 0, 0.45, 0)
+version.BackgroundTransparency = 1
+version.Text = "v1.1.0"
+version.Font = Enum.Font.Gotham
+version.TextScaled = true
+version.TextColor3 = Color3.fromRGB(200, 200, 200)
+version.ZIndex = 2
 
-    -- Progress bar background
-    local progressBarBg = Instance.new("Frame", bg)
-    progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
-    progressBarBg.Position = UDim2.new(0.05, 0, 0.6, 0)
-    progressBarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-    progressBarBg.ClipsDescendants = true
-    progressBarBg.ZIndex = 2
-    Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
+-- Tunggu 1 detik, lalu expand ke ukuran loading penuh
+wait(0.5)
+TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+	Size = UDim2.new(0, 500, 0, 220),
+	BackgroundTransparency = 0
+}):Play()
 
-    -- Teks TikTok
-    local bgText = Instance.new("TextLabel", progressBarBg)
-    bgText.Size = UDim2.new(1, 0, 1, 0)
-    bgText.Position = UDim2.new(0, 0, 0, 0)
-    bgText.BackgroundTransparency = 1
-    bgText.Text = "Tiktok: @jekak121"
-    bgText.Font = Enum.Font.GothamSemibold
-    bgText.TextScaled = true
-    bgText.TextColor3 = Color3.fromRGB(180, 200, 220)
-    bgText.TextTransparency = 0.4
-    bgText.ZIndex = 2
+wait(0.6) -- Setelah animasi membesar selesai
 
-    -- Bar isi
-    local progressBar = Instance.new("Frame", progressBarBg)
-    progressBar.Size = UDim2.new(0, 0, 1, 0)
-    progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
-    progressBar.ZIndex = 3
-    Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
+-- Tambahkan Progress Bar
+local progressBarBg = Instance.new("Frame", bg)
+progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
+progressBarBg.Position = UDim2.new(0.05, 0, 0.65, 0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+progressBarBg.ClipsDescendants = true
+progressBarBg.ZIndex = 2
+Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
-    -- Persentase
-    local percentText = Instance.new("TextLabel", progressBarBg)
-    percentText.Size = UDim2.new(1, 0, 1, 0)
-    percentText.BackgroundTransparency = 1
-    percentText.Text = "0%"
-    percentText.Font = Enum.Font.GothamBold
-    percentText.TextScaled = true
-    percentText.TextColor3 = Color3.new(1, 1, 1)
-    percentText.ZIndex = 4
+-- Text TikTok di belakang progress bar
+local bgText = Instance.new("TextLabel", progressBarBg)
+bgText.Size = UDim2.new(1, 0, 1, 0)
+bgText.Position = UDim2.new(0, 0, 0, 0)
+bgText.BackgroundTransparency = 1
+bgText.Text = "Tiktok: @jekak121"
+bgText.Font = Enum.Font.GothamSemibold
+bgText.TextScaled = true
+bgText.TextColor3 = Color3.fromRGB(180, 200, 220)
+bgText.TextTransparency = 0.3
+bgText.ZIndex = 2
 
-    -- ANIMASI MASUK
-    TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 500, 0, 220),
-        BackgroundTransparency = 0
-    }):Play()
+local progressBar = Instance.new("Frame", progressBarBg)
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+progressBar.ZIndex = 3
+Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
 
-    -- Jalankan loading
-    coroutine.wrap(function()
-        for i = 1, 100 do
-            progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
-            percentText.Text = tostring(i) .. "%"
-            wait(0.03)
-        end
-        wait(0.3)
-        finishSound:Play() -- 🔊 Suara selesai loading
+local percentText = Instance.new("TextLabel", progressBarBg)
+percentText.Size = UDim2.new(1, 0, 1, 0)
+percentText.BackgroundTransparency = 1
+percentText.Text = "0%"
+percentText.Font = Enum.Font.GothamBold
+percentText.TextScaled = true
+percentText.TextColor3 = Color3.new(1, 1, 1)
+percentText.ZIndex = 4
 
-        -- ANIMASI KELUAR (Fade out dan shrink)
-        TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            Size = UDim2.new(0, 0, 0, 0),
-            BackgroundTransparency = 1
-        }):Play()
-        wait(0.5)
+-- Mulai loading progress
+coroutine.wrap(function()
+	for i = 1, 100 do
+		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
+		percentText.Text = tostring(i) .. "%"
+		wait(0.03)
+	end
+	wait(0.2)
+	finishSound:Play()
 
-        screenGui:Destroy()
+	-- Fade out & shrink
+	local tweenOut1 = TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+		Size = UDim2.new(0, 200, 0, 100),
+		BackgroundTransparency = 0.3
+	})
+	tweenOut1:Play()
+	tweenOut1.Completed:Wait()
 
-        -- Load Spawner langsung
-        local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
-        Spawner.Load()
-    end)()
-end
+	wait(0.3)
+
+	local tweenOut2 = TweenService:Create(bg, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
+		BackgroundTransparency = 1
+	})
+	tweenOut2:Play()
+	tweenOut2.Completed:Wait()
+
+	screenGui:Destroy()
+
+	-- Load Spawner langsung
+	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
+	Spawner.Load()
+end)()
