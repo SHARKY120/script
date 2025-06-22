@@ -19,12 +19,14 @@ screenGui.ResetOnSpawn = false
 -- Background hitam biru + teks/loading bar
 do
     local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(0.5, 0, 0.5, 0)  -- Ukuran lebih kecil
-    bg.Position = UDim2.new(0.5, -0.25 * 300, 0.5, -0.25 * 200)  -- Pusatkan
+    bg.Size = UDim2.new(0.4, 0, 0.3, 0)  -- Ukuran lebih kecil
+    bg.Position = UDim2.new(0.5, -0.2 * 300, 0.5, -0.15 * 200)  -- Pusatkan
     bg.BackgroundColor3 = Color3.fromRGB(0, 0, 102)  -- Warna biru gelap
+    bg.BorderSizePixel = 2
+    bg.BorderColor3 = Color3.fromRGB(0, 0, 0)  -- Border hitam
 
     local loadingText = Instance.new("TextLabel", bg)
-    loadingText.Size = UDim2.new(1, 0, 0.2, 0)
+    loadingText.Size = UDim2.new(1, 0, 0.15, 0)
     loadingText.Position = UDim2.new(0, 0, 0.1, 0)
     loadingText.BackgroundTransparency = 1
     loadingText.Text = "Loading Script"
@@ -41,14 +43,22 @@ do
     progressBar.Size = UDim2.new(0, 0, 1, 0)
     progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
 
-    local percentText = Instance.new("TextLabel", bg)
-    percentText.Size = UDim2.new(0, 60, 0.05, 0)
-    percentText.Position = UDim2.new(0.9, 0, 0.5, 0)
+    local percentText = Instance.new("TextLabel", progressBarBg)
+    percentText.Size = UDim2.new(1, 0, 1, 0)
     percentText.BackgroundTransparency = 1
     percentText.Text = "0%"
     percentText.Font = Enum.Font.SourceSansBold
     percentText.TextScaled = true
     percentText.TextColor3 = Color3.new(1, 1, 1)
+
+    local tiktokText = Instance.new("TextLabel", progressBarBg)
+    tiktokText.Size = UDim2.new(1, 0, 0.5, 0)
+    tiktokText.Position = UDim2.new(0, 0, 1, 0)
+    tiktokText.BackgroundTransparency = 1
+    tiktokText.Text = "Tiktok: @Jekak121"
+    tiktokText.Font = Enum.Font.SourceSans
+    tiktokText.TextScaled = true
+    tiktokText.TextColor3 = Color3.new(1, 1, 1)
 
     local statusText = Instance.new("TextLabel", bg)
     statusText.Size = UDim2.new(1, 0, 0.05, 0)
