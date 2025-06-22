@@ -187,7 +187,12 @@ coroutine.wrap(function()
 	wait(0.3)
 	screenGui:Destroy()
 
-	-- Load spawner
+return {
+    Load = function()
+      -- Load spawner
 	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
 	Spawner.Load()
+    end
+}
+
 end)()
