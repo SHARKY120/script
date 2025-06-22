@@ -12,7 +12,7 @@ spawnSound.Parent = game:GetService("SoundService")
 
 -- Sound selesai loading
 local finishSound = Instance.new("Sound")
-finishSound.SoundId = "rbxassetid://9118823102" -- bisa diganti jika ingin
+finishSound.SoundId = "rbxassetid://9118823102"
 finishSound.Volume = 1
 finishSound.Parent = game:GetService("SoundService")
 
@@ -26,7 +26,7 @@ local TweenService = game:GetService("TweenService")
 
 -- Frame utama
 local bg = Instance.new("Frame", screenGui)
-bg.Size = UDim2.new(0, 200, 0, 100) -- Mulai dari kecil
+bg.Size = UDim2.new(0, 200, 0, 100)
 bg.Position = UDim2.new(0.5, 0, 0.5, 0)
 bg.AnchorPoint = Vector2.new(0.5, 0.5)
 bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
@@ -66,7 +66,8 @@ title.Position = UDim2.new(0, 0, 0.15, 0)
 title.BackgroundTransparency = 1
 title.Text = "jekak121 Spawner"
 title.Font = Enum.Font.GothamBold
-title.TextScaled = true
+title.TextScaled = false
+title.TextSize = 38 -- besar saat awal
 title.TextColor3 = Color3.new(1, 1, 1)
 title.ZIndex = 2
 
@@ -80,16 +81,20 @@ version.TextScaled = true
 version.TextColor3 = Color3.fromRGB(200, 200, 200)
 version.ZIndex = 2
 
--- Tunggu 1 detik, lalu expand ke ukuran loading penuh
+-- Animasi masuk (fade + membesar + title mengecil)
 wait(0.5)
 TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 	Size = UDim2.new(0, 500, 0, 220),
 	BackgroundTransparency = 0
 }):Play()
 
-wait(0.6) -- Setelah animasi membesar selesai
+TweenService:Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
+	TextSize = 26 -- mengecil saat screen membesar
+}):Play()
 
--- Tambahkan Progress Bar
+wait(0.6)
+
+-- Progress bar
 local progressBarBg = Instance.new("Frame", bg)
 progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
 progressBarBg.Position = UDim2.new(0.05, 0, 0.65, 0)
@@ -98,24 +103,26 @@ progressBarBg.ClipsDescendants = true
 progressBarBg.ZIndex = 2
 Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
--- Text TikTok di belakang progress bar
-local bgText = Instance.new("TextLabel", progressBarBg)
-bgText.Size = UDim2.new(1, 0, 1, 0)
-bgText.Position = UDim2.new(0, 0, 0, 0)
+-- Text TikTok di bawah progress bar
+local bgText = Instance.new("TextLabel", bg)
+bgText.Size = UDim2.new(1, 0, 0.1, 0)
+bgText.Position = UDim2.new(0, 0, 0.87, 0)
 bgText.BackgroundTransparency = 1
 bgText.Text = "Tiktok: @jekak121"
 bgText.Font = Enum.Font.GothamSemibold
 bgText.TextScaled = true
 bgText.TextColor3 = Color3.fromRGB(180, 200, 220)
 bgText.TextTransparency = 0.3
-bgText.ZIndex = 2
+bgText.ZIndex = 1
 
+-- Bar isi
 local progressBar = Instance.new("Frame", progressBarBg)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
 progressBar.ZIndex = 3
 Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
 
+-- Persentase
 local percentText = Instance.new("TextLabel", progressBarBg)
 percentText.Size = UDim2.new(1, 0, 1, 0)
 percentText.BackgroundTransparency = 1
@@ -135,7 +142,7 @@ coroutine.wrap(function()
 	wait(0.2)
 	finishSound:Play()
 
-	-- Fade out & shrink
+	-- Fade out dan mengecil
 	local tweenOut1 = TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
 		Size = UDim2.new(0, 200, 0, 100),
 		BackgroundTransparency = 0.3
@@ -153,7 +160,7 @@ coroutine.wrap(function()
 
 	screenGui:Destroy()
 
-	-- Load Spawner langsung
+	-- Load spawner
 	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
 	Spawner.Load()
 end)()
