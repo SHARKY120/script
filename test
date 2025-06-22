@@ -94,14 +94,5 @@ do
     end)
 end
 
--- Fungsi untuk memuat script utama
-function loadMainScript()
-    local success, err = pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
-    end)
-    if not success then
-        warn("Failed to load script: " .. err)
-    end
-end
-
+local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
 Spawner.Load()
