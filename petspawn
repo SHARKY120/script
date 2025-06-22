@@ -25,9 +25,8 @@ screenGui.ResetOnSpawn = false
 -- Eksekusi script utama saat loading screen muncul
 task.spawn(function()
     pcall(function()
-        -- Ganti URL dengan yang valid atau tambahkan penanganan kesalahan
         local success, err = pcall(function()
-          loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/GrowaGarden/refs/heads/main/sc"))() -- Ganti dengan URL yang valid
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/meijinemiko/GrowaGarden/refs/heads/main/sc"))()
         end)
         if not success then
             warn("Failed to load script: " .. err)
@@ -187,12 +186,18 @@ coroutine.wrap(function()
 	wait(0.3)
 	screenGui:Destroy()
 
-return {
-    Load = function()
-      -- Load spawner
-	local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
-	Spawner.Load()
-    end
-}
+	-- Load spawner dengan penanganan error
+	local success, result = pcall(function()
+		return loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
+	end)
 
+	if success then
+		if typeof(result) == "table" and typeof(result.Load) == "function" then
+			result.Load()
+		else
+			warn("().")
+		end
+	else
+		warn("Failed To Load Script:", result)
+	end
 end)()
