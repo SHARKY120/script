@@ -82,7 +82,7 @@ version.TextSize = 18
 version.TextColor3 = Color3.fromRGB(200, 200, 200)
 version.ZIndex = 2
 
--- Animasi fade in + membesar
+-- Fade in dan expand
 wait(0.3)
 TweenService:Create(bg, TweenInfo.new(0.4), {
 	BackgroundTransparency = 0
@@ -94,7 +94,7 @@ TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
 }):Play()
 
 TweenService:Create(title, TweenInfo.new(0.5), {
-	TextSize = 48 -- agak diperbesar saat besar
+	TextSize = 48
 }):Play()
 
 TweenService:Create(version, TweenInfo.new(0.5), {
@@ -112,7 +112,6 @@ progressBarBg.ClipsDescendants = true
 progressBarBg.ZIndex = 2
 Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
--- Tiktok Text
 local bgText = Instance.new("TextLabel", bg)
 bgText.Size = UDim2.new(1, 0, 0.1, 0)
 bgText.Position = UDim2.new(0, 0, 0, 185)
@@ -124,14 +123,12 @@ bgText.TextColor3 = Color3.fromRGB(180, 200, 220)
 bgText.TextTransparency = 0.3
 bgText.ZIndex = 1
 
--- Bar Isi
 local progressBar = Instance.new("Frame", progressBarBg)
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
 progressBar.ZIndex = 3
 Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
 
--- Persentase
 local percentText = Instance.new("TextLabel", progressBarBg)
 percentText.Size = UDim2.new(1, 0, 1, 0)
 percentText.BackgroundTransparency = 1
@@ -141,7 +138,7 @@ percentText.TextScaled = true
 percentText.TextColor3 = Color3.new(1, 1, 1)
 percentText.ZIndex = 4
 
--- Jalankan progress bar
+-- Jalankan progress
 coroutine.wrap(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -151,7 +148,10 @@ coroutine.wrap(function()
 	wait(0.2)
 	finishSound:Play()
 
-	-- Mengecil dan menyesuaikan teks
+	-- Hapus progress bar
+	progressBarBg:Destroy()
+
+	-- Mengecil (tidak transparan)
 	TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine), {
 		Size = UDim2.new(0, 200, 0, 100)
 	}):Play()
@@ -164,7 +164,7 @@ coroutine.wrap(function()
 		TextSize = 14
 	}):Play()
 
-	wait(0.4)
+	wait(0.5)
 
 	-- Fade out
 	TweenService:Create(bg, TweenInfo.new(0.3, Enum.EasingStyle.Sine), {
