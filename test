@@ -17,15 +17,23 @@ screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
 do
+    local TweenService = game:GetService("TweenService")
+
     -- FRAME UTAMA
     local bg = Instance.new("Frame", screenGui)
     bg.Size = UDim2.new(0, 500, 0, 220)
     bg.Position = UDim2.new(0.5, -250, 0.5, -110)
-    bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- hitam elegan
+    bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     bg.BorderSizePixel = 0
+    bg.BackgroundTransparency = 1
     Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 12)
 
-    -- Glow belakang (biru menyebar)
+    local stroke = Instance.new("UIStroke", bg)
+    stroke.Thickness = 2.5
+    stroke.Color = Color3.fromRGB(0, 170, 255)
+    stroke.Transparency = 0.2
+
+    -- Cahaya biru animasi belakang
     local glow = Instance.new("ImageLabel", bg)
     glow.AnchorPoint = Vector2.new(0.5, 0.5)
     glow.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -33,14 +41,22 @@ do
     glow.BackgroundTransparency = 1
     glow.Image = "rbxassetid://200527618"
     glow.ImageColor3 = Color3.fromRGB(0, 153, 255)
-    glow.ImageTransparency = 0.75
+    glow.ImageTransparency = 0.8
     glow.ZIndex = 0
 
-    -- Border tebal glowing
-    local stroke = Instance.new("UIStroke", bg)
-    stroke.Thickness = 2.5
-    stroke.Color = Color3.fromRGB(0, 170, 255)
-    stroke.Transparency = 0.1
+    -- ANIMASI CAHAYA (bergerak perlahan)
+    coroutine.wrap(function()
+        while glow.Parent do
+            TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                ImageTransparency = 0.65
+            }):Play()
+            wait(2)
+            TweenService:Create(glow, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                ImageTransparency = 0.8
+            }):Play()
+            wait(2)
+        end
+    end)()
 
     -- Judul
     local title = Instance.new("TextLabel", bg)
@@ -73,7 +89,7 @@ do
     progressBarBg.ZIndex = 2
     Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
 
-    -- Text di background progress bar (tidak tertutup bar)
+    -- Text Tiktok di belakang progress bar
     local bgText = Instance.new("TextLabel", progressBarBg)
     bgText.Size = UDim2.new(1, 0, 1, 0)
     bgText.Position = UDim2.new(0, 0, 0, 0)
@@ -85,14 +101,14 @@ do
     bgText.TextTransparency = 0.35
     bgText.ZIndex = 2
 
-    -- Bar isi
+    -- Isi progress bar
     local progressBar = Instance.new("Frame", progressBarBg)
     progressBar.Size = UDim2.new(0, 0, 1, 0)
     progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
     progressBar.ZIndex = 3
     Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
 
-    -- Text % progress
+    -- Text progress %
     local percentText = Instance.new("TextLabel", progressBarBg)
     percentText.Size = UDim2.new(1, 0, 1, 0)
     percentText.BackgroundTransparency = 1
@@ -102,6 +118,10 @@ do
     percentText.TextColor3 = Color3.fromRGB(255, 255, 255)
     percentText.ZIndex = 4
 
+    -- FADE IN ANIMASI
+    TweenService:Create(bg, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
+
+    -- Jalankan progress loading
     coroutine.wrap(function()
         for i = 1, 100 do
             progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -111,7 +131,7 @@ do
         wait(0.5)
         screenGui:Destroy()
 
-        -- Load Spawner langsung
+        -- Load Spawner
         local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
         Spawner.Load()
     end)()
