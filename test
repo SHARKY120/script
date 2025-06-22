@@ -19,56 +19,76 @@ screenGui.ResetOnSpawn = false
 -- Loading UI
 do
     local bg = Instance.new("Frame", screenGui)
-    bg.Size = UDim2.new(0.4, 0, 0.3, 0)
-    bg.Position = UDim2.new(0.3, 0, 0.35, 0) -- Delta tidak dukung AnchorPoint
-    bg.BackgroundColor3 = Color3.fromRGB(10, 10, 30)
-    bg.BorderSizePixel = 2
-    bg.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    bg.Size = UDim2.new(0, 500, 0, 375) -- 4:3 aspect ratio (lebar 500, tinggi 375)
+    bg.Position = UDim2.new(0.5, -250, 0.5, -187)
+    bg.BackgroundColor3 = Color3.fromRGB(15, 15, 35)
+    bg.BorderSizePixel = 0
+
+    local bgCorner = Instance.new("UICorner", bg)
+    bgCorner.CornerRadius = UDim.new(0, 20)
+
+    local glow = Instance.new("UIStroke", bg)
+    glow.Thickness = 2
+    glow.Color = Color3.fromRGB(0, 170, 255)
+    glow.Transparency = 0.3
 
     local loadingText = Instance.new("TextLabel", bg)
     loadingText.Size = UDim2.new(1, 0, 0.15, 0)
-    loadingText.Position = UDim2.new(0, 0, 0.1, 0)
+    loadingText.Position = UDim2.new(0, 0, 0.08, 0)
     loadingText.BackgroundTransparency = 1
     loadingText.Text = "Loading Script"
     loadingText.TextScaled = true
-    loadingText.Font = Enum.Font.SourceSansBold
-    loadingText.TextColor3 = Color3.new(1, 1, 1)
+    loadingText.Font = Enum.Font.GothamBold
+    loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
 
+    -- ProgressBar Background
     local progressBarBg = Instance.new("Frame", bg)
-    progressBarBg.Size = UDim2.new(0.8, 0, 0.05, 0)
-    progressBarBg.Position = UDim2.new(0.1, 0, 0.5, 0)
-    progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 80)
+    progressBarBg.Size = UDim2.new(0.9, 0, 0.06, 0) -- lebih lebar dan lebih pendek
+    progressBarBg.Position = UDim2.new(0.05, 0, 0.6, 0)
+    progressBarBg.BackgroundColor3 = Color3.fromRGB(25, 25, 60)
     progressBarBg.ClipsDescendants = true
 
+    local barCorner = Instance.new("UICorner", progressBarBg)
+    barCorner.CornerRadius = UDim.new(1, 0)
+
+    -- Teks TikTok sebagai background
+    local bgText = Instance.new("TextLabel", progressBarBg)
+    bgText.Size = UDim2.new(1, 0, 1, 0)
+    bgText.Position = UDim2.new(0, 0, 0, 0)
+    bgText.BackgroundTransparency = 1
+    bgText.Text = "Tiktok: @jekak121"
+    bgText.Font = Enum.Font.Gotham
+    bgText.TextScaled = true
+    bgText.TextColor3 = Color3.fromRGB(50, 50, 255)
+    bgText.TextTransparency = 0.7
+    bgText.ZIndex = 0
+
+    -- Bar isi
     local progressBar = Instance.new("Frame", progressBarBg)
     progressBar.Size = UDim2.new(0, 0, 1, 0)
-    progressBar.BackgroundColor3 = Color3.fromRGB(0, 153, 255)
+    progressBar.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+    progressBar.ZIndex = 1
+
+    local fillCorner = Instance.new("UICorner", progressBar)
+    fillCorner.CornerRadius = UDim.new(1, 0)
 
     local percentText = Instance.new("TextLabel", progressBarBg)
     percentText.Size = UDim2.new(1, 0, 1, 0)
     percentText.BackgroundTransparency = 1
     percentText.Text = "0%"
-    percentText.Font = Enum.Font.SourceSansBold
+    percentText.Font = Enum.Font.GothamBold
     percentText.TextScaled = true
     percentText.TextColor3 = Color3.new(1, 1, 1)
-
-    local tiktokText = Instance.new("TextLabel", progressBarBg)
-    tiktokText.Size = UDim2.new(1, 0, 0.5, 0)
-    tiktokText.Position = UDim2.new(0, 0, 1, 0)
-    tiktokText.BackgroundTransparency = 1
-    tiktokText.Text = "Tiktok: @Jekak121"
-    tiktokText.Font = Enum.Font.SourceSans
-    tiktokText.TextScaled = true
-    tiktokText.TextColor3 = Color3.new(1, 1, 1)
+    percentText.ZIndex = 2
 
     local statusText = Instance.new("TextLabel", bg)
-    statusText.Size = UDim2.new(1, 0, 0.05, 0)
-    statusText.Position = UDim2.new(0, 0, 0.6, 0)
+    statusText.Size = UDim2.new(1, 0, 0.07, 0)
+    statusText.Position = UDim2.new(0, 0, 0.72, 0)
     statusText.BackgroundTransparency = 1
     statusText.Text = "Initializing..."
-    statusText.Font = Enum.Font.SourceSans
+    statusText.Font = Enum.Font.Gotham
     statusText.TextScaled = true
-    statusText.TextColor3 = Color3.fromRGB(240, 240, 240)
+    statusText.TextColor3 = Color3.fromRGB(220, 220, 220)
 
     local statuses = {
         "Getting server data...",
@@ -96,7 +116,7 @@ do
         wait(0.5)
         screenGui:Destroy()
 
-        -- Langsung load Spawner (TANPA fungsi tambahan)
+        -- Load Spawner langsung tanpa fungsi
         local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/DeltaGay/femboy/refs/heads/main/GardenSpawner.lua"))()
         Spawner.Load()
     end)()
