@@ -66,3 +66,5 @@ for _, container in ipairs(targets) do
 end
 
 frame.Text = frame.Text .. "\n\n💤 Pantau semua GUI utama (PlayerGui, CoreGui, StarterGui)..."
+
+
