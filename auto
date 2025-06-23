@@ -1,4 +1,4 @@
-```lua
+
 -- Grow a Garden - Auto Accept Gift With Filter
 -- By Sharky 🦈 - For Delta Executor
 
@@ -55,4 +55,3 @@ local function monitorGiftPopup()
 end
 
 monitorGiftPopup()
-```
