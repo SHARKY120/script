@@ -1,72 +1,68 @@
--- Sharky Super Lite GUI Gift Inspector – Fastest Version
+-- Sharky - GUI Detector Terbaru Saja (Ultra Ringan, Global)
 
 local player = game.Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui")
+local targets = {
+    player:FindFirstChild("PlayerGui"),
+    game.CoreGui,
+    game:GetService("StarterGui")
+}
 
--- Hapus GUI lama
-local old = game.CoreGui:FindFirstChild("SharkyGiftInspectorLite")
-if old then old:Destroy() end
+-- Cleanup
+local existing = game.CoreGui:FindFirstChild("SharkyOneShotInspector")
+if existing then existing:Destroy() end
 
--- Buat ScreenGui
+-- GUI Output
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
-screenGui.Name = "SharkyGiftInspectorLite"
+screenGui.Name = "SharkyOneShotInspector"
 screenGui.ResetOnSpawn = false
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Scrollable Panel
-local scroll = Instance.new("ScrollingFrame", screenGui)
-scroll.Size = UDim2.new(0, 500, 0, 300)
-scroll.Position = UDim2.new(0, 10, 0, 10)
-scroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-scroll.BackgroundTransparency = 0.2
-scroll.BorderSizePixel = 0
-scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-scroll.ScrollBarThickness = 8
-scroll.ClipsDescendants = true
+local frame = Instance.new("TextLabel", screenGui)
+frame.Size = UDim2.new(0, 500, 0, 300)
+frame.Position = UDim2.new(0, 10, 0, 10)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.2
+frame.TextColor3 = Color3.new(1,1,1)
+frame.Font = Enum.Font.Code
+frame.TextSize = 14
+frame.TextXAlignment = Enum.TextXAlignment.Left
+frame.TextYAlignment = Enum.TextYAlignment.Top
+frame.TextWrapped = true
+frame.ClipsDescendants = true
+frame.Text = "👀 Menunggu GUI..."
 
-local layout = Instance.new("UIListLayout", scroll)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
-layout.Padding = UDim.new(0, 3)
-layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+-- 🔁 Fungsi Scan Satu GUI
+local function describe(obj, indent)
+	indent = indent or ""
+	local lines = {}
 
--- Fungsi buat line
-local function addLine(text, color)
-	local label = Instance.new("TextLabel", scroll)
-	label.Size = UDim2.new(1, -10, 0, 18)
-	label.BackgroundTransparency = 1
-	label.Font = Enum.Font.Code
-	label.TextSize = 14
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.Text = text
-	label.TextColor3 = color or Color3.new(1, 1, 1)
-end
+	table.insert(lines, indent .. obj.Name .. " [" .. obj.ClassName .. "]")
 
--- Scan frame hadiah saja
-local function scanGift(frame)
-	addLine("🎁 GiftFrame: " .. frame.Name, Color3.fromRGB(255, 255, 0))
-
-	for _, obj in ipairs(frame:GetDescendants()) do
-		local text = obj.Name .. " [" .. obj.ClassName .. "]"
-		if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-			text = text .. " | Text: " .. (obj.Text or "[?]")
-		elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
-			text = text .. " | Image: " .. (obj.Image or "[?]")
-		end
-		addLine("  " .. text)
+	if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+		table.insert(lines, indent .. "  Text: " .. (obj.Text or "[Kosong]"))
+	elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+		table.insert(lines, indent .. "  Image: " .. (obj.Image or "[Kosong]"))
 	end
 
-	addLine("------")
-end
-
--- Pantau hanya Gift GUI
-gui.ChildAdded:Connect(function(child)
-	if child:IsA("ScreenGui") or child:IsA("Frame") then
-		task.wait(0.1)
-		if child:FindFirstChild("GiftFrame") or child.Name:lower():find("gift") then
-			scanGift(child)
+	for _, child in ipairs(obj:GetChildren()) do
+		for _, line in ipairs(describe(child, indent .. "  ")) do
+			table.insert(lines, line)
 		end
 	end
-end)
 
-addLine("✅ Sharky Inspector Aktif - Pantau Gift Saja (Ultra Ringan)")
+	return lines
+end
+
+-- Pantau semua target
+for _, container in ipairs(targets) do
+	if container and container:IsA("Instance") then
+		container.ChildAdded:Connect(function(child)
+			if child:IsA("ScreenGui") or child:IsA("Frame") then
+				task.wait(0.3)
+				local desc = describe(child)
+				frame.Text = "🆕 GUI Ditemukan di " .. container.Name .. ":\n\n" .. table.concat(desc, "\n"):sub(1, 5000)
+			end
+		end)
+	end
+end
+
+frame.Text = frame.Text .. "\n\n💤 Pantau semua GUI utama (PlayerGui, CoreGui, StarterGui)..."
