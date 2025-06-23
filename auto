@@ -7,9 +7,9 @@ local gui = player:WaitForChild("PlayerGui")
 
 -- 🔒 Daftar item yang boleh diterima (FILTER)
 local allowedItems = {
-    "Golden Seed",
-    "CutePet",
-    "Epic Tree",
+    "Queen Bee",
+    "Dragonfly",
+    "Red Fox",
     -- Tambahkan item lainnya di sini
 }
 
