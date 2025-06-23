@@ -1,19 +1,13 @@
-
--- Grow a Garden - Auto Accept Gift With Filter
--- By Sharky 🦈 - For Delta Executor
-
+-- Auto Accept Gift w/ Filter - Sharky Delta Version
 local player = game.Players.LocalPlayer
 local gui = player:WaitForChild("PlayerGui")
 
--- 🔒 Daftar item yang boleh diterima (FILTER)
 local allowedItems = {
     "Queen Bee",
     "Dragonfly",
     "Red Fox",
-    -- Tambahkan item lainnya di sini
 }
 
--- Fungsi untuk cek apakah item diperbolehkan
 local function isAllowed(itemName)
     for _, allowed in pairs(allowedItems) do
         if itemName:lower() == allowed:lower() then
@@ -23,31 +17,33 @@ local function isAllowed(itemName)
     return false
 end
 
--- Fungsi utama memantau GUI hadiah
 local function monitorGiftPopup()
     gui.ChildAdded:Connect(function(child)
-        -- Deteksi gift GUI
-        if child:IsA("ScreenGui") and (child:FindFirstChild("GiftFrame") or child:FindFirstChildWhichIsA("Frame")) then
-            wait(0.5) -- beri waktu GUI muncul
+        if child:IsA("ScreenGui") then
+            local frame = child:FindFirstChildWhichIsA("Frame", true)
+            local labels = frame and frame:GetDescendants()
+            local foundItemName = nil
+            local acceptBtn = nil
 
-            local giftFrame = child:FindFirstChild("GiftFrame") or child:FindFirstChildWhichIsA("Frame")
-
-            if giftFrame then
-                -- Coba cari nama item di label
-                local itemLabel = giftFrame:FindFirstChild("ItemName") or giftFrame:FindFirstChildWhichIsA("TextLabel")
-                local acceptButton = giftFrame:FindFirstChild("AcceptButton") or giftFrame:FindFirstChild("Accept") or giftFrame:FindFirstChildWhichIsA("TextButton")
-
-                if itemLabel and acceptButton then
-                    local itemName = itemLabel.Text
-                    if isAllowed(itemName) then
-                        wait(0.3)
-                        pcall(function()
-                            acceptButton:Activate()
-                            print("✅ Menerima hadiah item:", itemName)
-                        end)
-                    else
-                        print("⛔️ Menolak item tidak ada di whitelist:", itemName)
+            for _, obj in ipairs(labels) do
+                if obj:IsA("TextLabel") and obj.Text and obj.Text ~= "" then
+                    foundItemName = obj.Text
+                elseif obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    if string.find(obj.Name:lower(), "accept") then
+                        acceptBtn = obj
                     end
+                end
+            end
+
+            if foundItemName and acceptBtn then
+                wait(0.2)
+                if isAllowed(foundItemName) then
+                    pcall(function()
+                        firesignal(acceptBtn.MouseButton1Click)
+                        print("✅ Menerima hadiah:", foundItemName)
+                    end)
+                else
+                    print("⛔️ Ditolak:", foundItemName)
                 end
             end
         end
@@ -55,3 +51,4 @@ local function monitorGiftPopup()
 end
 
 monitorGiftPopup()
+print("🎯 Filter gift aktif di Grow a Garden")
