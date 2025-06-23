@@ -1,4 +1,4 @@
--- Sharky Real-time GUI Inspector - Universal Version (Support semua lokasi GUI)
+-- Sharky GUI Inspector - Scrollable & Realtime
 
 local containersToScan = {
     game.Players.LocalPlayer:FindFirstChild("PlayerGui"),
@@ -6,28 +6,34 @@ local containersToScan = {
     game:GetService("StarterGui")
 }
 
--- Buat panel output
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "SharkyUniversalInspector"
-screenGui.Parent = game.CoreGui
+-- Hapus GUI lama jika ada
+local old = game.CoreGui:FindFirstChild("SharkyScrollableInspector")
+if old then old:Destroy() end
+
+-- Buat GUI utama
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
+screenGui.Name = "SharkyScrollableInspector"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local outputLabel = Instance.new("TextLabel")
-outputLabel.Parent = screenGui
-outputLabel.Size = UDim2.new(0, 480, 0, 350)
-outputLabel.Position = UDim2.new(0, 10, 0, 10)
-outputLabel.BackgroundTransparency = 0.3
-outputLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-outputLabel.TextColor3 = Color3.new(1, 1, 1)
-outputLabel.Font = Enum.Font.Code
-outputLabel.TextSize = 14
-outputLabel.TextXAlignment = Enum.TextXAlignment.Left
-outputLabel.TextYAlignment = Enum.TextYAlignment.Top
-outputLabel.TextWrapped = true
-outputLabel.Text = "⏳ Mendeteksi UI..."
+-- Frame utama scroll
+local scrollingFrame = Instance.new("ScrollingFrame", screenGui)
+scrollingFrame.Size = UDim2.new(0, 480, 0, 350)
+scrollingFrame.Position = UDim2.new(0, 10, 0, 10)
+scrollingFrame.BackgroundTransparency = 0.2
+scrollingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+scrollingFrame.BorderSizePixel = 0
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollingFrame.ScrollBarThickness = 8
+scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollingFrame.ClipsDescendants = true
 
--- Fungsi untuk scan rekursif
+-- Layout
+local uiListLayout = Instance.new("UIListLayout", scrollingFrame)
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uiListLayout.Padding = UDim.new(0, 2)
+
+-- Fungsi scan rekursif
 local function scanGui(object, indent, lines)
     indent = indent or ""
     lines = lines or {}
@@ -35,9 +41,9 @@ local function scanGui(object, indent, lines)
     table.insert(lines, indent .. object.Name .. " [" .. object.ClassName .. "]")
 
     if object:IsA("TextLabel") or object:IsA("TextButton") then
-        table.insert(lines, indent .. "  Text: " .. (object.Text or "[Empty]"))
+        table.insert(lines, indent .. "  Text: " .. (object.Text or "[Kosong]"))
     elseif object:IsA("ImageLabel") or object:IsA("ImageButton") then
-        table.insert(lines, indent .. "  Image: " .. (object.Image or "[None]"))
+        table.insert(lines, indent .. "  Image: " .. (object.Image or "[Kosong]"))
     end
 
     for _, child in pairs(object:GetChildren()) do
@@ -47,32 +53,48 @@ local function scanGui(object, indent, lines)
     return lines
 end
 
--- Fungsi untuk update tampilan
+-- Fungsi update tampilan
 local function updateInspector()
-    local allLines = {}
+    for _, child in ipairs(scrollingFrame:GetChildren()) do
+        if child:IsA("TextLabel") then
+            child:Destroy()
+        end
+    end
 
     for _, container in ipairs(containersToScan) do
-        if container and container:IsA("Instance") then
+        if container then
             for _, child in ipairs(container:GetChildren()) do
                 if child:IsA("ScreenGui") then
-                    table.insert(allLines, "📦 GUI: " .. child.Name)
+                    local title = Instance.new("TextLabel", scrollingFrame)
+                    title.Size = UDim2.new(1, -10, 0, 20)
+                    title.BackgroundTransparency = 1
+                    title.TextColor3 = Color3.fromRGB(255, 255, 0)
+                    title.Font = Enum.Font.Code
+                    title.TextSize = 14
+                    title.TextXAlignment = Enum.TextXAlignment.Left
+                    title.Text = "📦 GUI: " .. child.Name
+
                     local result = scanGui(child, "  ")
                     for _, line in ipairs(result) do
-                        table.insert(allLines, line)
+                        local label = Instance.new("TextLabel", scrollingFrame)
+                        label.Size = UDim2.new(1, -10, 0, 18)
+                        label.BackgroundTransparency = 1
+                        label.TextColor3 = Color3.new(1, 1, 1)
+                        label.Font = Enum.Font.Code
+                        label.TextSize = 13
+                        label.TextXAlignment = Enum.TextXAlignment.Left
+                        label.Text = line
                     end
-                    table.insert(allLines, "")
                 end
             end
         end
     end
-
-    outputLabel.Text = table.concat(allLines, "\n"):sub(1, 5000)
 end
 
--- Update awal
+-- Jalankan awal
 updateInspector()
 
--- Pantau perubahan dari semua container
+-- Pantau perubahan
 for _, container in ipairs(containersToScan) do
     if container then
         container.ChildAdded:Connect(updateInspector)
@@ -80,4 +102,4 @@ for _, container in ipairs(containersToScan) do
     end
 end
 
-print("🧠 Sharky GUI Inspector aktif - Universal Scan Mode")
+print("✅ GUI Inspector Scrollable aktif")
