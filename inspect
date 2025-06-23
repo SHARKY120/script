@@ -1,21 +1,21 @@
--- 🔍 Real-time GUI Inspector (HUD) - By Sharky
+-- Sharky Real-time GUI Inspector - Universal Version (Support semua lokasi GUI)
 
-local player = game.Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui")
+local containersToScan = {
+    game.Players.LocalPlayer:FindFirstChild("PlayerGui"),
+    game.CoreGui,
+    game:GetService("StarterGui")
+}
 
--- Hapus GUI sebelumnya kalau ada
-if gui:FindFirstChild("SharkyGuiInspector") then
-    gui:FindFirstChild("SharkyGuiInspector"):Destroy()
-end
+-- Buat panel output
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SharkyUniversalInspector"
+screenGui.Parent = game.CoreGui
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Buat tampilan output di layar
-local inspectorGui = Instance.new("ScreenGui", gui)
-inspectorGui.Name = "SharkyGuiInspector"
-inspectorGui.ResetOnSpawn = false
-inspectorGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-local outputLabel = Instance.new("TextLabel", inspectorGui)
-outputLabel.Size = UDim2.new(0, 420, 0, 320)
+local outputLabel = Instance.new("TextLabel")
+outputLabel.Parent = screenGui
+outputLabel.Size = UDim2.new(0, 480, 0, 350)
 outputLabel.Position = UDim2.new(0, 10, 0, 10)
 outputLabel.BackgroundTransparency = 0.3
 outputLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -25,66 +25,59 @@ outputLabel.TextSize = 14
 outputLabel.TextXAlignment = Enum.TextXAlignment.Left
 outputLabel.TextYAlignment = Enum.TextYAlignment.Top
 outputLabel.TextWrapped = true
-outputLabel.TextScaled = false
-outputLabel.ClipsDescendants = true
-outputLabel.Text = "🔍 Memuat GUI..."
+outputLabel.Text = "⏳ Mendeteksi UI..."
 
--- Fungsi untuk rekursif cetak isi GUI
-local function scanGui(guiObject, indent, lines)
+-- Fungsi untuk scan rekursif
+local function scanGui(object, indent, lines)
     indent = indent or ""
     lines = lines or {}
 
-    table.insert(lines, indent .. guiObject.Name .. " [" .. guiObject.ClassName .. "]")
+    table.insert(lines, indent .. object.Name .. " [" .. object.ClassName .. "]")
 
-    if guiObject:IsA("TextLabel") or guiObject:IsA("TextButton") then
-        table.insert(lines, indent .. "  Text: " .. (guiObject.Text or "[Kosong]"))
-    elseif guiObject:IsA("ImageLabel") or guiObject:IsA("ImageButton") then
-        table.insert(lines, indent .. "  Image: " .. (guiObject.Image or "[Kosong]"))
+    if object:IsA("TextLabel") or object:IsA("TextButton") then
+        table.insert(lines, indent .. "  Text: " .. (object.Text or "[Empty]"))
+    elseif object:IsA("ImageLabel") or object:IsA("ImageButton") then
+        table.insert(lines, indent .. "  Image: " .. (object.Image or "[None]"))
     end
 
-    for _, child in ipairs(guiObject:GetChildren()) do
+    for _, child in pairs(object:GetChildren()) do
         scanGui(child, indent .. "  ", lines)
     end
 
     return lines
 end
 
--- Fungsi untuk memperbarui isi output
+-- Fungsi untuk update tampilan
 local function updateInspector()
     local allLines = {}
-    for _, screenGui in ipairs(gui:GetChildren()) do
-        if screenGui:IsA("ScreenGui") then
-            table.insert(allLines, "📦 GUI: " .. screenGui.Name)
-            local scanned = scanGui(screenGui, "  ")
-            for _, line in ipairs(scanned) do
-                table.insert(allLines, line)
+
+    for _, container in ipairs(containersToScan) do
+        if container and container:IsA("Instance") then
+            for _, child in ipairs(container:GetChildren()) do
+                if child:IsA("ScreenGui") then
+                    table.insert(allLines, "📦 GUI: " .. child.Name)
+                    local result = scanGui(child, "  ")
+                    for _, line in ipairs(result) do
+                        table.insert(allLines, line)
+                    end
+                    table.insert(allLines, "")
+                end
             end
-            table.insert(allLines, "")
         end
     end
 
-    -- Potong jika terlalu panjang
-    local finalText = table.concat(allLines, "\n")
-    if #finalText > 2000 then
-        finalText = string.sub(finalText, 1, 2000) .. "\n\n[📛 Terpotong - terlalu panjang]"
-    end
-
-    outputLabel.Text = finalText
+    outputLabel.Text = table.concat(allLines, "\n"):sub(1, 5000)
 end
 
--- Jalankan update awal
+-- Update awal
 updateInspector()
 
--- Update setiap kali ada perubahan
-gui.ChildAdded:Connect(updateInspector)
-gui.ChildRemoved:Connect(updateInspector)
-
--- Juga perbarui jika isi GUI berubah
-for _, screenGui in ipairs(gui:GetChildren()) do
-    if screenGui:IsA("ScreenGui") then
-        screenGui.DescendantAdded:Connect(updateInspector)
-        screenGui.DescendantRemoving:Connect(updateInspector)
+-- Pantau perubahan dari semua container
+for _, container in ipairs(containersToScan) do
+    if container then
+        container.ChildAdded:Connect(updateInspector)
+        container.ChildRemoved:Connect(updateInspector)
     end
 end
 
-print("✅ GUI Inspector Real-time aktif")
+print("🧠 Sharky GUI Inspector aktif - Universal Scan Mode")
