@@ -1,0 +1,58 @@
+```lua
+-- Grow a Garden - Auto Accept Gift With Filter
+-- By Sharky 🦈 - For Delta Executor
+
+local player = game.Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
+
+-- 🔒 Daftar item yang boleh diterima (FILTER)
+local allowedItems = {
+    "Golden Seed",
+    "CutePet",
+    "Epic Tree",
+    -- Tambahkan item lainnya di sini
+}
+
+-- Fungsi untuk cek apakah item diperbolehkan
+local function isAllowed(itemName)
+    for _, allowed in pairs(allowedItems) do
+        if itemName:lower() == allowed:lower() then
+            return true
+        end
+    end
+    return false
+end
+
+-- Fungsi utama memantau GUI hadiah
+local function monitorGiftPopup()
+    gui.ChildAdded:Connect(function(child)
+        -- Deteksi gift GUI
+        if child:IsA("ScreenGui") and (child:FindFirstChild("GiftFrame") or child:FindFirstChildWhichIsA("Frame")) then
+            wait(0.5) -- beri waktu GUI muncul
+
+            local giftFrame = child:FindFirstChild("GiftFrame") or child:FindFirstChildWhichIsA("Frame")
+
+            if giftFrame then
+                -- Coba cari nama item di label
+                local itemLabel = giftFrame:FindFirstChild("ItemName") or giftFrame:FindFirstChildWhichIsA("TextLabel")
+                local acceptButton = giftFrame:FindFirstChild("AcceptButton") or giftFrame:FindFirstChild("Accept") or giftFrame:FindFirstChildWhichIsA("TextButton")
+
+                if itemLabel and acceptButton then
+                    local itemName = itemLabel.Text
+                    if isAllowed(itemName) then
+                        wait(0.3)
+                        pcall(function()
+                            acceptButton:Activate()
+                            print("✅ Menerima hadiah item:", itemName)
+                        end)
+                    else
+                        print("⛔️ Menolak item tidak ada di whitelist:", itemName)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+monitorGiftPopup()
+```
