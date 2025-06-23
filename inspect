@@ -1,70 +1,56 @@
--- Sharky - GUI Detector Terbaru Saja (Ultra Ringan, Global)
+-- Sharky Remote Sniffer - Detect Real Gift Events (Grow a Garden)
 
 local player = game.Players.LocalPlayer
-local targets = {
-    player:FindFirstChild("PlayerGui"),
-    game.CoreGui,
-    game:GetService("StarterGui")
-}
+local rs = game:GetService("ReplicatedStorage")
 
 -- Cleanup
-local existing = game.CoreGui:FindFirstChild("SharkyOneShotInspector")
-if existing then existing:Destroy() end
+local old = game.CoreGui:FindFirstChild("SharkyRemoteSniffer")
+if old then old:Destroy() end
 
--- GUI Output
-local screenGui = Instance.new("ScreenGui", game.CoreGui)
-screenGui.Name = "SharkyOneShotInspector"
-screenGui.ResetOnSpawn = false
+-- Output GUI
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "SharkyRemoteSniffer"
+gui.ResetOnSpawn = false
 
-local frame = Instance.new("TextLabel", screenGui)
-frame.Size = UDim2.new(0, 500, 0, 300)
-frame.Position = UDim2.new(0, 10, 0, 10)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.BackgroundTransparency = 0.2
-frame.TextColor3 = Color3.new(1,1,1)
-frame.Font = Enum.Font.Code
-frame.TextSize = 14
-frame.TextXAlignment = Enum.TextXAlignment.Left
-frame.TextYAlignment = Enum.TextYAlignment.Top
-frame.TextWrapped = true
-frame.ClipsDescendants = true
-frame.Text = "👀 Menunggu GUI..."
+local label = Instance.new("TextLabel", gui)
+label.Size = UDim2.new(0, 520, 0, 280)
+label.Position = UDim2.new(0, 10, 0, 10)
+label.BackgroundColor3 = Color3.fromRGB(30,30,30)
+label.BackgroundTransparency = 0.2
+label.TextColor3 = Color3.new(1,1,1)
+label.Font = Enum.Font.Code
+label.TextSize = 14
+label.TextXAlignment = Enum.TextXAlignment.Left
+label.TextYAlignment = Enum.TextYAlignment.Top
+label.TextWrapped = true
+label.Text = "🛰 Listening for RemoteEvents to " .. player.Name
 
--- 🔁 Fungsi Scan Satu GUI
-local function describe(obj, indent)
-	indent = indent or ""
-	local lines = {}
+-- Log
+local log = {}
 
-	table.insert(lines, indent .. obj.Name .. " [" .. obj.ClassName .. "]")
-
-	if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-		table.insert(lines, indent .. "  Text: " .. (obj.Text or "[Kosong]"))
-	elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
-		table.insert(lines, indent .. "  Image: " .. (obj.Image or "[Kosong]"))
+-- Function untuk cetak data
+local function logRemote(remote, args)
+	local str = "📡 Remote: " .. remote:GetFullName() .. "\n"
+	for i, v in ipairs(args) do
+		local vstr
+		pcall(function() vstr = game:GetService("HttpService"):JSONEncode(v) end)
+		str = str .. "  Arg["..i.."]: " .. (vstr or tostring(v)) .. "\n"
 	end
+	str = str .. "\n-------------------\n"
 
-	for _, child in ipairs(obj:GetChildren()) do
-		for _, line in ipairs(describe(child, indent .. "  ")) do
-			table.insert(lines, line)
-		end
-	end
-
-	return lines
+	table.insert(log, 1, str)
+	if #log > 25 then table.remove(log) end
+	label.Text = table.concat(log)
 end
 
--- Pantau semua target
-for _, container in ipairs(targets) do
-	if container and container:IsA("Instance") then
-		container.ChildAdded:Connect(function(child)
-			if child:IsA("ScreenGui") or child:IsA("Frame") then
-				task.wait(0.3)
-				local desc = describe(child)
-				frame.Text = "🆕 GUI Ditemukan di " .. container.Name .. ":\n\n" .. table.concat(desc, "\n"):sub(1, 5000)
-			end
+-- Pantau semua remote event
+for _, remote in ipairs(rs:GetDescendants()) do
+	if remote:IsA("RemoteEvent") then
+		pcall(function()
+			remote.OnClientEvent:Connect(function(...)
+				local args = {...}
+				logRemote(remote, args)
+			end)
 		end)
 	end
 end
-
-frame.Text = frame.Text .. "\n\n💤 Pantau semua GUI utama (PlayerGui, CoreGui, StarterGui)..."
-
-
