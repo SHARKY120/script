@@ -1,105 +1,127 @@
--- Sharky GUI Inspector - Scrollable & Realtime
+-- Sharky GUI Inspector - Optimized + Scrollable + Realtime + Sorted
 
-local containersToScan = {
-    game.Players.LocalPlayer:FindFirstChild("PlayerGui"),
+local player = game.Players.LocalPlayer
+local guiTargets = {
+    player:FindFirstChild("PlayerGui"),
     game.CoreGui,
     game:GetService("StarterGui")
 }
 
--- Hapus GUI lama jika ada
-local old = game.CoreGui:FindFirstChild("SharkyScrollableInspector")
+-- Hapus GUI sebelumnya
+local old = game.CoreGui:FindFirstChild("SharkyOptimizedInspector")
 if old then old:Destroy() end
 
--- Buat GUI utama
+-- GUI utama
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
-screenGui.Name = "SharkyScrollableInspector"
+screenGui.Name = "SharkyOptimizedInspector"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Frame utama scroll
+-- ScrollFrame
 local scrollingFrame = Instance.new("ScrollingFrame", screenGui)
-scrollingFrame.Size = UDim2.new(0, 480, 0, 350)
+scrollingFrame.Size = UDim2.new(0, 500, 0, 360)
 scrollingFrame.Position = UDim2.new(0, 10, 0, 10)
+scrollingFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 scrollingFrame.BackgroundTransparency = 0.2
-scrollingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 scrollingFrame.BorderSizePixel = 0
-scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-scrollingFrame.ScrollBarThickness = 8
 scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollingFrame.ScrollBarThickness = 8
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollingFrame.ClipsDescendants = true
 
 -- Layout
-local uiListLayout = Instance.new("UIListLayout", scrollingFrame)
-uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-uiListLayout.Padding = UDim.new(0, 2)
+local layout = Instance.new("UIListLayout", scrollingFrame)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Padding = UDim.new(0, 2)
 
--- Fungsi scan rekursif
-local function scanGui(object, indent, lines)
+-- Reverse urutan: item baru di atas
+layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+
+-- Fungsi cetak isi GUI
+local function scanGui(obj, indent, lines)
     indent = indent or ""
     lines = lines or {}
 
-    table.insert(lines, indent .. object.Name .. " [" .. object.ClassName .. "]")
+    table.insert(lines, indent .. obj.Name .. " [" .. obj.ClassName .. "]")
 
-    if object:IsA("TextLabel") or object:IsA("TextButton") then
-        table.insert(lines, indent .. "  Text: " .. (object.Text or "[Kosong]"))
-    elseif object:IsA("ImageLabel") or object:IsA("ImageButton") then
-        table.insert(lines, indent .. "  Image: " .. (object.Image or "[Kosong]"))
+    if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+        table.insert(lines, indent .. "  Text: " .. (obj.Text or "[Kosong]"))
+    elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+        table.insert(lines, indent .. "  Image: " .. (obj.Image or "[Kosong]"))
     end
 
-    for _, child in pairs(object:GetChildren()) do
+    for _, child in ipairs(obj:GetChildren()) do
         scanGui(child, indent .. "  ", lines)
     end
 
     return lines
 end
 
--- Fungsi update tampilan
-local function updateInspector()
-    for _, child in ipairs(scrollingFrame:GetChildren()) do
-        if child:IsA("TextLabel") then
-            child:Destroy()
+-- Bersihkan isi lama
+local function clearOld()
+    for _, v in ipairs(scrollingFrame:GetChildren()) do
+        if v:IsA("TextLabel") then
+            v:Destroy()
         end
     end
+end
 
-    for _, container in ipairs(containersToScan) do
+-- Tampilkan hasil
+local function addLine(txt, color)
+    local label = Instance.new("TextLabel", scrollingFrame)
+    label.Size = UDim2.new(1, -10, 0, 18)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.Code
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Text = txt
+    label.TextColor3 = color or Color3.new(1, 1, 1)
+end
+
+-- Update isi GUI
+local function updateInspector()
+    clearOld()
+
+    for _, container in ipairs(guiTargets) do
         if container then
-            for _, child in ipairs(container:GetChildren()) do
-                if child:IsA("ScreenGui") then
-                    local title = Instance.new("TextLabel", scrollingFrame)
-                    title.Size = UDim2.new(1, -10, 0, 20)
-                    title.BackgroundTransparency = 1
-                    title.TextColor3 = Color3.fromRGB(255, 255, 0)
-                    title.Font = Enum.Font.Code
-                    title.TextSize = 14
-                    title.TextXAlignment = Enum.TextXAlignment.Left
-                    title.Text = "📦 GUI: " .. child.Name
-
-                    local result = scanGui(child, "  ")
-                    for _, line in ipairs(result) do
-                        local label = Instance.new("TextLabel", scrollingFrame)
-                        label.Size = UDim2.new(1, -10, 0, 18)
-                        label.BackgroundTransparency = 1
-                        label.TextColor3 = Color3.new(1, 1, 1)
-                        label.Font = Enum.Font.Code
-                        label.TextSize = 13
-                        label.TextXAlignment = Enum.TextXAlignment.Left
-                        label.Text = line
+            for _, guiObj in ipairs(container:GetChildren()) do
+                if guiObj:IsA("ScreenGui") then
+                    addLine("📦 GUI: " .. guiObj.Name, Color3.fromRGB(255, 255, 0))
+                    local lines = scanGui(guiObj, "  ")
+                    for _, line in ipairs(lines) do
+                        addLine(line)
                     end
+                    addLine("")
                 end
             end
         end
     end
 end
 
--- Jalankan awal
+-- Jalankan update awal
 updateInspector()
 
--- Pantau perubahan
-for _, container in ipairs(containersToScan) do
+-- Real-time: pantau semua perubahan
+for _, container in ipairs(guiTargets) do
     if container then
-        container.ChildAdded:Connect(updateInspector)
-        container.ChildRemoved:Connect(updateInspector)
+        container.ChildAdded:Connect(function()
+            task.delay(0.3, updateInspector)
+        end)
+        container.ChildRemoved:Connect(function()
+            task.delay(0.3, updateInspector)
+        end)
+
+        for _, guiObj in ipairs(container:GetChildren()) do
+            if guiObj:IsA("ScreenGui") then
+                guiObj.DescendantAdded:Connect(function()
+                    task.delay(0.3, updateInspector)
+                end)
+                guiObj.DescendantRemoving:Connect(function()
+                    task.delay(0.3, updateInspector)
+                end)
+            end
+        end
     end
 end
 
-print("✅ GUI Inspector Scrollable aktif")
+print("✅ Inspector aktif: scrollable, real-time, terurut (terbaru di atas)")
