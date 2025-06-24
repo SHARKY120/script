@@ -24,7 +24,7 @@ screenGui.ResetOnSpawn = false
 
 local TweenService = game:GetService("TweenService")
 
--- Frame utama loading screen
+-- Frame utama
 local bg = Instance.new("Frame", screenGui)
 bg.Size = UDim2.new(0, 200, 0, 100)
 bg.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -102,7 +102,6 @@ TweenService:Create(version, TweenInfo.new(0.5), {
 }):Play()
 
 wait(0.6)
-
 -- Progress bar
 local progressBarBg = Instance.new("Frame", bg)
 progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
@@ -150,6 +149,7 @@ coroutine.wrap(function()
 
 	-- Hapus progress bar
 	progressBarBg:Destroy()
+	bgText:Destroy()
 
 	-- Mengecil (tidak transparan)
 	TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine), {
@@ -173,357 +173,205 @@ coroutine.wrap(function()
 
 	wait(0.3)
 	screenGui:Destroy()
-end)()
-local CoreGui = game:GetService("CoreGui")
-local TweenService = game:GetService("TweenService")
 
--- GUI Utama
+	-- Lanjut ke GUI Utama setelah loading selesai (bagian berikutnya)
+end)()
+
+-- GUI Utama muncul setelah loading
+local CoreGui = game:GetService("CoreGui")
 local mainGui = Instance.new("ScreenGui", CoreGui)
 mainGui.Name = "JekakSpawnerUI"
-mainGui.ResetOnSpawn = false
 mainGui.IgnoreGuiInset = true
+mainGui.ResetOnSpawn = false
 
--- Alert Function
-local function createAlert(text, color)
-	local alert = Instance.new("TextLabel", mainGui)
-	alert.Size = UDim2.new(0, 250, 0, 30)
-	alert.Position = UDim2.new(1, -260, 0.5, -100 - (#mainGui:GetChildren()*35))
-	alert.BackgroundColor3 = color or Color3.fromRGB(50, 255, 100)
-	alert.BackgroundTransparency = 0.3
-	alert.Text = text
-	alert.Font = Enum.Font.GothamBold
-	alert.TextScaled = true
-	alert.TextColor3 = Color3.new(1, 1, 1)
-	alert.AnchorPoint = Vector2.new(0, 0)
-	Instance.new("UICorner", alert).CornerRadius = UDim.new(0, 6)
-	game:GetService("Debris"):AddItem(alert, 3)
-end
+-- Frame Menu Utama
+local mainFrame = Instance.new("Frame", mainGui)
+mainFrame.Size = UDim2.new(0, 340, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -170, 0.5, -110)
+mainFrame.BackgroundColor3 = Color3.fromRGB(15,15,15)
+mainFrame.Visible = true
+mainFrame.Name = "MainFrame"
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+local mainStroke = Instance.new("UIStroke", mainFrame)
+mainStroke.Color = Color3.fromRGB(0,170,255)
+mainStroke.Thickness = 2
+mainStroke.Transparency = 0.2
 
--- Menu Frame
-local menuFrame = Instance.new("Frame", mainGui)
-menuFrame.Size = UDim2.new(0, 320, 0, 200)
-menuFrame.Position = UDim2.new(0.5, -160, 0.5, -100)
-menuFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-menuFrame.Visible = false
-menuFrame.BorderSizePixel = 0
-Instance.new("UICorner", menuFrame).CornerRadius = UDim.new(0, 12)
-local stroke = Instance.new("UIStroke", menuFrame)
-stroke.Color = Color3.fromRGB(0, 170, 255)
-stroke.Thickness = 2
-stroke.Transparency = 0.2
+-- Tombol Page Pet
+local pagePetBtn = Instance.new("TextButton", mainFrame)
+pagePetBtn.Size = UDim2.new(0, 100, 0, 25)
+pagePetBtn.Position = UDim2.new(0, 10, 0, 10)
+pagePetBtn.Text = "Pet"
+pagePetBtn.Font = Enum.Font.GothamBold
+pagePetBtn.TextScaled = true
+pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+pagePetBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", pagePetBtn).CornerRadius = UDim.new(0, 6)
 
--- Tombol X
-local closeBtn = Instance.new("TextButton", menuFrame)
+-- Tombol Page Seed
+local pageSeedBtn = Instance.new("TextButton", mainFrame)
+pageSeedBtn.Size = UDim2.new(0, 100, 0, 25)
+pageSeedBtn.Position = UDim2.new(0, 120, 0, 10)
+pageSeedBtn.Text = "Seed"
+pageSeedBtn.Font = Enum.Font.GothamBold
+pageSeedBtn.TextScaled = true
+pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+pageSeedBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", pageSeedBtn).CornerRadius = UDim.new(0, 6)
+
+-- Tombol X (hide menu)
+local closeBtn = Instance.new("TextButton", mainFrame)
 closeBtn.Size = UDim2.new(0, 25, 0, 25)
-closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.Position = UDim2.new(1, -35, 0, 10)
 closeBtn.Text = "X"
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextScaled = true
-closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+closeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 closeBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1,0)
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1, 0)
 
--- Halaman
-local petPage = Instance.new("Frame", menuFrame)
-petPage.Name = "PetPage"
-petPage.Size = UDim2.new(1, 0, 1, -40)
-petPage.Position = UDim2.new(0, 0, 0, 40)
-petPage.BackgroundTransparency = 1
-
-local seedPage = petPage:Clone()
-seedPage.Name = "SeedPage"
-seedPage.Parent = menuFrame
-seedPage.Visible = false
-
--- Tombol Page Pet
-local pagePet = Instance.new("TextButton", menuFrame)
-pagePet.Size = UDim2.new(0, 80, 0, 30)
-pagePet.Position = UDim2.new(0, 10, 0, 5)
-pagePet.Text = "Pet"
-pagePet.Font = Enum.Font.GothamBold
-pagePet.TextScaled = true
-pagePet.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-pagePet.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", pagePet).CornerRadius = UDim.new(0, 6)
-
--- Tombol Page Seed
-local pageSeed = Instance.new("TextButton", menuFrame)
-pageSeed.Size = UDim2.new(0, 80, 0, 30)
-pageSeed.Position = UDim2.new(0, 100, 0, 5)
-pageSeed.Text = "Seed"
-pageSeed.Font = Enum.Font.GothamBold
-pageSeed.TextScaled = true
-pageSeed.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-pageSeed.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", pageSeed).CornerRadius = UDim.new(0, 6)
-
--- Tombol ?
-local helpBtn = Instance.new("TextButton", menuFrame)
-helpBtn.Size = UDim2.new(0, 25, 0, 25)
-helpBtn.Position = UDim2.new(1, -60, 0, 5)
-helpBtn.Text = "?"
-helpBtn.Font = Enum.Font.GothamBold
-helpBtn.TextScaled = true
-helpBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 100)
-helpBtn.TextColor3 = Color3.fromRGB(0, 170, 255)
-Instance.new("UICorner", helpBtn).CornerRadius = UDim.new(1, 0)
-local helpStroke = Instance.new("UIStroke", helpBtn)
-helpStroke.Color = Color3.fromRGB(0, 170, 255)
-helpStroke.Thickness = 2
-helpStroke.Transparency = 0.2
-
--- Popup Help
-local popup = Instance.new("Frame", mainGui)
-popup.Size = UDim2.new(0, 340, 0, 240)
-popup.Position = UDim2.new(0.5, -170, 0.5, -120)
-popup.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-popup.Visible = false
-Instance.new("UICorner", popup).CornerRadius = UDim.new(0, 10)
-local popStroke = Instance.new("UIStroke", popup)
-popStroke.Color = Color3.fromRGB(0, 170, 255)
-popStroke.Transparency = 0.2
-
-local popTitle = Instance.new("TextLabel", popup)
-popTitle.Size = UDim2.new(1, -40, 0, 30)
-popTitle.Position = UDim2.new(0, 10, 0, 10)
-popTitle.Text = "⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️"
-popTitle.Font = Enum.Font.GothamBold
-popTitle.TextWrapped = true
-popTitle.TextScaled = true
-popTitle.TextColor3 = Color3.fromRGB(0, 170, 255)
-popTitle.BackgroundTransparency = 1
-
-local popContent = Instance.new("TextLabel", popup)
-popContent.Size = UDim2.new(1, -20, 1, -60)
-popContent.Position = UDim2.new(0, 10, 0, 50)
-popContent.BackgroundTransparency = 1
-popContent.TextColor3 = Color3.new(1,1,1)
-popContent.Font = Enum.Font.Gotham
-popContent.TextWrapped = true
-popContent.TextScaled = true
-popContent.TextXAlignment = Enum.TextXAlignment.Left
-popContent.TextYAlignment = Enum.TextYAlignment.Top
-popContent.Text = [[You must be in public server
-Don't use new accounts it will ruin the code, use your main 
-It's work 100% but better if you already own the pet ex: 
-- Queen Bee 🐝
-- Dragonfly 🐉
-- RedFox 🦊
-- Raccoon 🦝
-- Mimic Octopus🐙
-
-Don't leave the game immediately wait 6-10 minutes before leaving game or you will destroy my script!]]
-
-local closeHelp = Instance.new("TextButton", popup)
-closeHelp.Size = UDim2.new(0, 25, 0, 25)
-closeHelp.Position = UDim2.new(1, -30, 0, 5)
-closeHelp.Text = "X"
-closeHelp.Font = Enum.Font.GothamBold
-closeHelp.TextScaled = true
-closeHelp.BackgroundColor3 = Color3.fromRGB(60,60,60)
-closeHelp.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", closeHelp).CornerRadius = UDim.new(1,0)
-closeHelp.MouseButton1Click:Connect(function()
-	popup.Visible = false
-end)
-
-helpBtn.MouseButton1Click:Connect(function()
-	popup.Visible = true
-end)
-
--- Tombol J (Toggle)
+-- Tombol Logo J
 local toggleBtn = Instance.new("TextButton", mainGui)
 toggleBtn.Size = UDim2.new(0, 45, 0, 45)
-toggleBtn.Position = UDim2.new(0, 10, 0, 80)
+toggleBtn.Position = UDim2.new(0, 10, 0, 90)
 toggleBtn.Text = "J"
 toggleBtn.Font = Enum.Font.GothamBlack
 toggleBtn.TextScaled = true
 toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 100)
-toggleBtn.TextColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1,0)
+toggleBtn.TextColor3 = Color3.fromRGB(0, 170, 255)
+toggleBtn.Visible = false
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
 local toggleStroke = Instance.new("UIStroke", toggleBtn)
-toggleStroke.Color = Color3.fromRGB(0,170,255)
+toggleStroke.Color = Color3.fromRGB(0, 170, 255)
 toggleStroke.Thickness = 2
 toggleStroke.Transparency = 0.2
-toggleBtn.Visible = false
 
--- Event tombol X dan J
+-- Fungsi toggle
 closeBtn.MouseButton1Click:Connect(function()
-	menuFrame.Visible = false
+	mainFrame.Visible = false
 	toggleBtn.Visible = true
 end)
 
 toggleBtn.MouseButton1Click:Connect(function()
-	menuFrame.Visible = true
+	mainFrame.Visible = true
 	toggleBtn.Visible = false
 end)
--- Fungsi alert bertumpuk
-local function createAlert(text, isError)
-	local existing = #mainGui:GetChildren()
+-- Variabel alert aktif
+local currentAlert = nil
+
+-- Fungsi membuat alert baru (dan hapus alert sebelumnya)
+local function createAlert(text, color)
+	if currentAlert then currentAlert:Destroy() end
+
 	local alert = Instance.new("TextLabel", mainGui)
-	alert.Size = UDim2.new(0, 240, 0, 32)
-	alert.Position = UDim2.new(1, -250, 0.5, -100 - (existing * 38))
-	alert.AnchorPoint = Vector2.new(0,0)
-	alert.BackgroundColor3 = isError and Color3.fromRGB(255, 60, 60) or Color3.fromRGB(50, 255, 100)
-	alert.BackgroundTransparency = 0.25
+	alert.Size = UDim2.new(0, 300, 0, 30)
+	alert.Position = UDim2.new(0.5, -150, 0.5, 130)
+	alert.BackgroundColor3 = color
+	alert.BackgroundTransparency = 0.3
+	alert.Text = text
 	alert.Font = Enum.Font.GothamBold
 	alert.TextScaled = true
 	alert.TextColor3 = Color3.new(1,1,1)
-	alert.Text = text
+	alert.AnchorPoint = Vector2.new(0.5, 0)
+	alert.ZIndex = 100
 	Instance.new("UICorner", alert).CornerRadius = UDim.new(0, 6)
-
+	currentAlert = alert
 	game:GetService("Debris"):AddItem(alert, 3)
 end
 
--- GUI Menu Utama
-local menu = Instance.new("Frame", mainGui)
-menu.Size = UDim2.new(0, 320, 0, 240)
-menu.Position = UDim2.new(0.5, -160, 0.5, -120)
-menu.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-menu.BorderSizePixel = 0
-menu.Name = "MainMenu"
-Instance.new("UICorner", menu).CornerRadius = UDim.new(0, 10)
-local menuStroke = Instance.new("UIStroke", menu)
-menuStroke.Color = Color3.fromRGB(0,170,255)
-menuStroke.Transparency = 0.2
-
--- Tombol X
-local closeBtn = Instance.new("TextButton", menu)
-closeBtn.Size = UDim2.new(0, 25, 0, 25)
-closeBtn.Position = UDim2.new(1, -30, 0, 5)
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextScaled = true
-closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
-closeBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1,0)
-
--- Tombol page PET
-local petBtn = Instance.new("TextButton", menu)
-petBtn.Size = UDim2.new(0.5, 0, 0, 30)
-petBtn.Position = UDim2.new(0, 0, 0, 5)
-petBtn.Text = "Pet"
-petBtn.Font = Enum.Font.GothamBold
-petBtn.TextScaled = true
-petBtn.TextColor3 = Color3.fromRGB(255,255,255)
-petBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-Instance.new("UICorner", petBtn).CornerRadius = UDim.new(0, 8)
-
--- Tombol page SEED
-local seedBtn = Instance.new("TextButton", menu)
-seedBtn.Size = UDim2.new(0.5, 0, 0, 30)
-seedBtn.Position = UDim2.new(0.5, 0, 0, 5)
-seedBtn.Text = "Seed"
-seedBtn.Font = Enum.Font.GothamBold
-seedBtn.TextScaled = true
-seedBtn.TextColor3 = Color3.fromRGB(255,255,255)
-seedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-Instance.new("UICorner", seedBtn).CornerRadius = UDim.new(0, 8)
-
--- Container page
-local pageFrame = Instance.new("Frame", menu)
-pageFrame.Size = UDim2.new(1, -20, 1, -40)
-pageFrame.Position = UDim2.new(0, 10, 0, 35)
-pageFrame.BackgroundTransparency = 1
-
--- Form Pet
-local petPage = Instance.new("Frame", pageFrame)
-petPage.Size = UDim2.new(1, 0, 1, 0)
+-- Frame konten untuk Pet & Seed
+local petPage = Instance.new("Frame", mainFrame)
+petPage.Size = UDim2.new(1, -20, 0, 140)
+petPage.Position = UDim2.new(0, 10, 0, 50)
 petPage.BackgroundTransparency = 1
 petPage.Name = "PetPage"
 
+local seedPage = petPage:Clone()
+seedPage.Name = "SeedPage"
+seedPage.Parent = mainFrame
+seedPage.Visible = false
+
+-- Label Pet Name
 local petLabel = Instance.new("TextLabel", petPage)
 petLabel.Size = UDim2.new(1, 0, 0, 30)
-petLabel.Position = UDim2.new(0, 0, 0, 10)
-petLabel.BackgroundTransparency = 1
+petLabel.Position = UDim2.new(0, 0, 0, 0)
+petLabel.BackgroundColor3 = Color3.fromRGB(25,25,25)
 petLabel.Text = "Enter Pet Name"
 petLabel.Font = Enum.Font.Gotham
 petLabel.TextScaled = true
 petLabel.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", petLabel).CornerRadius = UDim.new(0, 6)
 
-local petInput = Instance.new("TextBox", petPage)
-petInput.Size = UDim2.new(1, 0, 0, 32)
-petInput.Position = UDim2.new(0, 0, 0, 50)
-petInput.PlaceholderText = "Pet name"
-petInput.Font = Enum.Font.Gotham
-petInput.TextScaled = true
-petInput.TextColor3 = Color3.new(1,1,1)
-petInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Instance.new("UICorner", petInput).CornerRadius = UDim.new(0, 6)
+-- Tombol Spawn Pet
+local petSpawnBtn = Instance.new("TextButton", petPage)
+petSpawnBtn.Size = UDim2.new(0.5, 0, 0, 30)
+petSpawnBtn.Position = UDim2.new(0.25, 0, 0, 40)
+petSpawnBtn.Text = "Spawn"
+petSpawnBtn.Font = Enum.Font.GothamBold
+petSpawnBtn.TextScaled = true
+petSpawnBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+petSpawnBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", petSpawnBtn).CornerRadius = UDim.new(0, 6)
 
-local spawnPetBtn = Instance.new("TextButton", petPage)
-spawnPetBtn.Size = UDim2.new(0.5, 0, 0, 30)
-spawnPetBtn.Position = UDim2.new(0.25, 0, 0, 95)
-spawnPetBtn.Text = "Spawn"
-spawnPetBtn.Font = Enum.Font.GothamBold
-spawnPetBtn.TextScaled = true
-spawnPetBtn.TextColor3 = Color3.new(1,1,1)
-spawnPetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", spawnPetBtn).CornerRadius = UDim.new(0, 6)
-
--- Halaman seed akan dikirim di potongan berikutnya
-
-spawnPetBtn.MouseButton1Click:Connect(function()
-	local txt = petInput.Text
-	if txt == "" then
-		createAlert("Please fill pet name", true)
-	else
-		createAlert("Successful to spawn " .. txt)
-		spawnSound:Play()
-	end
-end)
-
-closeBtn.MouseButton1Click:Connect(function()
-	menu.Visible = false
-	toggleBtn.Visible = true
-end)
--- Form Seed
-local seedPage = Instance.new("Frame", pageFrame)
-seedPage.Size = UDim2.new(1, 0, 1, 0)
-seedPage.BackgroundTransparency = 1
-seedPage.Name = "SeedPage"
-seedPage.Visible = false
-
+-- Label Seed Name
 local seedLabel = Instance.new("TextLabel", seedPage)
 seedLabel.Size = UDim2.new(1, 0, 0, 30)
-seedLabel.Position = UDim2.new(0, 0, 0, 10)
-seedLabel.BackgroundTransparency = 1
+seedLabel.Position = UDim2.new(0, 0, 0, 0)
+seedLabel.BackgroundColor3 = Color3.fromRGB(25,25,25)
 seedLabel.Text = "Enter Seed Name"
 seedLabel.Font = Enum.Font.Gotham
 seedLabel.TextScaled = true
 seedLabel.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", seedLabel).CornerRadius = UDim.new(0, 6)
 
-local seedInput = Instance.new("TextBox", seedPage)
-seedInput.Size = UDim2.new(1, 0, 0, 32)
-seedInput.Position = UDim2.new(0, 0, 0, 50)
-seedInput.PlaceholderText = "Seed name"
-seedInput.Font = Enum.Font.Gotham
-seedInput.TextScaled = true
-seedInput.TextColor3 = Color3.new(1,1,1)
-seedInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Instance.new("UICorner", seedInput).CornerRadius = UDim.new(0, 6)
+-- Tombol Spawn Seed
+local seedSpawnBtn = Instance.new("TextButton", seedPage)
+seedSpawnBtn.Size = UDim2.new(0.5, 0, 0, 30)
+seedSpawnBtn.Position = UDim2.new(0.25, 0, 0, 40)
+seedSpawnBtn.Text = "Spawn"
+seedSpawnBtn.Font = Enum.Font.GothamBold
+seedSpawnBtn.TextScaled = true
+seedSpawnBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+seedSpawnBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", seedSpawnBtn).CornerRadius = UDim.new(0, 6)
 
-local spawnSeedBtn = Instance.new("TextButton", seedPage)
-spawnSeedBtn.Size = UDim2.new(0.5, 0, 0, 30)
-spawnSeedBtn.Position = UDim2.new(0.25, 0, 0, 95)
-spawnSeedBtn.Text = "Spawn"
-spawnSeedBtn.Font = Enum.Font.GothamBold
-spawnSeedBtn.TextScaled = true
-spawnSeedBtn.TextColor3 = Color3.new(1,1,1)
-spawnSeedBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", spawnSeedBtn).CornerRadius = UDim.new(0, 6)
-
-spawnSeedBtn.MouseButton1Click:Connect(function()
-	local txt = seedInput.Text
-	if txt == "" then
-		createAlert("Please fill seed name", true)
+-- Aksi spawn tombol PET
+petSpawnBtn.MouseButton1Click:Connect(function()
+	local petName = petLabel.Text
+	if not petName or petName == "" or petName == "Enter Pet Name" then
+		createAlert("Please fill pet name", Color3.fromRGB(255,80,80))
 	else
-		createAlert("Successful to spawn " .. txt .. " seed")
+		createAlert("Successful to spawn " .. petName, Color3.fromRGB(50, 255, 100))
 		spawnSound:Play()
 	end
 end)
 
--- Tombol ?
+-- Aksi spawn tombol SEED
+seedSpawnBtn.MouseButton1Click:Connect(function()
+	local seedName = seedLabel.Text
+	if not seedName or seedName == "" or seedName == "Enter Seed Name" then
+		createAlert("Please fill seed name", Color3.fromRGB(255,80,80))
+	else
+		createAlert("Successful to spawn " .. seedName .. " seed", Color3.fromRGB(50, 255, 100))
+		spawnSound:Play()
+	end
+end)
+
+-- Navigasi page Pet <-> Seed
+pagePetBtn.MouseButton1Click:Connect(function()
+	petPage.Visible = true
+	seedPage.Visible = false
+	pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+	pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+end)
+
+pageSeedBtn.MouseButton1Click:Connect(function()
+	petPage.Visible = false
+	seedPage.Visible = true
+	pageSeedBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+	pagePetBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+end)
+-- Tombol ? hanya di PetPage
 local helpBtn = Instance.new("TextButton", petPage)
 helpBtn.Size = UDim2.new(0, 25, 0, 25)
 helpBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -532,32 +380,35 @@ helpBtn.Font = Enum.Font.GothamBold
 helpBtn.TextScaled = true
 helpBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 100)
 helpBtn.TextColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", helpBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UICorner", helpBtn).CornerRadius = UDim.new(1,0)
 local helpStroke = Instance.new("UIStroke", helpBtn)
 helpStroke.Color = Color3.fromRGB(0,170,255)
-helpStroke.Thickness = 1.5
+helpStroke.Thickness = 2
 helpStroke.Transparency = 0.2
 
 -- Popup instruksi
 local popup = Instance.new("Frame", mainGui)
-popup.Size = UDim2.new(0, 360, 0, 220)
-popup.Position = UDim2.new(0.5, -180, 0.5, -110)
+popup.Size = UDim2.new(0, 340, 0, 220)
+popup.Position = UDim2.new(0.5, -170, 0.5, -110)
 popup.BackgroundColor3 = Color3.fromRGB(15,15,25)
 popup.Visible = false
 Instance.new("UICorner", popup).CornerRadius = UDim.new(0, 10)
-local popupStroke = Instance.new("UIStroke", popup)
-popupStroke.Color = Color3.fromRGB(0,170,255)
-popupStroke.Transparency = 0.2
+local popStroke = Instance.new("UIStroke", popup)
+popStroke.Color = Color3.fromRGB(0,170,255)
+popStroke.Transparency = 0.2
 
-local title = Instance.new("TextLabel", popup)
-title.Size = UDim2.new(1, -40, 0, 28)
-title.Position = UDim2.new(0, 10, 0, 10)
-title.Text = "⚠️ THINGS YOU NEED TO KNOW ⚠️"
-title.Font = Enum.Font.GothamBold
-title.TextScaled = true
-title.TextColor3 = Color3.fromRGB(0,170,255)
-title.BackgroundTransparency = 1
+-- Judul popup
+local popupTitle = Instance.new("TextLabel", popup)
+popupTitle.Size = UDim2.new(1, -40, 0, 30)
+popupTitle.Position = UDim2.new(0, 10, 0, 10)
+popupTitle.Text = "⚠️ THINGS YOU NEED TO KNOW ⚠️"
+popupTitle.Font = Enum.Font.GothamBold
+popupTitle.TextWrapped = true
+popupTitle.TextScaled = true
+popupTitle.TextColor3 = Color3.fromRGB(0, 170, 255)
+popupTitle.BackgroundTransparency = 1
 
+-- Konten instruksi
 local content = Instance.new("TextLabel", popup)
 content.Size = UDim2.new(1, -20, 1, -60)
 content.Position = UDim2.new(0, 10, 0, 50)
@@ -565,9 +416,9 @@ content.BackgroundTransparency = 1
 content.TextColor3 = Color3.new(1,1,1)
 content.Font = Enum.Font.Gotham
 content.TextWrapped = true
+content.TextScaled = true
 content.TextXAlignment = Enum.TextXAlignment.Left
 content.TextYAlignment = Enum.TextYAlignment.Top
-content.TextScaled = true
 content.Text = [[You must be in public server
 Don't use new accounts it will ruin the code, use your main 
 It's work 100% but better if you already own the pet ex: 
@@ -579,16 +430,17 @@ It's work 100% but better if you already own the pet ex:
 
 Don't leave the game immediately wait 6-10 minutes before leaving game or you will destroy my script!]]
 
-local popupClose = Instance.new("TextButton", popup)
-popupClose.Size = UDim2.new(0, 25, 0, 25)
-popupClose.Position = UDim2.new(1, -30, 0, 5)
-popupClose.Text = "X"
-popupClose.Font = Enum.Font.GothamBold
-popupClose.TextScaled = true
-popupClose.BackgroundColor3 = Color3.fromRGB(60,60,60)
-popupClose.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", popupClose).CornerRadius = UDim.new(1, 0)
-popupClose.MouseButton1Click:Connect(function()
+-- Tombol close popup
+local close = Instance.new("TextButton", popup)
+close.Size = UDim2.new(0, 25, 0, 25)
+close.Position = UDim2.new(1, -30, 0, 5)
+close.Text = "X"
+close.Font = Enum.Font.GothamBold
+close.TextScaled = true
+close.BackgroundColor3 = Color3.fromRGB(60,60,60)
+close.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
+close.MouseButton1Click:Connect(function()
 	popup.Visible = false
 end)
 
@@ -596,41 +448,10 @@ helpBtn.MouseButton1Click:Connect(function()
 	popup.Visible = true
 end)
 
--- Tombol Logo J
-local toggleBtn = Instance.new("TextButton", mainGui)
-toggleBtn.Size = UDim2.new(0, 45, 0, 45)
-toggleBtn.Position = UDim2.new(0, 10, 0, 100) -- agak ke bawah agar tidak tertutup menu lain
-toggleBtn.Text = "J"
-toggleBtn.Font = Enum.Font.GothamBlack
-toggleBtn.TextScaled = true
-toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 100)
-toggleBtn.TextColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1,0)
-local toggleStroke = Instance.new("UIStroke", toggleBtn)
-toggleStroke.Color = Color3.fromRGB(0,170,255)
-toggleStroke.Thickness = 2
-toggleStroke.Transparency = 0.2
-toggleBtn.Visible = false
+-- Auto buka PetPage setelah loading selesai
+task.wait(0.5)
+mainFrame.Visible = true
+pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+petPage.Visible = true
 
-toggleBtn.MouseButton1Click:Connect(function()
-	menu.Visible = true
-	toggleBtn.Visible = false
-end)
-
--- Switching Page
-petBtn.MouseButton1Click:Connect(function()
-	petPage.Visible = true
-	seedPage.Visible = false
-	petBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-	seedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-end)
-
-seedBtn.MouseButton1Click:Connect(function()
-	petPage.Visible = false
-	seedPage.Visible = true
-	seedBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-	petBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-end)
-
--- Default aktif page pet
-petBtn:FireEvent("MouseButton1Click")
