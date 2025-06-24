@@ -271,6 +271,80 @@ local function createSpawnerMenu(titleText, isPet)
 		toggleBtn.Visible = true
 	end)
 
+	-- Tombol bantuan (hanya di petMenu)
+	if isPet then
+		local helpBtn = Instance.new("TextButton", frame)
+		helpBtn.Size = UDim2.new(0, 25, 0, 25)
+		helpBtn.Position = UDim2.new(0, 5, 0, 5)
+		helpBtn.Text = "?"
+		helpBtn.Font = Enum.Font.GothamBold
+		helpBtn.TextScaled = true
+		helpBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 100)
+		helpBtn.TextColor3 = Color3.fromRGB(0,170,255)
+		Instance.new("UICorner", helpBtn).CornerRadius = UDim.new(1,0)
+		local helpStroke = Instance.new("UIStroke", helpBtn)
+		helpStroke.Color = Color3.fromRGB(0,170,255)
+		helpStroke.Thickness = 2
+		helpStroke.Transparency = 0.2
+
+		local popup = Instance.new("Frame", mainGui)
+		popup.Size = UDim2.new(0, 340, 0, 220)
+		popup.Position = UDim2.new(0.5, -170, 0.5, -110)
+		popup.BackgroundColor3 = Color3.fromRGB(15,15,25)
+		popup.Visible = false
+		Instance.new("UICorner", popup).CornerRadius = UDim.new(0, 10)
+		local popStroke = Instance.new("UIStroke", popup)
+		popStroke.Color = Color3.fromRGB(0,170,255)
+		popStroke.Transparency = 0.2
+
+		local title = Instance.new("TextLabel", popup)
+		title.Size = UDim2.new(1, -40, 0, 30)
+		title.Position = UDim2.new(0, 10, 0, 10)
+		title.Text = "⚠️THINGS YOU NEED TO KNOW BEFORE EXECUTING THE SCRIPT⚠️"
+		title.Font = Enum.Font.GothamBold
+		title.TextWrapped = true
+		title.TextScaled = true
+		title.TextColor3 = Color3.fromRGB(0, 170, 255)
+		title.BackgroundTransparency = 1
+
+		local content = Instance.new("TextLabel", popup)
+		content.Size = UDim2.new(1, -20, 1, -60)
+		content.Position = UDim2.new(0, 10, 0, 50)
+		content.BackgroundTransparency = 1
+		content.TextColor3 = Color3.new(1,1,1)
+		content.Font = Enum.Font.Gotham
+		content.TextWrapped = true
+		content.TextScaled = true
+		content.TextYAlignment = Enum.TextYAlignment.Top
+		content.Text = [[You must be in public server don't play in private server
+Do not use a new account because it will detect or not load, you must play on your main account
+This script is work 100% but better when you have the pet that you want to spawn example :
+-Queen Bee 🐝
+-Dragonfly🐉
+-RedFox 🦊
+-Raccoon 🦝
+
+Do not leave immediately in the game and wait at least 6-10 minutes before leaving the game or it will ruin data so be careful]]
+
+		local close = Instance.new("TextButton", popup)
+		close.Size = UDim2.new(0, 25, 0, 25)
+		close.Position = UDim2.new(1, -30, 0, 5)
+		close.Text = "X"
+		close.Font = Enum.Font.GothamBold
+		close.TextScaled = true
+		close.BackgroundColor3 = Color3.fromRGB(60,60,60)
+		close.TextColor3 = Color3.new(1,1,1)
+		Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
+		close.MouseButton1Click:Connect(function()
+			popup.Visible = false
+		end)
+
+		helpBtn.MouseButton1Click:Connect(function()
+			popup.Visible = true
+		end)
+	end
+
+
 	return frame
 end
 
