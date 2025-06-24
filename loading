@@ -166,6 +166,14 @@ coroutine.wrap(function()
 
 	wait(0.3)
 	screenGui:Destroy()
+-- Tampilkan GUI utama setelah loading selesai
+mainFrame.Visible = true
+toggleBtn.Visible = false
+petPage.Visible = true
+seedPage.Visible = false
+pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
+
 
 	-- Lanjut ke GUI utama (dikirim di blok berikutnya)
 end)()
