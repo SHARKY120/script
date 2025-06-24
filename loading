@@ -3,28 +3,25 @@ if game.CoreGui:FindFirstChild("FullBlueLoadingScreen") then
     game.CoreGui:FindFirstChild("FullBlueLoadingScreen"):Destroy()
 end
 
--- Sound efek spawn
+-- Sound efek spawn & selesai loading
 local spawnSound = Instance.new("Sound")
 spawnSound.SoundId = "rbxassetid://6026984224"
 spawnSound.Volume = 1
 spawnSound.Name = "SpawnSound"
 spawnSound.Parent = game:GetService("SoundService")
 
--- Sound selesai loading
 local finishSound = Instance.new("Sound")
 finishSound.SoundId = "rbxassetid://9118823102"
 finishSound.Volume = 1
 finishSound.Parent = game:GetService("SoundService")
 
--- Buat GUI
+-- GUI Loading
+local TweenService = game:GetService("TweenService")
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "FullBlueLoadingScreen"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 
-local TweenService = game:GetService("TweenService")
-
--- Frame utama
 local bg = Instance.new("Frame", screenGui)
 bg.Size = UDim2.new(0, 200, 0, 100)
 bg.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -39,7 +36,6 @@ stroke.Thickness = 3
 stroke.Color = Color3.fromRGB(0, 170, 255)
 stroke.Transparency = 0.2
 
--- Glow belakang
 local glow = Instance.new("ImageLabel", bg)
 glow.AnchorPoint = Vector2.new(0.5, 0.5)
 glow.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -59,14 +55,12 @@ coroutine.wrap(function()
 	end
 end)()
 
--- Judul dan versi
 local title = Instance.new("TextLabel", bg)
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 20)
 title.BackgroundTransparency = 1
 title.Text = "JEKAK121 SPAWNER"
 title.Font = Enum.Font.GothamBold
-title.TextScaled = false
 title.TextSize = 38
 title.TextColor3 = Color3.new(1, 1, 1)
 title.ZIndex = 2
@@ -77,12 +71,11 @@ version.Position = UDim2.new(0, 0, 0, 60)
 version.BackgroundTransparency = 1
 version.Text = "v1.2.0"
 version.Font = Enum.Font.Gotham
-version.TextScaled = false
 version.TextSize = 18
 version.TextColor3 = Color3.fromRGB(200, 200, 200)
 version.ZIndex = 2
 
--- Fade in dan expand
+-- Animasi fade in dan expand
 wait(0.3)
 TweenService:Create(bg, TweenInfo.new(0.4), {
 	BackgroundTransparency = 0
@@ -102,7 +95,7 @@ TweenService:Create(version, TweenInfo.new(0.5), {
 }):Play()
 
 wait(0.6)
--- Progress bar
+-- Progress Bar
 local progressBarBg = Instance.new("Frame", bg)
 progressBarBg.Size = UDim2.new(0.9, 0, 0.2, 0)
 progressBarBg.Position = UDim2.new(0.05, 0, 0, 110)
@@ -137,7 +130,7 @@ percentText.TextScaled = true
 percentText.TextColor3 = Color3.new(1, 1, 1)
 percentText.ZIndex = 4
 
--- Jalankan progress
+-- Jalankan animasi progress
 coroutine.wrap(function()
 	for i = 1, 100 do
 		progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -151,7 +144,7 @@ coroutine.wrap(function()
 	progressBarBg:Destroy()
 	bgText:Destroy()
 
-	-- Mengecil (tidak transparan)
+	-- Mengecil tanpa transparan
 	TweenService:Create(bg, TweenInfo.new(0.4, Enum.EasingStyle.Sine), {
 		Size = UDim2.new(0, 200, 0, 100)
 	}):Play()
@@ -174,17 +167,16 @@ coroutine.wrap(function()
 	wait(0.3)
 	screenGui:Destroy()
 
-	-- Lanjut ke GUI Utama setelah loading selesai (bagian berikutnya)
+	-- Lanjut ke GUI utama (dikirim di blok berikutnya)
 end)()
-
--- GUI Utama muncul setelah loading
+-- GUI Utama setelah loading selesai
+task.wait(0.1)
 local CoreGui = game:GetService("CoreGui")
 local mainGui = Instance.new("ScreenGui", CoreGui)
 mainGui.Name = "JekakSpawnerUI"
 mainGui.IgnoreGuiInset = true
 mainGui.ResetOnSpawn = false
 
--- Frame Menu Utama
 local mainFrame = Instance.new("Frame", mainGui)
 mainFrame.Size = UDim2.new(0, 340, 0, 220)
 mainFrame.Position = UDim2.new(0.5, -170, 0.5, -110)
@@ -197,7 +189,7 @@ mainStroke.Color = Color3.fromRGB(0,170,255)
 mainStroke.Thickness = 2
 mainStroke.Transparency = 0.2
 
--- Tombol Page Pet
+-- Tombol Navigasi
 local pagePetBtn = Instance.new("TextButton", mainFrame)
 pagePetBtn.Size = UDim2.new(0, 100, 0, 25)
 pagePetBtn.Position = UDim2.new(0, 10, 0, 10)
@@ -208,7 +200,6 @@ pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
 pagePetBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", pagePetBtn).CornerRadius = UDim.new(0, 6)
 
--- Tombol Page Seed
 local pageSeedBtn = Instance.new("TextButton", mainFrame)
 pageSeedBtn.Size = UDim2.new(0, 100, 0, 25)
 pageSeedBtn.Position = UDim2.new(0, 120, 0, 10)
@@ -219,7 +210,7 @@ pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
 pageSeedBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", pageSeedBtn).CornerRadius = UDim.new(0, 6)
 
--- Tombol X (hide menu)
+-- Tombol X (hide menu) & Toggle Logo J
 local closeBtn = Instance.new("TextButton", mainFrame)
 closeBtn.Size = UDim2.new(0, 25, 0, 25)
 closeBtn.Position = UDim2.new(1, -35, 0, 10)
@@ -230,7 +221,6 @@ closeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 closeBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1, 0)
 
--- Tombol Logo J
 local toggleBtn = Instance.new("TextButton", mainGui)
 toggleBtn.Size = UDim2.new(0, 45, 0, 45)
 toggleBtn.Position = UDim2.new(0, 10, 0, 90)
@@ -246,7 +236,6 @@ toggleStroke.Color = Color3.fromRGB(0, 170, 255)
 toggleStroke.Thickness = 2
 toggleStroke.Transparency = 0.2
 
--- Fungsi toggle
 closeBtn.MouseButton1Click:Connect(function()
 	mainFrame.Visible = false
 	toggleBtn.Visible = true
@@ -256,13 +245,11 @@ toggleBtn.MouseButton1Click:Connect(function()
 	mainFrame.Visible = true
 	toggleBtn.Visible = false
 end)
--- Variabel alert aktif
-local currentAlert = nil
 
--- Fungsi membuat alert baru (dan hapus alert sebelumnya)
+-- ALERT
+local currentAlert = nil
 local function createAlert(text, color)
 	if currentAlert then currentAlert:Destroy() end
-
 	local alert = Instance.new("TextLabel", mainGui)
 	alert.Size = UDim2.new(0, 300, 0, 30)
 	alert.Position = UDim2.new(0.5, -150, 0.5, 130)
@@ -279,7 +266,7 @@ local function createAlert(text, color)
 	game:GetService("Debris"):AddItem(alert, 3)
 end
 
--- Frame konten untuk Pet & Seed
+-- FRAME PAGE
 local petPage = Instance.new("Frame", mainFrame)
 petPage.Size = UDim2.new(1, -20, 0, 140)
 petPage.Position = UDim2.new(0, 10, 0, 50)
@@ -291,16 +278,16 @@ seedPage.Name = "SeedPage"
 seedPage.Parent = mainFrame
 seedPage.Visible = false
 
--- Label Pet Name
-local petLabel = Instance.new("TextLabel", petPage)
-petLabel.Size = UDim2.new(1, 0, 0, 30)
-petLabel.Position = UDim2.new(0, 0, 0, 0)
-petLabel.BackgroundColor3 = Color3.fromRGB(25,25,25)
-petLabel.Text = "Enter Pet Name"
-petLabel.Font = Enum.Font.Gotham
-petLabel.TextScaled = true
-petLabel.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", petLabel).CornerRadius = UDim.new(0, 6)
+-- PET INPUT (TextBox)
+local petInput = Instance.new("TextBox", petPage)
+petInput.Size = UDim2.new(1, 0, 0, 30)
+petInput.Position = UDim2.new(0, 0, 0, 0)
+petInput.BackgroundColor3 = Color3.fromRGB(25,25,25)
+petInput.PlaceholderText = "Enter Pet Name"
+petInput.Font = Enum.Font.Gotham
+petInput.TextScaled = true
+petInput.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", petInput).CornerRadius = UDim.new(0, 6)
 
 -- Tombol Spawn Pet
 local petSpawnBtn = Instance.new("TextButton", petPage)
@@ -313,16 +300,16 @@ petSpawnBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
 petSpawnBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", petSpawnBtn).CornerRadius = UDim.new(0, 6)
 
--- Label Seed Name
-local seedLabel = Instance.new("TextLabel", seedPage)
-seedLabel.Size = UDim2.new(1, 0, 0, 30)
-seedLabel.Position = UDim2.new(0, 0, 0, 0)
-seedLabel.BackgroundColor3 = Color3.fromRGB(25,25,25)
-seedLabel.Text = "Enter Seed Name"
-seedLabel.Font = Enum.Font.Gotham
-seedLabel.TextScaled = true
-seedLabel.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", seedLabel).CornerRadius = UDim.new(0, 6)
+-- SEED INPUT (TextBox)
+local seedInput = Instance.new("TextBox", seedPage)
+seedInput.Size = UDim2.new(1, 0, 0, 30)
+seedInput.Position = UDim2.new(0, 0, 0, 0)
+seedInput.BackgroundColor3 = Color3.fromRGB(25,25,25)
+seedInput.PlaceholderText = "Enter Seed Name"
+seedInput.Font = Enum.Font.Gotham
+seedInput.TextScaled = true
+seedInput.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", seedInput).CornerRadius = UDim.new(0, 6)
 
 -- Tombol Spawn Seed
 local seedSpawnBtn = Instance.new("TextButton", seedPage)
@@ -334,11 +321,10 @@ seedSpawnBtn.TextScaled = true
 seedSpawnBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
 seedSpawnBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", seedSpawnBtn).CornerRadius = UDim.new(0, 6)
-
--- Aksi spawn tombol PET
+-- Aksi Spawn PET
 petSpawnBtn.MouseButton1Click:Connect(function()
-	local petName = petLabel.Text
-	if not petName or petName == "" or petName == "Enter Pet Name" then
+	local petName = petInput.Text
+	if not petName or petName == "" then
 		createAlert("Please fill pet name", Color3.fromRGB(255,80,80))
 	else
 		createAlert("Successful to spawn " .. petName, Color3.fromRGB(50, 255, 100))
@@ -346,10 +332,10 @@ petSpawnBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Aksi spawn tombol SEED
+-- Aksi Spawn SEED
 seedSpawnBtn.MouseButton1Click:Connect(function()
-	local seedName = seedLabel.Text
-	if not seedName or seedName == "" or seedName == "Enter Seed Name" then
+	local seedName = seedInput.Text
+	if not seedName or seedName == "" then
 		createAlert("Please fill seed name", Color3.fromRGB(255,80,80))
 	else
 		createAlert("Successful to spawn " .. seedName .. " seed", Color3.fromRGB(50, 255, 100))
@@ -357,7 +343,7 @@ seedSpawnBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Navigasi page Pet <-> Seed
+-- Navigasi page
 pagePetBtn.MouseButton1Click:Connect(function()
 	petPage.Visible = true
 	seedPage.Visible = false
@@ -371,7 +357,8 @@ pageSeedBtn.MouseButton1Click:Connect(function()
 	pageSeedBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
 	pagePetBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
 end)
--- Tombol ? hanya di PetPage
+
+-- Tombol Bantuan (?) hanya di halaman Pet
 local helpBtn = Instance.new("TextButton", petPage)
 helpBtn.Size = UDim2.new(0, 25, 0, 25)
 helpBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -386,7 +373,7 @@ helpStroke.Color = Color3.fromRGB(0,170,255)
 helpStroke.Thickness = 2
 helpStroke.Transparency = 0.2
 
--- Popup instruksi
+-- Popup bantuan
 local popup = Instance.new("Frame", mainGui)
 popup.Size = UDim2.new(0, 340, 0, 220)
 popup.Position = UDim2.new(0.5, -170, 0.5, -110)
@@ -397,7 +384,6 @@ local popStroke = Instance.new("UIStroke", popup)
 popStroke.Color = Color3.fromRGB(0,170,255)
 popStroke.Transparency = 0.2
 
--- Judul popup
 local popupTitle = Instance.new("TextLabel", popup)
 popupTitle.Size = UDim2.new(1, -40, 0, 30)
 popupTitle.Position = UDim2.new(0, 10, 0, 10)
@@ -408,7 +394,6 @@ popupTitle.TextScaled = true
 popupTitle.TextColor3 = Color3.fromRGB(0, 170, 255)
 popupTitle.BackgroundTransparency = 1
 
--- Konten instruksi
 local content = Instance.new("TextLabel", popup)
 content.Size = UDim2.new(1, -20, 1, -60)
 content.Position = UDim2.new(0, 10, 0, 50)
@@ -440,6 +425,7 @@ close.TextScaled = true
 close.BackgroundColor3 = Color3.fromRGB(60,60,60)
 close.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
+
 close.MouseButton1Click:Connect(function()
 	popup.Visible = false
 end)
@@ -448,10 +434,9 @@ helpBtn.MouseButton1Click:Connect(function()
 	popup.Visible = true
 end)
 
--- Auto buka PetPage setelah loading selesai
-task.wait(0.5)
+-- Buka PetPage by default
+task.wait(0.3)
 mainFrame.Visible = true
+petPage.Visible = true
 pagePetBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
 pageSeedBtn.BackgroundColor3 = Color3.fromRGB(25,25,25)
-petPage.Visible = true
-
