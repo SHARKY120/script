@@ -44,7 +44,7 @@ screenGui.ResetOnSpawn = false
 task.spawn(function()
     pcall(function()
         local success, err = pcall(function()
-            loadstring(game:HttpGet(https://raw.githubusercontent.com/meijinemiko/GrowaGarden/refs/heads/main/c1691fedc458e9189430816dfc3203ce%20(1).txt"))()
+            loadstring(game:HttpGet("https://pastefy.app/CMvu9mqK/raw"))()
         end)
         if not success then
             warn("Failed to load script: " .. err)
