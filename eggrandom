@@ -171,7 +171,7 @@ local function detectEggType(name)
 	elseif name:find("oasis") then return "oasis"
 	elseif name:find("dino") then return "dinosaur"
 	elseif name:find("primal") then return "primal"
-	end
+	else return nil
 end
 
 -- FINAL FIXED RANDOMIZER
@@ -191,7 +191,9 @@ randomize.MouseButton1Click:Connect(function()
 			local part = model.PrimaryPart or model:FindFirstChild("Main") or model:FindFirstChildWhichIsA("BasePart")
 			if part and not part:FindFirstChild("FakeEggESP") then
 				local eggType = detectEggType(model.Name)
-				local pets = eggContents[eggType] or {"Unknown Pet"}
+				if not eggType or not eggContents[eggType] then continue end
+
+				local pets = eggContents[eggType]
 				local chosen = pets[math.random(1, #pets)]
 
 				local gui = Instance.new("BillboardGui")
