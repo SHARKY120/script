@@ -1,11 +1,11 @@
--- 🌟 Jekak121 Egg Randomizer V1.2.0 (FINAL FIX)
+-- 🌟 Jekak121 Egg Randomizer V1.2.0 (FINAL)
 for _, obj in pairs(game.CoreGui:GetChildren()) do
 	if obj.Name == "EggRandomizerGUI" or obj.Name == "JToggleLogo" or obj.Name == "EggRandomizerLoading" then
 		obj:Destroy()
 	end
 end
 
--- Loading screen
+-- Loading Screen
 local loadingGui = Instance.new("ScreenGui", game.CoreGui)
 loadingGui.Name = "EggRandomizerLoading"
 loadingGui.IgnoreGuiInset = true
@@ -41,7 +41,6 @@ local fill = Instance.new("Frame", progressBar)
 fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 fill.Size = UDim2.new(0, 0, 1, 0)
 fill.BorderSizePixel = 0
-fill.Name = "Fill"
 
 for i = 0, 100 do
 	fill.Size = UDim2.new(i / 100, 0, 1, 0)
@@ -57,7 +56,6 @@ local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 300, 0, 180)
 main.Position = UDim2.new(0, 20, 0.2, 0)
 main.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-main.Name = "MainFrame"
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
 
 local titleMain = Instance.new("TextLabel", main)
@@ -69,6 +67,7 @@ titleMain.TextSize = 16
 titleMain.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleMain.BackgroundTransparency = 1
 
+-- Tombol Close (X)
 local closeBtn = Instance.new("TextButton", main)
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -35, 0, 5)
@@ -80,24 +79,30 @@ closeBtn.BackgroundTransparency = 1
 
 closeBtn.MouseButton1Click:Connect(function()
 	gui.Enabled = false
-	if not game.CoreGui:FindFirstChild("JToggleLogo") then
-		local logo = Instance.new("TextButton", game.CoreGui)
-		logo.Name = "JToggleLogo"
-		logo.Size = UDim2.new(0, 40, 0, 40)
-		logo.Position = UDim2.new(0, 10, 0.2, 0)
-		logo.Text = "J"
-		logo.Font = Enum.Font.GothamBlack
-		logo.TextSize = 18
-		logo.TextColor3 = Color3.fromRGB(0, 200, 255)
-		logo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-		Instance.new("UICorner", logo).CornerRadius = UDim.new(1, 0)
-		logo.MouseButton1Click:Connect(function()
-			gui.Enabled = true
-			logo:Destroy()
-		end)
-	end
+	if game.CoreGui:FindFirstChild("JToggleLogo") then return end
+
+	local logoGui = Instance.new("ScreenGui", game.CoreGui)
+	logoGui.Name = "JToggleLogo"
+	logoGui.ResetOnSpawn = false
+	logoGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	local logo = Instance.new("TextButton", logoGui)
+	logo.Size = UDim2.new(0, 40, 0, 40)
+	logo.Position = UDim2.new(0, 10, 0.2, 0)
+	logo.Text = "J"
+	logo.Font = Enum.Font.GothamBlack
+	logo.TextSize = 18
+	logo.TextColor3 = Color3.fromRGB(0, 200, 255)
+	logo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Instance.new("UICorner", logo).CornerRadius = UDim.new(1, 0)
+
+	logo.MouseButton1Click:Connect(function()
+		gui.Enabled = true
+		logoGui:Destroy()
+	end)
 end)
 
+-- Toggle ESP
 local toggle = Instance.new("TextButton", main)
 toggle.Size = UDim2.new(0, 120, 0, 30)
 toggle.Position = UDim2.new(0, 10, 0, 60)
@@ -120,6 +125,7 @@ toggle.MouseButton1Click:Connect(function()
 	end
 end)
 
+-- Tombol Randomize
 local randomize = Instance.new("TextButton", main)
 randomize.Size = UDim2.new(0, 120, 0, 30)
 randomize.Position = UDim2.new(0, 10, 0, 100)
@@ -129,6 +135,7 @@ randomize.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 randomize.Font = Enum.Font.Gotham
 randomize.TextSize = 14
 
+-- Isi Pet Egg
 local eggContents = {
 	["common"] = {"Golden Lab", "Dog", "Bunny"},
 	["uncommon"] = {"Black Bunny", "Chicken", "Cat", "Deer"},
@@ -164,7 +171,7 @@ local function detectEggType(name)
 	elseif name:find("oasis") then return "oasis"
 	elseif name:find("dino") then return "dinosaur"
 	elseif name:find("primal") then return "primal"
-	else return nil end -- ✅ skip yang tidak dikenal
+	else return nil end
 end
 
 randomize.MouseButton1Click:Connect(function()
@@ -184,6 +191,7 @@ randomize.MouseButton1Click:Connect(function()
 			if part and not part:FindFirstChild("FakeEggESP") then
 				local eggType = detectEggType(model.Name)
 				if not eggType or not eggContents[eggType] then continue end
+
 				local pets = eggContents[eggType]
 				local chosen = pets[math.random(1, #pets)]
 
