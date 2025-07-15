@@ -1,0 +1,147 @@
+--[[ 
+🌟 Jekak121 Egg Randomizer V1.2.0 GUI
+🖥️ GUI untuk kontrol ESP visual telur
+]]
+
+-- Destroy existing GUI
+if game.CoreGui:FindFirstChild("EggRandomizerGUI") then
+    game.CoreGui.EggRandomizerGUI:Destroy()
+end
+
+-- Create GUI
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "EggRandomizerGUI"
+gui.ResetOnSpawn = false
+
+-- Main frame
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 280, 0, 160)
+main.Position = UDim2.new(0, 20, 0.2, 0)
+main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+main.BorderSizePixel = 0
+main.BackgroundTransparency = 0.1
+
+-- Title
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "🌱 Jekak121 Egg Randomizer V1.2.0"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+
+-- ESP Toggle Button
+local toggle = Instance.new("TextButton", main)
+toggle.Size = UDim2.new(0, 120, 0, 30)
+toggle.Position = UDim2.new(0, 10, 0, 50)
+toggle.Text = "🔘 ESP: OFF"
+toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+toggle.Font = Enum.Font.Gotham
+toggle.TextSize = 14
+toggle.BorderSizePixel = 0
+
+local espEnabled = false
+
+toggle.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    toggle.Text = espEnabled and "✅ ESP: ON" or "🔘 ESP: OFF"
+
+    -- Hapus semua ESP jika OFF
+    if not espEnabled then
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
+                v:Destroy()
+            end
+        end
+    end
+end)
+
+-- Randomize Button
+local randomize = Instance.new("TextButton", main)
+randomize.Size = UDim2.new(0, 120, 0, 30)
+randomize.Position = UDim2.new(0, 10, 0, 90)
+randomize.Text = "🎲 Randomize"
+randomize.TextColor3 = Color3.fromRGB(255, 255, 255)
+randomize.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+randomize.Font = Enum.Font.Gotham
+randomize.TextSize = 14
+randomize.BorderSizePixel = 0
+
+-- Fake pet list default
+local defaultPets = {
+    ["common"] = {"🐶 Dog", "🐱 Cat", "🐭 Mouse"},
+    ["mythical"] = {"🐉 Dragon", "🦄 Unicorn", "👼 Seraph"},
+    ["bug"] = {"🐞 Ladybug", "🕷️ Spider", "🪲 Beetle"},
+    ["rare"] = {"🦊 Fox", "🐢 Turtle", "🐸 Frog"},
+    ["legendary"] = {"🦈 Shark", "🦅 Phoenix", "🐙 Mimic Octopus"},
+    ["uncommon"] = {"🐰 Bunny", "🐤 Chick", "🦔 Hedgehog"},
+    -- lainnya tinggal kamu tambahkan nanti
+}
+
+-- Fungsi klasifikasi jenis telur dari nama
+local function detectEggType(name)
+    name = name:lower()
+    if name:find("mythical") then return "mythical"
+    elseif name:find("bug") then return "bug"
+    elseif name:find("legendary") then return "legendary"
+    elseif name:find("uncommon") then return "uncommon"
+    elseif name:find("rare") and name:find("summer") then return "rare"
+    elseif name:find("rare") then return "rare"
+    elseif name:find("common") and name:find("summer") then return "common"
+    elseif name:find("common") then return "common"
+    elseif name:find("primal") then return "mythical"
+    elseif name:find("night") then return "mythical"
+    elseif name:find("paradise") or name:find("oasis") or name:find("bee") then return "bug"
+    elseif name:find("dino") then return "uncommon"
+    else return "common" end
+end
+
+-- Fungsi pasang teks ESP
+local function addESP(part, text)
+    if not part or part:FindFirstChild("FakeEggESP") then return end
+    local gui = Instance.new("BillboardGui", part)
+    gui.Name = "FakeEggESP"
+    gui.Size = UDim2.new(0, 200, 0, 40)
+    gui.StudsOffset = Vector3.new(0, 3, 0)
+    gui.AlwaysOnTop = true
+    local label = Instance.new("TextLabel", gui)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Text = text
+    label.Font = Enum.Font.GothamBold
+    label.TextScaled = true
+    label.TextStrokeTransparency = 0.6
+end
+
+-- Fungsi randomizer ESP
+randomize.MouseButton1Click:Connect(function()
+    if not espEnabled then return end
+
+    -- Bersihkan ESP dulu
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
+            v:Destroy()
+        end
+    end
+
+    -- Pasang ulang dengan isi random
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name:lower():find("egg") then
+            local part = obj:FindFirstChild("Main") or obj:FindFirstChildWhichIsA("Part")
+            if part then
+                local eggType = detectEggType(obj.Name)
+                local petList = defaultPets[eggType] or {"🐣 Unknown"}
+                local petName = petList[math.random(1, #petList)]
+                addESP(part, "Contains: " .. petName)
+            end
+        elseif obj:IsA("Part") and obj.Name:lower():find("egg") then
+            local eggType = detectEggType(obj.Name)
+            local petList = defaultPets[eggType] or {"🐣 Unknown"}
+            local petName = petList[math.random(1, #petList)]
+            addESP(obj, "Contains: " .. petName)
+        end
+    end
+end)
