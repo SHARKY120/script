@@ -1,6 +1,11 @@
---🌟 Jekak121 Egg Randomizer V1.2.0 - GUI + Loading + Toggle
-if game.CoreGui:FindFirstChild("EggRandomizerGUI") then game.CoreGui.EggRandomizerGUI:Destroy() end
-if game.CoreGui:FindFirstChild("JToggleLogo") then game.CoreGui.JToggleLogo:Destroy() end
+--🌟 Jekak121 Egg Randomizer V1.2.0 - FINAL SCRIPT
+
+-- Hapus GUI lama jika ada
+for _, obj in pairs(game.CoreGui:GetChildren()) do
+	if obj.Name == "EggRandomizerGUI" or obj.Name == "JToggleLogo" or obj.Name == "EggRandomizerLoading" then
+		obj:Destroy()
+	end
+end
 
 -- Loading Screen
 local loadingGui = Instance.new("ScreenGui", game.CoreGui)
@@ -46,7 +51,7 @@ for i = 0, 100 do
 end
 loadingGui:Destroy()
 
--- GUI Main
+-- GUI
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "EggRandomizerGUI"
 
@@ -55,9 +60,7 @@ main.Size = UDim2.new(0, 300, 0, 180)
 main.Position = UDim2.new(0, 20, 0.2, 0)
 main.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
 main.Name = "MainFrame"
-
-local uiCorner = Instance.new("UICorner", main)
-uiCorner.CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
 
 local titleMain = Instance.new("TextLabel", main)
 titleMain.Size = UDim2.new(1, -40, 0, 40)
@@ -68,7 +71,7 @@ titleMain.TextSize = 16
 titleMain.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleMain.BackgroundTransparency = 1
 
--- Tombol Close & Logo J
+-- Tombol Close
 local closeBtn = Instance.new("TextButton", main)
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -35, 0, 5)
@@ -78,6 +81,7 @@ closeBtn.TextSize = 16
 closeBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
 closeBtn.BackgroundTransparency = 1
 
+-- Logo J muncul setelah ditutup
 closeBtn.MouseButton1Click:Connect(function()
 	gui.Enabled = false
 	if not game.CoreGui:FindFirstChild("JToggleLogo") then
@@ -90,8 +94,7 @@ closeBtn.MouseButton1Click:Connect(function()
 		logo.TextSize = 18
 		logo.TextColor3 = Color3.fromRGB(0, 200, 255)
 		logo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-		local corner = Instance.new("UICorner", logo)
-		corner.CornerRadius = UDim.new(1, 0)
+		Instance.new("UICorner", logo).CornerRadius = UDim.new(1, 0)
 		logo.MouseButton1Click:Connect(function()
 			gui.Enabled = true
 			logo:Destroy()
@@ -122,7 +125,7 @@ toggle.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Tombol 🎲 Randomize
+-- Tombol Randomize
 local randomize = Instance.new("TextButton", main)
 randomize.Size = UDim2.new(0, 120, 0, 30)
 randomize.Position = UDim2.new(0, 10, 0, 100)
@@ -131,7 +134,8 @@ randomize.TextColor3 = Color3.fromRGB(255, 255, 255)
 randomize.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 randomize.Font = Enum.Font.Gotham
 randomize.TextSize = 14
--- Pet Data per Egg Type
+
+-- Data Egg
 local eggContents = {
 	["common"] = {"Golden Lab", "Dog", "Bunny"},
 	["uncommon"] = {"Black Bunny", "Chicken", "Cat", "Deer"},
@@ -150,7 +154,6 @@ local eggContents = {
 	["primal"] = {"Parasaurolophus", "Iguanodon", "Pachycephalosaurus", "Dilophosaurus", "Ankylosaurus", "Spinosaurus"},
 }
 
--- Deteksi jenis egg
 local function detectEggType(name)
 	name = name:lower()
 	if name:find("common") and name:find("summer") then return "commonsummer"
@@ -171,47 +174,44 @@ local function detectEggType(name)
 	else return "common" end
 end
 
--- Tambah ESP ke egg
-local function addESP(part, text)
-	if not part or part:FindFirstChild("FakeEggESP") then return end
-	local gui = Instance.new("BillboardGui", part)
-	gui.Name = "FakeEggESP"
-	gui.Size = UDim2.new(0, 200, 0, 40)
-	gui.StudsOffset = Vector3.new(0, 3, 0)
-	gui.AlwaysOnTop = true
-	local label = Instance.new("TextLabel", gui)
-	label.Size = UDim2.new(1, 0, 1, 0)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.Text = text
-	label.Font = Enum.Font.GothamBold
-	label.TextScaled = true
-	label.TextStrokeTransparency = 0.6
-end
-
--- Randomizer Function
+-- FINAL FIXED RANDOMIZER
 randomize.MouseButton1Click:Connect(function()
 	if not espEnabled then return end
 
-	-- Hapus semua ESP lama
-	for _, v in pairs(workspace:GetDescendants()) do
-		if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
-			v:Destroy()
+	for _, obj in pairs(workspace:GetDescendants()) do
+		if obj:IsA("BillboardGui") and obj.Name == "FakeEggESP" then
+			obj:Destroy()
 		end
 	end
 
-	-- Cegah pasang ESP ganda di 1 egg
-	local processedEggs = {}
+	local processed = {}
 
-	for _, obj in pairs(workspace:GetDescendants()) do
-		if obj:IsA("Model") and obj.Name:lower():find("egg") and not processedEggs[obj] then
-			local part = obj.PrimaryPart or obj:FindFirstChild("Main") or obj:FindFirstChildWhichIsA("BasePart")
+	for _, model in pairs(workspace:GetDescendants()) do
+		if model:IsA("Model") and model.Name:lower():find("egg") and not processed[model] then
+			local part = model.PrimaryPart or model:FindFirstChild("Main") or model:FindFirstChildWhichIsA("BasePart")
 			if part and not part:FindFirstChild("FakeEggESP") then
-				local t = detectEggType(obj.Name)
-				local pets = eggContents[t] or {"Unknown Pet"}
-				local petName = pets[math.random(1, #pets)]
-				addESP(part, "Contains: " .. petName)
-				processedEggs[obj] = true
+				local eggType = detectEggType(model.Name)
+				local pets = eggContents[eggType] or {"Unknown Pet"}
+				local chosen = pets[math.random(1, #pets)]
+
+				local gui = Instance.new("BillboardGui")
+				gui.Name = "FakeEggESP"
+				gui.Adornee = part
+				gui.Size = UDim2.new(0, 200, 0, 40)
+				gui.StudsOffset = Vector3.new(0, 3, 0)
+				gui.AlwaysOnTop = true
+				gui.Parent = part
+
+				local label = Instance.new("TextLabel", gui)
+				label.Size = UDim2.new(1, 0, 1, 0)
+				label.BackgroundTransparency = 1
+				label.TextColor3 = Color3.fromRGB(255, 255, 255)
+				label.Text = "Contains: " .. chosen
+				label.Font = Enum.Font.GothamBold
+				label.TextScaled = true
+				label.TextStrokeTransparency = 0.6
+
+				processed[model] = true
 			end
 		end
 	end
