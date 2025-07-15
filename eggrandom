@@ -189,7 +189,7 @@ local function addESP(part, text)
 	label.TextStrokeTransparency = 0.6
 end
 
--- Randomizer Function with anti-duplicate
+-- Randomizer Function
 randomize.MouseButton1Click:Connect(function()
 	if not espEnabled then return end
 
@@ -201,17 +201,17 @@ randomize.MouseButton1Click:Connect(function()
 	end
 
 	-- Cegah pasang ESP ganda di 1 egg
-	local addedESP = {}
+	local processedEggs = {}
 
 	for _, obj in pairs(workspace:GetDescendants()) do
-		if obj:IsA("Model") and obj.Name:lower():find("egg") and not addedESP[obj] then
-			local part = obj:FindFirstChild("Main") or obj:FindFirstChildWhichIsA("Part")
+		if obj:IsA("Model") and obj.Name:lower():find("egg") and not processedEggs[obj] then
+			local part = obj.PrimaryPart or obj:FindFirstChild("Main") or obj:FindFirstChildWhichIsA("BasePart")
 			if part and not part:FindFirstChild("FakeEggESP") then
 				local t = detectEggType(obj.Name)
 				local pets = eggContents[t] or {"Unknown Pet"}
 				local petName = pets[math.random(1, #pets)]
 				addESP(part, "Contains: " .. petName)
-				addedESP[obj] = true
+				processedEggs[obj] = true
 			end
 		end
 	end
