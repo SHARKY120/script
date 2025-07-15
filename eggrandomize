@@ -1,154 +1,236 @@
---[[ 
-🌱 Jekak121 Egg Randomizer V1.2.0
-📦 ESP Visual Pet Berdasarkan Jenis Egg
-🟢 Dapat dihidupkan / dimatikan + tombol Randomize
-]]
-
--- Hapus GUI sebelumnya jika ada
-if game.CoreGui:FindFirstChild("EggRandomizerGUI") then
-    game.CoreGui.EggRandomizerGUI:Destroy()
+-- 🌟 Jekak121 Egg Randomizer V1.2.0 (FINAL with Rainbow Color)
+for _, obj in pairs(game.CoreGui:GetChildren()) do
+	if obj.Name == "EggRandomizerGUI" or obj.Name == "JToggleLogo" or obj.Name == "EggRandomizerLoading" then
+		obj:Destroy()
+	end
 end
+
+-- Loading Screen
+local loadingGui = Instance.new("ScreenGui", game.CoreGui)
+loadingGui.Name = "EggRandomizerLoading"
+loadingGui.IgnoreGuiInset = true
+
+local frame = Instance.new("Frame", loadingGui)
+frame.Size = UDim2.new(0, 300, 0, 120)
+frame.Position = UDim2.new(0.5, -150, 0.5, -60)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Text = "JekaK121 Pet Egg Randomizer"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+
+local version = Instance.new("TextLabel", frame)
+version.Size = UDim2.new(1, 0, 0, 20)
+version.Position = UDim2.new(0, 0, 0, 40)
+version.Text = "Version 1.2.0"
+version.Font = Enum.Font.Gotham
+version.TextSize = 14
+version.TextColor3 = Color3.fromRGB(180, 180, 180)
+version.BackgroundTransparency = 1
+
+local progressBar = Instance.new("Frame", frame)
+progressBar.Position = UDim2.new(0, 10, 1, -30)
+progressBar.Size = UDim2.new(1, -20, 0, 20)
+progressBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+
+local fill = Instance.new("Frame", progressBar)
+fill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+fill.Size = UDim2.new(0, 0, 1, 0)
+fill.BorderSizePixel = 0
+
+for i = 0, 100 do
+	fill.Size = UDim2.new(i / 100, 0, 1, 0)
+	task.wait(0.015)
+end
+loadingGui:Destroy()
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Name = "EggRandomizerGUI"
-gui.ResetOnSpawn = false
 
--- Floating Frame kiri-atas
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 280, 0, 160)
+main.Size = UDim2.new(0, 300, 0, 180)
 main.Position = UDim2.new(0, 20, 0.2, 0)
-main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-main.BorderSizePixel = 0
-main.BackgroundTransparency = 0.1
+main.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
 
-local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "🌱 Jekak121 Egg Randomizer V1.2.0"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 16
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.BackgroundTransparency = 1
+local titleMain = Instance.new("TextLabel", main)
+titleMain.Size = UDim2.new(1, -40, 0, 40)
+titleMain.Position = UDim2.new(0, 10, 0, 5)
+titleMain.Text = "Jekak121 Egg Randomizer V1.2.0"
+titleMain.Font = Enum.Font.GothamBold
+titleMain.TextSize = 16
+titleMain.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleMain.BackgroundTransparency = 1
+-- Tombol X
+local closeBtn = Instance.new("TextButton", main)
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 16
+closeBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
+closeBtn.BackgroundTransparency = 1
+
+closeBtn.MouseButton1Click:Connect(function()
+	gui.Enabled = false
+	if game.CoreGui:FindFirstChild("JToggleLogo") then return end
+
+	local logoGui = Instance.new("ScreenGui", game.CoreGui)
+	logoGui.Name = "JToggleLogo"
+	logoGui.ResetOnSpawn = false
+	logoGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	local logo = Instance.new("TextButton", logoGui)
+	logo.Size = UDim2.new(0, 40, 0, 40)
+	logo.Position = UDim2.new(0, 10, 0.2, 0)
+	logo.Text = "J"
+	logo.Font = Enum.Font.GothamBlack
+	logo.TextSize = 18
+	logo.TextColor3 = Color3.fromRGB(0, 200, 255)
+	logo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Instance.new("UICorner", logo).CornerRadius = UDim.new(1, 0)
+
+	logo.MouseButton1Click:Connect(function()
+		gui.Enabled = true
+		logoGui:Destroy()
+	end)
+end)
 
 -- Toggle ESP
 local toggle = Instance.new("TextButton", main)
 toggle.Size = UDim2.new(0, 120, 0, 30)
-toggle.Position = UDim2.new(0, 10, 0, 50)
+toggle.Position = UDim2.new(0.5, -60, 0, 60)
 toggle.Text = "🔘 ESP: OFF"
 toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 toggle.Font = Enum.Font.Gotham
 toggle.TextSize = 14
-toggle.BorderSizePixel = 0
 
 local espEnabled = false
-
 toggle.MouseButton1Click:Connect(function()
-    espEnabled = not espEnabled
-    toggle.Text = espEnabled and "✅ ESP: ON" or "🔘 ESP: OFF"
-    if not espEnabled then
-        for _, v in pairs(workspace:GetDescendants()) do
-            if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
-                v:Destroy()
-            end
-        end
-    end
+	espEnabled = not espEnabled
+	toggle.Text = espEnabled and "✅ ESP: ON" or "🔘 ESP: OFF"
+	if not espEnabled then
+		for _, v in pairs(workspace:GetDescendants()) do
+			if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
+				v:Destroy()
+			end
+		end
+	end
 end)
-
--- Tombol Randomize
 local randomize = Instance.new("TextButton", main)
 randomize.Size = UDim2.new(0, 120, 0, 30)
-randomize.Position = UDim2.new(0, 10, 0, 90)
+randomize.Position = UDim2.new(0.5, -60, 0, 100)
 randomize.Text = "🎲 Randomize"
 randomize.TextColor3 = Color3.fromRGB(255, 255, 255)
 randomize.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 randomize.Font = Enum.Font.Gotham
 randomize.TextSize = 14
-randomize.BorderSizePixel = 0
 
--- Daftar isi pet per jenis telur (dari kamu)
 local eggContents = {
-    ["common"] = {"Golden Lab", "Dog", "Bunny"},
-    ["uncommon"] = {"Black Bunny", "Chicken", "Cat", "Deer"},
-    ["rare"] = {"Orange Tabby", "Spotted Deer", "Pig", "Rooster", "Monkey"},
-    ["legendary"] = {"Cow", "Silver Monkey", "Sea Otter", "Turtle", "Polar Bear"},
-    ["mythical"] = {"Grey Mouse", "Brown Mouse", "Squirrel", "Red Giant Ant", "Red Fox"},
-    ["bug"] = {"Snail", "Giant Ant", "Caterpillar", "Praying Mantis", "Dragonfly"},
-    ["night"] = {"Hedgehog", "Mole", "Frog", "Echo Frog", "Night Owl", "Raccoon"},
-    ["bee"] = {"Bee", "Honey Bee", "Bear Bee", "Petal Bee", "Queen Bee"},
-    ["antibee"] = {"Wasp", "Tarantula Hawk", "Moth", "Butterfly", "Disco Bee"},
-    ["commonsummer"] = {"Starfish", "Seagull", "Crab"},
-    ["raresummer"] = {"Flamingo", "Toucan", "Sea Turtle", "Orangutan", "Seal"},
-    ["paradise"] = {"Ostrich", "Peacock", "Capybara", "Scarlet Macaw", "Mimic Octopus"},
-    ["oasis"] = {"Meerkat", "Sand Snake", "Axolotl", "Hyacinth Macaw", "Fennec Fox"},
-    ["dinosaur"] = {"Raptor", "Triceratops", "Stegosaurus", "Pterodactyl", "Brontosaurus", "T-Rex"},
-    ["primal"] = {"Parasaurolophus", "Iguanodon", "Pachycephalosaurus", "Dilophosaurus", "Ankylosaurus", "Spinosaurus"},
+	["common"] = {"Golden Lab", "Dog", "Bunny"},
+	["uncommon"] = {"Black Bunny", "Chicken", "Cat", "Deer"},
+	["rare"] = {"Orange Tabby", "Spotted Deer", "Pig", "Rooster", "Monkey"},
+	["legendary"] = {"Cow", "Silver Monkey", "Sea Otter", "Turtle", "Polar Bear"},
+	["mythical"] = {"Grey Mouse", "Brown Mouse", "Squirrel", "Red Giant Ant", "Red Fox"},
+	["bug"] = {"Snail", "Giant Ant", "Caterpillar", "Praying Mantis", "Dragonfly"},
+	["night"] = {"Hedgehog", "Mole", "Frog", "Echo Frog", "Night Owl", "Raccoon"},
+	["bee"] = {"Bee", "Honey Bee", "Bear Bee", "Petal Bee", "Queen Bee"},
+	["antibee"] = {"Wasp", "Tarantula Hawk", "Moth", "Butterfly", "Disco Bee"},
+	["commonsummer"] = {"Starfish", "Seagull", "Crab"},
+	["raresummer"] = {"Flamingo", "Toucan", "Sea Turtle", "Orangutan", "Seal"},
+	["paradise"] = {"Ostrich", "Peacock", "Capybara", "Scarlet Macaw", "Mimic Octopus"},
+	["oasis"] = {"Meerkat", "Sand Snake", "Axolotl", "Hyacinth Macaw", "Fennec Fox"},
+	["dinosaur"] = {"Raptor", "Triceratops", "Stegosaurus", "Pterodactyl", "Brontosaurus", "T-Rex"},
+	["primal"] = {"Parasaurolophus", "Iguanodon", "Pachycephalosaurus", "Dilophosaurus", "Ankylosaurus", "Spinosaurus"},
 }
 
--- Fungsi deteksi jenis telur dari namanya
+local rainbowPets = {
+	["Red Fox"] = true,
+	["Dragonfly"] = true,
+	["Raccoon"] = true,
+	["Queen Bee"] = true,
+	["Disco Bee"] = true,
+	["Mimic Octopus"] = true,
+	["Fennec Fox"] = true,
+	["T-Rex"] = true,
+	["Spinosaurus"] = true,
+}
+
 local function detectEggType(name)
-    name = name:lower()
-    if name:find("common") and name:find("summer") then return "commonsummer"
-    elseif name:find("rare") and name:find("summer") then return "raresummer"
-    elseif name:find("common") then return "common"
-    elseif name:find("uncommon") then return "uncommon"
-    elseif name:find("rare") then return "rare"
-    elseif name:find("legendary") then return "legendary"
-    elseif name:find("mythical") then return "mythical"
-    elseif name:find("bug") then return "bug"
-    elseif name:find("night") then return "night"
-    elseif name:find("bee") and name:find("anti") then return "antibee"
-    elseif name:find("bee") then return "bee"
-    elseif name:find("paradise") then return "paradise"
-    elseif name:find("oasis") then return "oasis"
-    elseif name:find("dino") then return "dinosaur"
-    elseif name:find("primal") then return "primal"
-    else return "common" end
+	name = name:lower()
+	if name:find("common") and name:find("summer") then return "commonsummer"
+	elseif name:find("rare") and name:find("summer") then return "raresummer"
+	elseif name:find("common") then return "common"
+	elseif name:find("uncommon") then return "uncommon"
+	elseif name:find("rare") then return "rare"
+	elseif name:find("legendary") then return "legendary"
+	elseif name:find("mythical") then return "mythical"
+	elseif name:find("bug") then return "bug"
+	elseif name:find("night") then return "night"
+	elseif name:find("anti") and name:find("bee") then return "antibee"
+	elseif name:find("bee") then return "bee"
+	elseif name:find("paradise") then return "paradise"
+	elseif name:find("oasis") then return "oasis"
+	elseif name:find("dino") then return "dinosaur"
+	elseif name:find("primal") then return "primal"
+	else return nil end
 end
 
--- Fungsi pasang teks ESP
-local function addESP(part, text)
-    if not part or part:FindFirstChild("FakeEggESP") then return end
-    local gui = Instance.new("BillboardGui", part)
-    gui.Name = "FakeEggESP"
-    gui.Size = UDim2.new(0, 200, 0, 40)
-    gui.StudsOffset = Vector3.new(0, 3, 0)
-    gui.AlwaysOnTop = true
-    local label = Instance.new("TextLabel", gui)
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.Text = text
-    label.Font = Enum.Font.GothamBold
-    label.TextScaled = true
-    label.TextStrokeTransparency = 0.6
-end
-
--- Saat tombol Randomize diklik
 randomize.MouseButton1Click:Connect(function()
-    if not espEnabled then return end
+	if not espEnabled then return end
 
-    -- Bersihkan semua ESP lama
-    for _, v in pairs(workspace:GetDescendants()) do
-        if v:IsA("BillboardGui") and v.Name == "FakeEggESP" then
-            v:Destroy()
-        end
-    end
+	for _, obj in pairs(workspace:GetDescendants()) do
+		if obj:IsA("BillboardGui") and obj.Name == "FakeEggESP" then
+			obj:Destroy()
+		end
+	end
 
-    -- Loop semua telur dan pasang ESP baru
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj:IsA("Model") and obj.Name:lower():find("egg") then
-            local part = obj:FindFirstChild("Main") or obj:FindFirstChildWhichIsA("Part")
-            if part then
-                local eggType = detectEggType(obj.Name)
-                local list = eggContents[eggType] or {"Unknown Pet"}
-                local petName = list[math.random(1, #list)]
-                addESP(part, "Contains: " .. petName)
-            end
-        elseif obj:IsA("Part") and obj.Name:lower():find("egg") then
-            local eggType = detectEggType(obj.Name)
-            local list = eggContents[eggType] or {"Unknown Pet"}
-            local petName = list[math.random(1, #list)]
-            addESP(obj, "Contains: " .. petName)
-        end
-    end
+	local processed = {}
+
+	for _, model in pairs(workspace:GetDescendants()) do
+		if model:IsA("Model") and model.Name:lower():find("egg") and not processed[model] then
+			local part = model.PrimaryPart or model:FindFirstChild("Main") or model:FindFirstChildWhichIsA("BasePart")
+			if part and not part:FindFirstChild("FakeEggESP") then
+				local eggType = detectEggType(model.Name)
+				if not eggType or not eggContents[eggType] then continue end
+				local pets = eggContents[eggType]
+				local chosen = pets[math.random(1, #pets)]
+
+				local gui = Instance.new("BillboardGui")
+				gui.Name = "FakeEggESP"
+				gui.Adornee = part
+				gui.Size = UDim2.new(0, 200, 0, 40)
+				gui.StudsOffset = Vector3.new(0, 3, 0)
+				gui.AlwaysOnTop = true
+				gui.Parent = part
+
+				local label = Instance.new("TextLabel", gui)
+				label.Size = UDim2.new(1, 0, 1, 0)
+				label.BackgroundTransparency = 1
+				label.Text = "Contains: " .. chosen
+				label.Font = Enum.Font.GothamBold
+				label.TextScaled = true
+				label.TextStrokeTransparency = 0.6
+
+				if rainbowPets[chosen] then
+					task.spawn(function()
+						while gui and label and label.Parent and label:IsDescendantOf(game) do
+							local t = tick() * 2
+							label.TextColor3 = Color3.fromHSV((t % 1), 1, 1)
+							task.wait()
+						end
+					end)
+				else
+					label.TextColor3 = Color3.fromRGB(255, 255, 255)
+				end
+
+				processed[model] = true
+			end
+		end
+	end
 end)
