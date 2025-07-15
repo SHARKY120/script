@@ -171,7 +171,7 @@ local function detectEggType(name)
 	elseif name:find("oasis") then return "oasis"
 	elseif name:find("dino") then return "dinosaur"
 	elseif name:find("primal") then return "primal"
-	else return "common" end
+	end
 end
 
 -- FINAL FIXED RANDOMIZER
