@@ -65,6 +65,7 @@ titleMain.Font = Enum.Font.GothamBold
 titleMain.TextSize = 16
 titleMain.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleMain.BackgroundTransparency = 1
+
 -- Tombol X
 local closeBtn = Instance.new("TextButton", main)
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -122,6 +123,7 @@ toggle.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+
 local randomize = Instance.new("TextButton", main)
 randomize.Size = UDim2.new(0, 120, 0, 30)
 randomize.Position = UDim2.new(0.5, -60, 0, 100)
@@ -147,8 +149,6 @@ local eggContents = {
 	["oasis"] = {"Meerkat", "Sand Snake", "Axolotl", "Hyacinth Macaw", "Fennec Fox"},
 	["dinosaur"] = {"Raptor", "Triceratops", "Stegosaurus", "Pterodactyl", "Brontosaurus", "T-Rex"},
 	["primal"] = {"Parasaurolophus", "Iguanodon", "Pachycephalosaurus", "Dilophosaurus", "Ankylosaurus", "Spinosaurus"},
-        ["zen"] = {"Shiba Inu", "Nihonzaru", "Tanuki", "Tanchozuru", "Kappa", "Kitsune"},
-}
 }
 
 local rainbowPets = {
@@ -161,7 +161,6 @@ local rainbowPets = {
 	["Fennec Fox"] = true,
 	["T-Rex"] = true,
 	["Spinosaurus"] = true,
-        ["Kitsune"] = true,
 }
 
 local function detectEggType(name)
@@ -181,10 +180,20 @@ local function detectEggType(name)
 	elseif name:find("oasis") then return "oasis"
 	elseif name:find("dino") then return "dinosaur"
 	elseif name:find("primal") then return "primal"
-        elseif name:find("zen") then return "zen"
+	elseif name:find("zen") then return "zen"
 	else return nil end
 end
 
+-- Tambahan Zen Egg
+eggContents["zen"] = {
+	"Shiba Inu", "Nihonzaru", "Tanuki", "Tanchozuru", "Kappa", "Kitsune"
+}
+
+-- Tambahkan Kitsune ke kategori rare dan rainbowPets
+table.insert(eggContents["rare"], "Kitsune")
+rainbowPets["Kitsune"] = true
+
+-- Lanjut ke bagian randomizer...
 randomize.MouseButton1Click:Connect(function()
 	if not espEnabled then return end
 
