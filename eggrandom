@@ -181,6 +181,7 @@ local function detectEggType(name)
 	elseif name:find("oasis") then return "oasis"
 	elseif name:find("dino") then return "dinosaur"
 	elseif name:find("primal") then return "primal"
+        elseif name:find("zen") then return "zen"
 	else return nil end
 end
 
