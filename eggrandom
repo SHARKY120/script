@@ -147,6 +147,8 @@ local eggContents = {
 	["oasis"] = {"Meerkat", "Sand Snake", "Axolotl", "Hyacinth Macaw", "Fennec Fox"},
 	["dinosaur"] = {"Raptor", "Triceratops", "Stegosaurus", "Pterodactyl", "Brontosaurus", "T-Rex"},
 	["primal"] = {"Parasaurolophus", "Iguanodon", "Pachycephalosaurus", "Dilophosaurus", "Ankylosaurus", "Spinosaurus"},
+        ["zen"] = {"Shiba Inu", "Nihonzaru", "Tanuki", "Tanchozuru", "Kappa", "Kitsune"},
+}
 }
 
 local rainbowPets = {
@@ -159,6 +161,7 @@ local rainbowPets = {
 	["Fennec Fox"] = true,
 	["T-Rex"] = true,
 	["Spinosaurus"] = true,
+        ["Kitsune"] = true,
 }
 
 local function detectEggType(name)
