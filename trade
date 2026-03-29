@@ -1,144 +1,235 @@
---// SERVICES
-local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+--// THEME (bisa kamu ubah)
+local THEME_COLOR = Color3.fromRGB(0,255,200)
 
-gui.Name = "JekakTradeUI"
-gui.ResetOnSpawn = false
+--// SAVE SYSTEM (opsional, tergantung executor)
+local saveFile = "jekak_ui_pos.txt"
 
---// LOADING SCREEN
-local loadingFrame = Instance.new("Frame", gui)
-loadingFrame.Size = UDim2.new(1,0,1,0)
-loadingFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
-
-local loadingText = Instance.new("TextLabel", loadingFrame)
-loadingText.Size = UDim2.new(1,0,0.1,0)
-loadingText.Position = UDim2.new(0,0,0.4,0)
-loadingText.BackgroundTransparency = 1
-loadingText.TextColor3 = Color3.fromRGB(0,255,200)
-loadingText.TextScaled = true
-loadingText.Font = Enum.Font.GothamBold
-loadingText.Text = "Jekak Trade Script\n0%"
-
--- loading animation 5 detik
-for i = 0,100 do
-    loadingText.Text = "Jekak Trade Script\n"..i.."%"
-    task.wait(0.05) -- 100 x 0.05 = 5 detik
+local function savePos(pos)
+    if writefile then
+        writefile(saveFile, game:GetService("HttpService"):JSONEncode({x=pos.X.Scale,y=pos.Y.Scale}))
+    end
 end
 
-loadingFrame:Destroy()
+local function loadPos()
+    if readfile and isfile and isfile(saveFile) then
+        local data = game:GetService("HttpService"):JSONDecode(readfile(saveFile))
+        return UDim2.new(data.x,0,data.y,0)
+    end
+    return UDim2.new(0.5,-60,0,20)
+end
 
---// OPEN BUTTON
-local openBtn = Instance.new("TextButton", gui)
-openBtn.Size = UDim2.new(0,120,0,40)
-openBtn.Position = UDim2.new(0,10,0.5,0)
-openBtn.Text = "OPEN"
-openBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-openBtn.TextColor3 = Color3.fromRGB(0,255,200)
+--// GUI
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.Name = "JekakUI"
+
+--// LOADING (FULL SCREEN)
+local loading = Instance.new("Frame", gui)
+loading.Size = UDim2.new(1,0,1,0)
+loading.BackgroundColor3 = Color3.fromRGB(10,10,10)
+
+local text = Instance.new("TextLabel", loading)
+text.Size = UDim2.new(1,0,0.1,0)
+text.Position = UDim2.new(0,0,0.45,0)
+text.BackgroundTransparency = 1
+text.TextColor3 = THEME_COLOR
+text.Font = Enum.Font.GothamBold
+text.TextScaled = true
+
+for i=0,100 do
+    text.Text = "Jekak Trade Script\n"..i.."%"
+    task.wait(0.05)
+end
+loading:Destroy()
+
+--// DRAG FUNCTION
+local function makeDraggable(obj)
+    local dragging, dragStart, startPos
+
+    obj.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = obj.Position
+        end
+    end)
+
+    obj.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+            savePos(obj.Position)
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            obj.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+--// SHOW MENU BUTTON (atas tengah)
+local openFrame = Instance.new("Frame", gui)
+openFrame.Size = UDim2.new(0,160,0,40)
+openFrame.Position = loadPos()
+openFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+
+local stroke = Instance.new("UIStroke", openFrame)
+stroke.Color = THEME_COLOR
+stroke.Thickness = 2
+
+-- neon glow animasi
+task.spawn(function()
+    while true do
+        for i=0,1,0.05 do
+            stroke.Transparency = i
+            task.wait(0.03)
+        end
+        for i=1,0,-0.05 do
+            stroke.Transparency = i
+            task.wait(0.03)
+        end
+    end
+end)
+
+-- tombol panah (drag handle)
+local arrow = Instance.new("TextLabel", openFrame)
+arrow.Size = UDim2.new(0,30,1,0)
+arrow.Text = "↕↔"
+arrow.BackgroundTransparency = 1
+arrow.TextColor3 = THEME_COLOR
+arrow.Font = Enum.Font.GothamBold
+arrow.TextScaled = true
+
+-- tombol show menu
+local openBtn = Instance.new("TextButton", openFrame)
+openBtn.Size = UDim2.new(1,-30,1,0)
+openBtn.Position = UDim2.new(0,30,0,0)
+openBtn.Text = "Show Menu"
+openBtn.BackgroundTransparency = 1
+openBtn.TextColor3 = THEME_COLOR
 openBtn.Font = Enum.Font.GothamBold
 openBtn.TextScaled = true
 
--- neon stroke
-local stroke = Instance.new("UIStroke", openBtn)
-stroke.Color = Color3.fromRGB(0,255,200)
-stroke.Thickness = 2
+makeDraggable(openFrame)
 
---// MAIN MENU
-local mainFrame = Instance.new("Frame", gui)
-mainFrame.Size = UDim2.new(0,300,0,220)
-mainFrame.Position = UDim2.new(0.5,-150,0.5,-110)
-mainFrame.BackgroundColor3 = Color3.fromRGB(15,15,15)
-mainFrame.Visible = false
+--// MAIN MENU (LEBIH KECIL)
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0,240,0,160)
+main.Position = UDim2.new(0.5,-120,0.5,-80)
+main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+main.Visible = false
 
-local mainStroke = Instance.new("UIStroke", mainFrame)
-mainStroke.Color = Color3.fromRGB(0,255,200)
+local mainStroke = Instance.new("UIStroke", main)
+mainStroke.Color = THEME_COLOR
 mainStroke.Thickness = 2
 
+makeDraggable(main)
+
+-- neon glow menu
+task.spawn(function()
+    while true do
+        for i=0,1,0.05 do
+            mainStroke.Transparency = i
+            task.wait(0.03)
+        end
+        for i=1,0,-0.05 do
+            mainStroke.Transparency = i
+            task.wait(0.03)
+        end
+    end
+end)
+
 -- TITLE
-local title = Instance.new("TextLabel", mainFrame)
-title.Size = UDim2.new(1,0,0,40)
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1,0,0,30)
+title.Text = "Jekak Trade"
 title.BackgroundTransparency = 1
-title.Text = "Jekak Trade Script"
-title.TextColor3 = Color3.fromRGB(0,255,200)
+title.TextColor3 = THEME_COLOR
 title.Font = Enum.Font.GothamBold
 title.TextScaled = true
 
--- CLOSE BUTTON
-local closeBtn = Instance.new("TextButton", mainFrame)
-closeBtn.Size = UDim2.new(0,30,0,30)
-closeBtn.Position = UDim2.new(1,-35,0,5)
-closeBtn.Text = "X"
-closeBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-closeBtn.TextColor3 = Color3.fromRGB(255,50,50)
-closeBtn.Font = Enum.Font.GothamBold
+-- CLOSE
+local close = Instance.new("TextButton", main)
+close.Size = UDim2.new(0,25,0,25)
+close.Position = UDim2.new(1,-30,0,5)
+close.Text = "X"
+close.BackgroundColor3 = Color3.fromRGB(20,20,20)
+close.TextColor3 = Color3.fromRGB(255,50,50)
 
---// BUTTON 1 (Freeze Trade)
-local freezeBtn = Instance.new("TextButton", mainFrame)
-freezeBtn.Size = UDim2.new(0.9,0,0,50)
-freezeBtn.Position = UDim2.new(0.05,0,0.3,0)
-freezeBtn.Text = "Freeze Trade"
-freezeBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-freezeBtn.TextColor3 = Color3.fromRGB(0,255,200)
-freezeBtn.Font = Enum.Font.GothamBold
-freezeBtn.TextScaled = true
+-- BUTTON 1
+local btn1 = Instance.new("TextButton", main)
+btn1.Size = UDim2.new(0.9,0,0,40)
+btn1.Position = UDim2.new(0.05,0,0.3,0)
+btn1.Text = "Freeze Trade"
+btn1.BackgroundColor3 = Color3.fromRGB(20,20,20)
+btn1.TextColor3 = THEME_COLOR
+btn1.Font = Enum.Font.GothamBold
+btn1.TextScaled = true
 
-local freezeDesc = Instance.new("TextLabel", freezeBtn)
-freezeDesc.Size = UDim2.new(1,0,0,15)
-freezeDesc.Position = UDim2.new(0,0,1,0)
-freezeDesc.BackgroundTransparency = 1
-freezeDesc.Text = "Freeze Victim's Trade UI"
-freezeDesc.TextColor3 = Color3.fromRGB(150,150,150)
-freezeDesc.TextScaled = true
+local desc1 = Instance.new("TextLabel", btn1)
+desc1.Size = UDim2.new(1,0,0,12)
+desc1.Position = UDim2.new(0,0,1,0)
+desc1.Text = "Freeze Victim's Trade UI"
+desc1.BackgroundTransparency = 1
+desc1.TextColor3 = Color3.fromRGB(150,150,150)
+desc1.TextScaled = true
 
---// BUTTON 2 (Force Accept)
-local acceptBtn = Instance.new("TextButton", mainFrame)
-acceptBtn.Size = UDim2.new(0.9,0,0,50)
-acceptBtn.Position = UDim2.new(0.05,0,0.6,0)
-acceptBtn.Text = "Force Accept"
-acceptBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-acceptBtn.TextColor3 = Color3.fromRGB(0,255,200)
-acceptBtn.Font = Enum.Font.GothamBold
-acceptBtn.TextScaled = true
+-- BUTTON 2
+local btn2 = Instance.new("TextButton", main)
+btn2.Size = UDim2.new(0.9,0,0,40)
+btn2.Position = UDim2.new(0.05,0,0.65,0)
+btn2.Text = "Force Accept"
+btn2.BackgroundColor3 = Color3.fromRGB(20,20,20)
+btn2.TextColor3 = THEME_COLOR
+btn2.Font = Enum.Font.GothamBold
+btn2.TextScaled = true
 
-local acceptDesc = Instance.new("TextLabel", acceptBtn)
-acceptDesc.Size = UDim2.new(1,0,0,15)
-acceptDesc.Position = UDim2.new(0,0,1,0)
-acceptDesc.BackgroundTransparency = 1
-acceptDesc.Text = "Force Accept For Victim's Trade"
-acceptDesc.TextColor3 = Color3.fromRGB(150,150,150)
-acceptDesc.TextScaled = true
+local desc2 = Instance.new("TextLabel", btn2)
+desc2.Size = UDim2.new(1,0,0,12)
+desc2.Position = UDim2.new(0,0,1,0)
+desc2.Text = "Force Accept For Victim's Trade"
+desc2.BackgroundTransparency = 1
+desc2.TextColor3 = Color3.fromRGB(150,150,150)
+desc2.TextScaled = true
 
---// POPUP FUNCTION
-local function showPopup(text)
-    local popup = Instance.new("TextLabel", gui)
-    popup.Size = UDim2.new(0,250,0,50)
-    popup.Position = UDim2.new(0.5,-125,0.8,0)
-    popup.BackgroundColor3 = Color3.fromRGB(20,20,20)
-    popup.TextColor3 = Color3.fromRGB(0,255,200)
-    popup.Font = Enum.Font.GothamBold
-    popup.TextScaled = true
-    popup.Text = text
+--// POPUP
+local function popup(msg)
+    local p = Instance.new("TextLabel", gui)
+    p.Size = UDim2.new(0,200,0,40)
+    p.Position = UDim2.new(0.5,-100,0.8,0)
+    p.BackgroundColor3 = Color3.fromRGB(20,20,20)
+    p.TextColor3 = THEME_COLOR
+    p.Font = Enum.Font.GothamBold
+    p.TextScaled = true
+    p.Text = msg
 
-    local pStroke = Instance.new("UIStroke", popup)
-    pStroke.Color = Color3.fromRGB(0,255,200)
+    local s = Instance.new("UIStroke", p)
+    s.Color = THEME_COLOR
 
     task.wait(2)
-    popup:Destroy()
+    p:Destroy()
 end
 
---// BUTTON ACTIONS (UI ONLY)
-freezeBtn.MouseButton1Click:Connect(function()
-    showPopup("Freeze Trade Success!")
+btn1.MouseButton1Click:Connect(function()
+    popup("Freeze Trade Success!")
 end)
 
-acceptBtn.MouseButton1Click:Connect(function()
-    showPopup("Victim Accepted The Trade Forcly!")
+btn2.MouseButton1Click:Connect(function()
+    popup("Victim Accepted The Trade Forcly!")
 end)
 
---// OPEN/CLOSE LOGIC
+--// OPEN CLOSE
 openBtn.MouseButton1Click:Connect(function()
-    mainFrame.Visible = not mainFrame.Visible
+    main.Visible = not main.Visible
 end)
 
-closeBtn.MouseButton1Click:Connect(function()
-    mainFrame.Visible = false
+close.MouseButton1Click:Connect(function()
+    main.Visible = false
 end)
