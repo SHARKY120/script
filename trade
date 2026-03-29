@@ -22,7 +22,14 @@ end
 
 --// GUI
 local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui", player.PlayerGui)
+if player.PlayerGui:FindFirstChild("JekakUI") then
+    player.PlayerGui.JekakUI:Destroy()
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "JekakUI"
+gui.Parent = player:WaitForChild("PlayerGui")
+gui.ResetOnSpawn = false
 
 --// LOADING (BOX KECIL)
 local loading = Instance.new("Frame", gui)
