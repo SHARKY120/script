@@ -31,6 +31,10 @@ gui.Name = "JekakUI"
 gui.Parent = player:WaitForChild("PlayerGui")
 gui.ResetOnSpawn = false
 
+-- FIX AGAR TIDAK KETUTUP UI LAIN
+gui.DisplayOrder = 999999
+gui.IgnoreGuiInset = true
+
 --// LOADING (BOX KECIL)
 local loading = Instance.new("Frame", gui)
 loading.Size = UDim2.new(0,300,0,150)
